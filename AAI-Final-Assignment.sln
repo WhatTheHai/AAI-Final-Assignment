@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32002.185
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AAI-Final-Assignment-WinForms", "AAI-Final-Assignment-WinForms\AAI-Final-Assignment-WinForms.csproj", "{19F95D6E-6385-448C-9A78-B65FA225811F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AAI-Final-Assignment-WinForms", "AAI-Final-Assignment-WinForms\AAI-Final-Assignment-WinForms.csproj", "{19F95D6E-6385-448C-9A78-B65FA225811F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
