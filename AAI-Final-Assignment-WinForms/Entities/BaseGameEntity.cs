@@ -19,7 +19,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
         {
             Pos = pos;
             World = world;
-            Id = ++_nextId;
+            Id = _nextId++;
             // later constructor met parameters bouwen 
         }
 
@@ -35,10 +35,10 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
         // can add other stats like: 
 
-        // vector position
-        // scaling flout
-        // bounding radius float ?
-        // model? 
-        // rendering? 
+            // vector position
+            // scaling flout
+            // bounding radius float ?
+            // model? 
+            // rendering? 
     }
 }
