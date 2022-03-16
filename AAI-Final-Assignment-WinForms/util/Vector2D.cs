@@ -1,12 +1,4 @@
-﻿using System;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SteeringCS
+﻿namespace AAI_Final_Assignment_WinForms.util
 {
 
     public class Vector2D
@@ -74,7 +66,7 @@ namespace SteeringCS
             return this;
         }
 
-        public Vector2D truncate(double maX)
+        public Vector2D Truncate(double maX)
         {
             if (Length() > maX)
             {
