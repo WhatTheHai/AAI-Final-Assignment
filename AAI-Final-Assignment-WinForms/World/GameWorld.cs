@@ -22,6 +22,7 @@ namespace AAI_Final_Assignment_WinForms.World
         {
             Width = w;
             Height = h;
+            Populate();
         }
 
         public void Update(float timeElapsed)
@@ -40,6 +41,11 @@ namespace AAI_Final_Assignment_WinForms.World
             //entities.ForEach(e => e.Render(g));
             g.FillEllipse(Brushes.Yellow, new Rectangle(a, b, 20, 20));
             //Target.Render(g);
+        }
+
+        private void Populate()
+        {
+
         }
     }
 }

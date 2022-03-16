@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using AAI_Final_Assignment_WinForms.util;
+using AAI_Final_Assignment_WinForms.World;
 
 namespace AAI_Final_Assignment_WinForms.Entities
 {
@@ -13,9 +14,11 @@ namespace AAI_Final_Assignment_WinForms.Entities
         // maxforce
         // max rotation rate 
 
-        protected MovingEntity()
-        {
-            // later constructor met parameters bouwen 
+        public MovingEntity(Vector2D pos, GameWorld world): base(pos, world) {
+            Mass = 10;
+            MaxSpeed = 10;
+            Velocity = new Vector2D();
+            Heading = new Vector2D();
         }
 
         public override void Update(double timeElapsed)
