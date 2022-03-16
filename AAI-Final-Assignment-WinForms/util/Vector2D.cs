@@ -50,7 +50,7 @@
 
         public Vector2D Divide(double value) {
             if (value <= 0) {
-                throw new ArgumentOutOfRangeException(nameof(value), $"Value cannot be 0 or lower, value is {value}");
+                throw new ArgumentOutOfRangeException(nameof(value), $@"Value cannot be 0 or lower, value is {value}");
             }
 
             this.X /= value;

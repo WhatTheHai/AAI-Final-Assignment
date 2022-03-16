@@ -1,7 +1,13 @@
-﻿namespace AAI_Final_Assignment_WinForms.Entities
+﻿using AAI_Final_Assignment_WinForms.util;
+using AAI_Final_Assignment_WinForms.World;
+
+namespace AAI_Final_Assignment_WinForms.Entities
 {
     public abstract class BaseGameEntity
     {
+        public Vector2D Pos { get; set; }
+        public float Scale { get; set; }
+        public GameWorld World { get; set; }
         // records the next unique identifier for an entity 
         private static int _nextId;
 
