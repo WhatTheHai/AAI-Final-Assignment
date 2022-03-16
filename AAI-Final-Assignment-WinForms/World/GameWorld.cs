@@ -19,6 +19,12 @@ namespace AAI_Final_Assignment_WinForms.World
         {
             Width = width;
             Height = height;
+            Populate();
+        }
+
+        private void Populate() 
+        {
+
         }
     }
 }
