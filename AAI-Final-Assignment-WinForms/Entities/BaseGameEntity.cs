@@ -14,8 +14,10 @@ namespace AAI_Final_Assignment_WinForms.Entities
         // unique identifier of entity 
         public int Id { get; set; }
 
-        protected BaseGameEntity()
+        protected BaseGameEntity(Vector2D pos, GameWorld world) 
         {
+            Pos = pos;
+            World = world;
             Id = _nextId;
             _nextId++;
             // later constructor met parameters bouwen 

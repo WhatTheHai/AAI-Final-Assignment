@@ -66,12 +66,12 @@
             return this;
         }
 
-        public Vector2D Truncate(double maX)
+        public Vector2D Truncate(double max)
         {
-            if (Length() > maX)
+            if (Length() > max)
             {
                 Normalize();
-                Multiply(maX);
+                Multiply(max);
             }
             return this;
         }
@@ -83,7 +83,7 @@
 
         public override string ToString()
         {
-            return String.Format("({0},{1})", X, Y);
+            return $"({X},{Y})";
         }
     }
 
