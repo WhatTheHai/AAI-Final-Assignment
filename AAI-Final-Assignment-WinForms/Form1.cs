@@ -1,4 +1,3 @@
-using System.Drawing.Printing;
 using AAI_Final_Assignment_WinForms.World;
 using Timer = System.Timers.Timer;
 
@@ -15,7 +14,7 @@ namespace AAI_Final_Assignment_WinForms
         {
             InitializeComponent();
 
-            _world = new GameWorld(Screen.Width, Screen.Height);
+            _world = new GameWorld(_mainPanel.Width, _mainPanel.Height);
             _timer = new Timer();
             _timer.Elapsed += Timer_Elapsed;
             _timer.Interval = 2000;
@@ -25,10 +24,10 @@ namespace AAI_Final_Assignment_WinForms
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
         {
             _world.Update(timeDelta);
-            Screen.Invalidate();
+            _mainPanel.Invalidate();
         }
 
-        private void Screen_Paint(object sender, PaintEventArgs e)
+        private void MainPanel_Paint(object sender, PaintEventArgs e)
         {
             _world.Render(e.Graphics);
         }

@@ -3,7 +3,8 @@ using AAI_Final_Assignment_WinForms.World;
 
 namespace AAI_Final_Assignment_WinForms.Entities
 {
-    public abstract class BaseGameEntity {
+    public abstract class BaseGameEntity
+    {
         public Vector2D Pos { get; set; }
         public float Scale { get; set; }
         public GameWorld World { get; set; }
@@ -14,7 +15,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
         // unique identifier of entity 
         public int Id { get; set; }
 
-        protected BaseGameEntity(Vector2D pos, GameWorld world) {
+        protected BaseGameEntity(Vector2D pos, GameWorld world)
+        {
             Pos = pos;
             World = world;
             Id = ++_nextId;
@@ -33,11 +35,10 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
         // can add other stats like: 
 
-            // vector position
-            // scaling flout
-            // bounding radius float ?
-            // model? 
-            // rendering? 
-        }
+        // vector position
+        // scaling flout
+        // bounding radius float ?
+        // model? 
+        // rendering? 
     }
 }
