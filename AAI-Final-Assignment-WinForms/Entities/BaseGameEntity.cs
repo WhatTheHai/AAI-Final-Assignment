@@ -17,7 +17,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
         protected BaseGameEntity(Vector2D pos, GameWorld world) {
             Pos = pos;
             World = world;
-            Id = ++_nextId;
+            Id = _nextId++;
             // later constructor met parameters bouwen 
         }
 
@@ -38,6 +38,5 @@ namespace AAI_Final_Assignment_WinForms.Entities
             // bounding radius float ?
             // model? 
             // rendering? 
-        }
     }
 }
