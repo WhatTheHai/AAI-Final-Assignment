@@ -26,6 +26,11 @@ namespace AAI_Final_Assignment_WinForms.Entities
         {
         }
 
+        public virtual void Render(Graphics g)
+        {
+            //g.FillEllipse(Brushes.Blue, new Rectangle((int)Pos.X, (int)Pos.Y, 10, 10));
+        }
+
         // can add other stats like: 
 
         // vector position
