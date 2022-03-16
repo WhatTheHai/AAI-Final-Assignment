@@ -10,11 +10,12 @@ namespace AAI_Final_Assignment_WinForms
         private Timer _timer;
 
         public const float timeDelta = 0.8f;
+
         public Form1()
         {
             InitializeComponent();
 
-            _world = new GameWorld(w: Screen.Width, h: Screen.Height);
+            _world = new GameWorld(Screen.Width, Screen.Height);
             _timer = new Timer();
             _timer.Elapsed += Timer_Elapsed;
             _timer.Interval = 2000;
