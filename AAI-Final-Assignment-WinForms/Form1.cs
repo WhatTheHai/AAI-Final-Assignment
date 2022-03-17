@@ -19,6 +19,7 @@ namespace AAI_Final_Assignment_WinForms
             _timer.Elapsed += Timer_Elapsed;
             _timer.Interval = 20;
             _timer.Enabled = true;
+            
         }
 
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)

@@ -6,7 +6,8 @@ namespace AAI_Final_Assignment_WinForms.World
 {
     public class GameWorld
     {
-        private List<MovingEntity> entities = new List<MovingEntity>();
+        private List<MovingEntity> _movingEntities;
+        private List<BaseGameEntity> _obstacles;
         public Witch Witch { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
@@ -21,37 +22,40 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public GameWorld(int w, int h)
         {
+            _movingEntities = new List<MovingEntity>();
+            _obstacles = new List<BaseGameEntity>();
             Width = w;
             Height = h;
+
+            Witch = new Witch(new Vector2D(100, 100), this, 5);
             Populate();
         }
 
         public void Update(float timeElapsed)
         {
-            foreach (MovingEntity me in entities)
+            foreach (MovingEntity me in _movingEntities)
             {
-                //me.SteeringBehaviour = new SteeringBehaviour(me); // restore later
-
                 me.Update(timeElapsed);
             }
         }
 
         public void Render(Graphics g)
         {
-            entities.ForEach(e => e.Render(g));
+            _movingEntities.ForEach(e => e.Render(g));
+            _obstacles.ForEach(o => o.Render(g));
             Witch.Render(g);
         }
 
         private void Populate()
         {
-            Witch = new Witch(new Vector2D(10, 10), this, 5);
-            Witch.WColor = Color.BlueViolet;
+            for (int i = 0; i < 10; i++)
+            {
+                TestEnemy t = new TestEnemy(new Vector2D(10, i * 10), this, 5);
+                _movingEntities.Add(t);
+            }
 
-            Witch run = new Witch(new Vector2D(50, 50), this, 5);
-            run.WColor = Color.Orange;
-            run.SteeringBehaviour = new SteeringBehaviour(run);
-            run.SteeringBehaviour.Seek = true;
-            entities.Add(run);
+            Obstacle o = new Obstacle(new Vector2D(100,100), this);
+            _obstacles.Add(o);
         }
     }
 }

@@ -35,6 +35,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             MaxSpeed = 10;
             Velocity = new Vector2D();
             Heading = new Vector2D();
+            SteeringBehaviour = new SteeringBehaviour(this);
         }
 
         public override void Update(double timeElapsed)
