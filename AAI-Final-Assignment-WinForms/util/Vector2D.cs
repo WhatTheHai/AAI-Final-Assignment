@@ -1,4 +1,7 @@
-﻿namespace AAI_Final_Assignment_WinForms.util
+﻿using System.Numerics;
+using System.Runtime.Intrinsics;
+
+namespace AAI_Final_Assignment_WinForms.util
 {
 
     public class Vector2D
@@ -89,6 +92,14 @@
         public override string ToString()
         {
             return $"({X},{Y})";
+        }
+
+        public double Distance(Vector2D v1) {
+            Vector2D v2 = v1.Sub(this);
+            if (v2.Length() < 0) {
+                return -v2.Length();
+            }
+            return v2.Length();
         }
     }
 

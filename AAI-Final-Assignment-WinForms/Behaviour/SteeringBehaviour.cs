@@ -12,22 +12,21 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 {
     public class SteeringBehaviour 
     {
-        private const bool F = false;
-        public bool seek = F, flee = F, obstacleAvoidance = F;
+        public bool Seek, Flee, ObstacleAvoidance;
         private MovingEntity ME { get; set; }
 
         public Vector2D Calculate() 
         {
-            if (seek) {
+            if (Seek) {
                 return new Vector2D(0, 0);
             }
 
-            if (flee)
+            if (Flee)
             {
                 return new Vector2D(0, 0);
             }
 
-            if (obstacleAvoidance)
+            if (ObstacleAvoidance)
             {
                 return new Vector2D(0, 0);
             }
@@ -49,12 +48,17 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             return desiredVelocity.Sub(ME.Velocity.Clone());
         }
 
-        public Vector2D CalculateHide() 
-        {
+        public Vector2D CalculateFlee() {
+            double PanicDistanceSq = 10.0;
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
 
-            Vector2D desiredVelocity = targetPos.Sub(mePos).Normalize().Multiply(ME.MaxSpeed);
+            //If not in the panic distance, do not flee
+            if (mePos.Distance(targetPos) > PanicDistanceSq) {
+                return new Vector2D(0, 0);
+            }
+
+            Vector2D desiredVelocity = mePos.Sub(targetPos).Normalize().Multiply(ME.MaxSpeed);
 
             return desiredVelocity.Sub(ME.Velocity.Clone());
         }
