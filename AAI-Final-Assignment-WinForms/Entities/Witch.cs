@@ -17,6 +17,17 @@ namespace AAI_Final_Assignment_WinForms.Entities
             Scale = scale;
             WColor = Color.Green;
         }
+
+        public override void Render(Graphics g) 
+        {
+            double leftCorner = Pos.X - Scale;
+            double rightCorner = Pos.Y - Scale;
+            double size = Scale * 2;
+
+            Pen p = new Pen(WColor, 2);
+            g.DrawEllipse(p, new Rectangle((int)leftCorner, (int)rightCorner, (int)size, (int)size));
+            g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
+        }
     }
 
 }
