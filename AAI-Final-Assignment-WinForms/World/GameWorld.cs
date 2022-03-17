@@ -50,7 +50,7 @@ namespace AAI_Final_Assignment_WinForms.World
             Witch run = new Witch(new Vector2D(50, 50), this, 5);
             run.WColor = Color.Orange;
             run.SteeringBehaviour = new SteeringBehaviour(run);
-            run.SteeringBehaviour.Seek = true;
+            run.SteeringBehaviour.Flee = true;
             entities.Add(run);
         }
     }
