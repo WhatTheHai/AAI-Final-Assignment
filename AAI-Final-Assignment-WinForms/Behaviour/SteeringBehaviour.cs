@@ -50,7 +50,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         }
 
         public Vector2D CalculateFlee() {
-            double PanicDistanceSq = 10.0;
+            double PanicDistanceSq = 100.0;
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
 

@@ -26,7 +26,7 @@ namespace AAI_Final_Assignment_WinForms.util
 
         public double LengthSquared()
         {
-            return Math.Pow(X, 2) + Math.Pow(Y, 2);
+            return (X*X) + (Y*Y);
         }
 
 
@@ -95,11 +95,10 @@ namespace AAI_Final_Assignment_WinForms.util
         }
 
         public double Distance(Vector2D v1) {
-            Vector2D v2 = v1.Sub(this);
-            if (v2.Length() < 0) {
-                return -v2.Length();
-            }
-            return v2.Length();
+            double xDistance = v1.X - this.X;
+            double yDistance = v1.Y - this.Y;
+
+            return Math.Sqrt((xDistance * xDistance) + (yDistance * yDistance));
         }
     }
 
