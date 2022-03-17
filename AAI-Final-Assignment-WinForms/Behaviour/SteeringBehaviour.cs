@@ -17,13 +17,14 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
         public Vector2D Calculate() 
         {
-            if (Seek) {
-                return new Vector2D(0, 0);
+            if (Seek)
+            {
+                return CalculateSeek();
             }
 
             if (Flee)
             {
-                return new Vector2D(0, 0);
+                return CalculateFlee();
             }
 
             if (ObstacleAvoidance)
@@ -34,7 +35,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             return new Vector2D(0, 0);
         }
 
-        protected SteeringBehaviour(MovingEntity me) {
+        public SteeringBehaviour(MovingEntity me) {
             ME = me;
         }
 

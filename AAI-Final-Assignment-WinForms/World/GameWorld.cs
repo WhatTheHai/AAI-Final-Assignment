@@ -1,4 +1,5 @@
-﻿using AAI_Final_Assignment_WinForms.Entities;
+﻿using AAI_Final_Assignment_WinForms.Behaviour;
+using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.util;
 
 namespace AAI_Final_Assignment_WinForms.World
@@ -29,7 +30,8 @@ namespace AAI_Final_Assignment_WinForms.World
         {
             foreach (MovingEntity me in entities)
             {
-                // me.SB = new SeekBehaviour(me); // restore later
+                //me.SteeringBehaviour = new SteeringBehaviour(me); // restore later
+
                 me.Update(timeElapsed);
             }
         }
@@ -44,6 +46,12 @@ namespace AAI_Final_Assignment_WinForms.World
         {
             Witch = new Witch(new Vector2D(10, 10), this, 5);
             Witch.WColor = Color.BlueViolet;
+
+            Witch run = new Witch(new Vector2D(50, 50), this, 5);
+            run.WColor = Color.Orange;
+            run.SteeringBehaviour = new SteeringBehaviour(run);
+            run.SteeringBehaviour.Seek = true;
+            entities.Add(run);
         }
     }
 }
