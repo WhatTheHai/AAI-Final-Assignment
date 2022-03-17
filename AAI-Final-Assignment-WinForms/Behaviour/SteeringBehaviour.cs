@@ -67,13 +67,16 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public Vector2D CalculateObstacleAvoidance()
         {
             // A. only consider obstacle in range of detection box 
-                // loop to all objects to tag them if they are in range
+            // loop to all objects to tag them if they are in range
             // B. transforms all tagged obstacle to vehicle local space
             // C. check obstacles for overlap of detection box 
             // D. got objects that ar e in detection box
             // 
 
             // list of obstacles maken 
+            double minLength = 2;
+            double detectionBoxLength = minLength + (ME.Velocity.Length() / ME.MaxSpeed) * minLength;
+           
 
             return null;
         }
