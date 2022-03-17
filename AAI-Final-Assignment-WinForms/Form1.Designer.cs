@@ -28,17 +28,17 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this._mainPanel = new System.Windows.Forms.Panel();
+            this._mainPanel = new AAI_Final_Assignment_WinForms.MainPanel();
             this.SuspendLayout();
             // 
-            // Screen
+            // _mainPanel
             // 
-            this._mainPanel.BackColor = System.Drawing.SystemColors.HotTrack;
-            this._mainPanel.Location = new System.Drawing.Point(1, 1);
+            this._mainPanel.Location = new System.Drawing.Point(2, 2);
             this._mainPanel.Name = "_mainPanel";
-            this._mainPanel.Size = new System.Drawing.Size(800, 451);
+            this._mainPanel.Size = new System.Drawing.Size(798, 449);
             this._mainPanel.TabIndex = 0;
             this._mainPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.MainPanel_Paint);
+            this._mainPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this._mainPanel_MouseClick);
             // 
             // Form1
             // 
@@ -54,6 +54,6 @@
 
         #endregion
 
-        private Panel _mainPanel;
+        private MainPanel _mainPanel;
     }
 }

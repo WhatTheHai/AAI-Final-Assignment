@@ -1,3 +1,4 @@
+using AAI_Final_Assignment_WinForms.util;
 using AAI_Final_Assignment_WinForms.World;
 using Timer = System.Timers.Timer;
 
@@ -13,11 +14,10 @@ namespace AAI_Final_Assignment_WinForms
         public Form1()
         {
             InitializeComponent();
-
             _world = new GameWorld(_mainPanel.Width, _mainPanel.Height);
             _timer = new Timer();
             _timer.Elapsed += Timer_Elapsed;
-            _timer.Interval = 2000;
+            _timer.Interval = 20;
             _timer.Enabled = true;
         }
 
@@ -30,6 +30,11 @@ namespace AAI_Final_Assignment_WinForms
         private void MainPanel_Paint(object sender, PaintEventArgs e)
         {
             _world.Render(e.Graphics);
+        }
+
+        private void _mainPanel_MouseClick(object sender, MouseEventArgs e)
+        {
+            _world.Witch.Pos = new Vector2D(e.X, e.Y);
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using AAI_Final_Assignment_WinForms.Entities;
+using AAI_Final_Assignment_WinForms.util;
 
 namespace AAI_Final_Assignment_WinForms.World
 {
@@ -9,7 +10,6 @@ namespace AAI_Final_Assignment_WinForms.World
         public int Width { get; set; }
         public int Height { get; set; }
 
-        private int a, b;
         // game world class
         // the game world class contains all the data and objects pertinent to the environment like: walls, obstacles, agents etc...
 
@@ -36,16 +36,14 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public void Render(Graphics g)
         {
-            a += 10;
-            b += 10;
-            //entities.ForEach(e => e.Render(g));
-            g.FillEllipse(Brushes.Yellow, new Rectangle(a, b, 20, 20));
-            //Target.Render(g);
+            entities.ForEach(e => e.Render(g));
+            Witch.Render(g);
         }
 
         private void Populate()
         {
-            // nee
+            Witch = new Witch(new Vector2D(10, 10), this, 5);
+            Witch.WColor = Color.BlueViolet;
         }
     }
 }
