@@ -12,9 +12,8 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 {
     public class SteeringBehaviour 
     {
-        public bool Seek, Flee, ObstacleAvoidance;
+        public bool Seek, Flee, Arrive, ObstacleAvoidance;
         private MovingEntity ME { get; set; }
-
         public Vector2D Calculate() 
         {
             if (Seek)
@@ -25,6 +24,11 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             if (Flee)
             {
                 return CalculateFlee();
+            }
+
+            if (Arrive)
+            {
+                return CalculateArrive();
             }
 
             if (ObstacleAvoidance)
@@ -41,15 +45,21 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
         public Vector2D CalculateSeek() 
         {
+            double MaxCloseDistance = 10.0;
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
+            if (mePos.Distance(targetPos) < MaxCloseDistance)
+            {
+                return new Vector2D(0, 0);
+            }
 
             Vector2D desiredVelocity = targetPos.Sub(mePos).Normalize().Multiply(ME.MaxSpeed);
 
             return desiredVelocity.Sub(ME.Velocity.Clone());
         }
 
-        public Vector2D CalculateFlee() {
+        public Vector2D CalculateFlee() 
+        {
             double PanicDistanceSq = 100.0;
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
@@ -62,6 +72,42 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             Vector2D desiredVelocity = mePos.Sub(targetPos).Normalize().Multiply(ME.MaxSpeed);
 
             return desiredVelocity.Sub(ME.Velocity.Clone());
+        }
+
+        public Vector2D CalculateArrive()
+        {
+            const double decelerationTweaker = 0.8;
+            //1 = fast, 2 = normal, 3 = slow
+            const double deceleration = 2;
+            
+            Vector2D mePos = ME.Pos.Clone();
+            Vector2D targetPos = ME.World.Witch.Pos.Clone();
+            //Vector2D toTarget = ME.World.Witch.Pos.Sub(ME.Pos);
+            Vector2D toTarget = targetPos.Sub(mePos);
+
+            double dist = toTarget.Length();
+
+            if (dist > 0) {
+                double speed = dist / (deceleration * decelerationTweaker);
+                speed = Math.Min(speed, ME.MaxSpeed);
+                Vector2D desiredVelocity = toTarget.Multiply(speed / dist);
+
+                return (desiredVelocity.Sub(ME.Velocity));
+            }
+
+            return new Vector2D(0, 0);
+
+/*            Vector2D mePos = ME.Pos.Clone();
+            Vector2D targetPos = ME.World.Witch.Pos.Clone();
+            if (mePos.Distance(targetPos) > 0)
+            {
+                double speed = mePos.Distance(targetPos) / (deceleration * decelerationTweaker);
+                speed = Math.Min(speed, ME.MaxSpeed);
+
+                Vector2D desiredVelocity = targetPos.Sub(mePos).Multiply(speed / (mePos.Distance(targetPos)));
+                return desiredVelocity.Sub(ME.Velocity);
+            }
+            return new Vector2D(0, 0);*/
         }
 
         public Vector2D CalculateObstacleAvoidance()
