@@ -17,7 +17,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             Velocity = new Vector2D(0, 0);
             Scale = scale;
             Color = Color.DarkOrchid;
-            SteeringBehaviour.Seek = true;
+            SteeringBehaviour.Arrive = true;
         }
 
         public override void Render(Graphics g)
