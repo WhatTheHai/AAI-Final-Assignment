@@ -8,15 +8,14 @@ using AAI_Final_Assignment_WinForms.World;
 
 namespace AAI_Final_Assignment_WinForms.Entities
 {
-    public class Obstacle : ObstacleEntity
+    public  class ObstacleEntity : BaseGameEntity 
     {
-        public Obstacle(Vector2D pos, GameWorld world) : base(pos, world)
+        public bool IsTagged { get; set; }
+        public ObstacleEntity(Vector2D pos, GameWorld world) : base(pos, world)
         {
-        }
 
-        public override void Render(Graphics g)
-        {
-            g.FillEllipse(Brushes.Black, new Rectangle((int)Pos.X, (int)Pos.Y, 50, 50));
         }
+   
+
     }
 }

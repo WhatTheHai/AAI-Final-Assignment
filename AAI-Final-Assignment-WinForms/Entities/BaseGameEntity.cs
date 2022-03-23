@@ -12,7 +12,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
         // world that contains the entity
         public GameWorld World { get; set; }
         // radius where entity checks for obstacles
-        public Vector2D BoundingRadius { get; set; }
+        public double BoundingRadius { get; set; }
 
 
         // todo: not sure if necessary :

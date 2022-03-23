@@ -10,12 +10,12 @@ using AAI_Final_Assignment_WinForms.util;
 
 namespace AAI_Final_Assignment_WinForms.Behaviour
 {
-    public class SteeringBehaviour 
+    public class SteeringBehaviour
     {
         public bool Seek, Flee, ObstacleAvoidance;
         private MovingEntity ME { get; set; }
 
-        public Vector2D Calculate() 
+        public Vector2D Calculate()
         {
             if (Seek)
             {
@@ -35,11 +35,12 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             return new Vector2D(0, 0);
         }
 
-        public SteeringBehaviour(MovingEntity me) {
+        public SteeringBehaviour(MovingEntity me)
+        {
             ME = me;
         }
 
-        public Vector2D CalculateSeek() 
+        public Vector2D CalculateSeek()
         {
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
@@ -49,13 +50,15 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             return desiredVelocity.Sub(ME.Velocity.Clone());
         }
 
-        public Vector2D CalculateFlee() {
+        public Vector2D CalculateFlee()
+        {
             double PanicDistanceSq = 100.0;
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
 
             //If not in the panic distance, do not flee
-            if (mePos.Distance(targetPos) > PanicDistanceSq) {
+            if (mePos.Distance(targetPos) > PanicDistanceSq)
+            {
                 return new Vector2D(0, 0);
             }
 
@@ -73,10 +76,58 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             // D. got objects that ar e in detection box
             // 
 
-            // list of obstacles maken 
+
+            //  min length of detection box
             double minLength = 2;
+
+            // calculate length of detection box considering velocity 
             double detectionBoxLength = minLength + (ME.Velocity.Length() / ME.MaxSpeed) * minLength;
-           
+
+            // tag obstacles in range of box 
+            ME.TagObstacles(detectionBoxLength);
+
+            // keep track of closest obstacle 
+            Obstacle closestIntersectingObstacle = null;
+            double distanceToClosestObstacle = Double.MaxValue;
+            Vector2D posOfClosestObstacle = null;
+
+            foreach (Obstacle obstacle in ME.World.Obstacles)
+            {
+                if (obstacle.IsTagged)
+                {
+                    Vector2D localPos = Matrix2D.PointToLocalSpace(obstacle.Pos, ME.Heading, ME.Side, ME.Pos).Clone();
+                    if (localPos.X >= 0)
+                    {
+                        double expandRadius = obstacle.BoundingRadius + ME.BoundingRadius;
+                        if (Math.Abs(localPos.Y) < expandRadius)
+                        {
+                            double cX = localPos.X;
+                            double cY = localPos.Y;
+                            double SqrtPart = Math.Sqrt(expandRadius * expandRadius - cY * cY);
+                            double ip = cX - SqrtPart;
+
+                            if (ip < distanceToClosestObstacle)
+                            {
+                                distanceToClosestObstacle = ip;
+                                closestIntersectingObstacle = obstacle;
+                                posOfClosestObstacle = localPos;
+                            }
+                        }
+                    }
+                }
+            }
+
+            Vector2D steeringForce = new Vector2D();
+
+            if (closestIntersectingObstacle != null)
+            {
+                double multiplier = 1.0 + (detectionBoxLength - posOfClosestObstacle.X) / detectionBoxLength;
+                steeringForce.Y = (closestIntersectingObstacle.BoundingRadius - posOfClosestObstacle.Y) * multiplier;
+                double brakingWeight = 0.2;
+
+                steeringForce.X = (closestIntersectingObstacle.BoundingRadius - posOfClosestObstacle.X) * brakingWeight;
+            }
+
 
             return null;
         }

@@ -60,5 +60,26 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 Side = Heading.Perpendicular();
             }
         }
+
+        public void TagObstacles(double boxRadius)
+        {
+            foreach (var obstacle in World.Obstacles)
+            {
+                // first always set tag to false
+                obstacle.IsTagged = false;
+
+                // wat is dit 
+                Vector2D to = obstacle.Pos.Sub(Pos).Clone();
+
+                //  boxradius from vehicle  boundingradius from obstacle 
+                double range = boxRadius + BoundingRadius;
+
+                // ????? 
+                if (to.LengthSquared() < range * range)
+                {
+                    obstacle.IsTagged = true;
+                }
+            }
+        }
     }
 }

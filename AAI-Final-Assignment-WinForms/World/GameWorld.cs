@@ -7,7 +7,7 @@ namespace AAI_Final_Assignment_WinForms.World
     public class GameWorld
     {
         private List<MovingEntity> _movingEntities;
-        private List<BaseGameEntity> _obstacles;
+        public List<ObstacleEntity> Obstacles;
         public Witch Witch { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
@@ -23,7 +23,7 @@ namespace AAI_Final_Assignment_WinForms.World
         public GameWorld(int w, int h)
         {
             _movingEntities = new List<MovingEntity>();
-            _obstacles = new List<BaseGameEntity>();
+            Obstacles = new List<ObstacleEntity>();
             Width = w;
             Height = h;
 
@@ -42,7 +42,7 @@ namespace AAI_Final_Assignment_WinForms.World
         public void Render(Graphics g)
         {
             _movingEntities.ForEach(e => e.Render(g));
-            _obstacles.ForEach(o => o.Render(g));
+            Obstacles.ForEach(o => o.Render(g));
             Witch.Render(g);
         }
 
@@ -54,8 +54,8 @@ namespace AAI_Final_Assignment_WinForms.World
                 _movingEntities.Add(t);
             }
 
-            Obstacle o = new Obstacle(new Vector2D(100,100), this);
-            _obstacles.Add(o);
+            Obstacle o = new Obstacle(new Vector2D(100, 100), this);
+            Obstacles.Add(o);
         }
     }
 }

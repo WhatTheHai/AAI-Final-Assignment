@@ -61,6 +61,13 @@ namespace AAI_Final_Assignment_WinForms.util
             return this;
         }
 
+        public Double Dot(Vector2D v2)
+        {
+            this.X *= v2.X;
+            this.Y *= v2.Y;
+            return X + Y;
+        }
+
         public Vector2D Normalize()
         {
             double currentLength = Length();
