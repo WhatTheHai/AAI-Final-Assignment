@@ -78,7 +78,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         {
             const double decelerationTweaker = 0.8;
             //1 = fast, 2 = normal, 3 = slow
-            const double deceleration = 3;
+            const double deceleration = 1;
             
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
@@ -86,7 +86,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
             double dist = toTarget.Length();
 
-            if (dist > 0.0000001) {
+            if (dist > 0.0001) {
                 double speed = dist / (deceleration * decelerationTweaker);
                 speed = Math.Min(speed, ME.MaxSpeed);
                 Vector2D desiredVelocity = toTarget.Multiply(speed / dist);
@@ -95,18 +95,6 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             }
 
             return new Vector2D(0, 0);
-
-/*            Vector2D mePos = ME.Pos.Clone();
-            Vector2D targetPos = ME.World.Witch.Pos.Clone();
-            if (mePos.Distance(targetPos) > 0)
-            {
-                double speed = mePos.Distance(targetPos) / (deceleration * decelerationTweaker);
-                speed = Math.Min(speed, ME.MaxSpeed);
-
-                Vector2D desiredVelocity = targetPos.Sub(mePos).Multiply(speed / (mePos.Distance(targetPos)));
-                return desiredVelocity.Sub(ME.Velocity);
-            }
-            return new Vector2D(0, 0);*/
         }
 
         public Vector2D CalculateObstacleAvoidance()

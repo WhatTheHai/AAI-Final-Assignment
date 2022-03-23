@@ -31,7 +31,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
         protected MovingEntity(Vector2D pos, GameWorld world) : base(pos, world)
         {
-            Mass = 10;
+            Mass = 20;
             MaxSpeed = 10;
             Velocity = new Vector2D();
             Heading = new Vector2D();
