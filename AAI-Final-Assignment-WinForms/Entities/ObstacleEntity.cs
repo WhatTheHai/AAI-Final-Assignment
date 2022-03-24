@@ -10,7 +10,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
 {
     public  class ObstacleEntity : BaseGameEntity 
     {
-        public bool IsTagged { get; set; }
+       // public bool IsTagged { get; set; }
         public ObstacleEntity(Vector2D pos, GameWorld world) : base(pos, world)
         {
 

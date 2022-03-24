@@ -34,7 +34,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
             if (ObstacleAvoidance)
             {
-                return new Vector2D(0, 0);
+                return CalculateObstacleAvoidance();
             }
 
             return new Vector2D(0, 0);
@@ -100,69 +100,108 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             return new Vector2D(0, 0);
         }
 
+        // public Vector2D CalculateObstacleAvoidance()
+        // {
+        //     // A. only consider obstacle in range of detection box 
+        //     // loop to all objects to tag them if they are in range
+        //     // B. transforms all tagged obstacle to vehicle local space
+        //     // C. check obstacles for overlap of detection box 
+        //     // D. got objects that ar e in detection box
+        //     // 
+        //
+        //
+        //     //  min length of detection box
+        //     double minLength = 2;
+        //
+        //     // calculate length of detection box considering velocity 
+        //     double detectionBoxLength = minLength + (ME.Velocity.Length() / ME.MaxSpeed) * minLength;
+        //
+        //     // tag obstacles in range of box 
+        //     ME.TagObstacles(detectionBoxLength);
+        //
+        //     // keep track of closest obstacle 
+        //     Obstacle closestIntersectingObstacle = null;
+        //     double distanceToClosestObstacle = Double.MaxValue;
+        //     Vector2D posOfClosestObstacle = null;
+        //
+        //     foreach (Obstacle obstacle in ME.World.Obstacles)
+        //     {
+        //         if (obstacle.IsTagged)
+        //         {
+        //             Vector2D localPos = Matrix2D.PointToLocalSpace(obstacle.Pos, ME.Heading, ME.Side, ME.Pos).Clone();
+        //             if (localPos.X >= 0)
+        //             {
+        //                 double expandRadius = obstacle.BoundingRadius + ME.BoundingRadius;
+        //                 if (Math.Abs(localPos.Y) < expandRadius)
+        //                 {
+        //                     double cX = localPos.X;
+        //                     double cY = localPos.Y;
+        //                     double SqrtPart = Math.Sqrt(expandRadius * expandRadius - cY * cY);
+        //                     double ip = cX - SqrtPart;
+        //
+        //                     if (ip < distanceToClosestObstacle)
+        //                     {
+        //                         distanceToClosestObstacle = ip;
+        //                         closestIntersectingObstacle = obstacle;
+        //                         posOfClosestObstacle = localPos;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        //
+        //     Vector2D steeringForce = new Vector2D();
+        //
+        //     if (closestIntersectingObstacle != null)
+        //     {
+        //         double multiplier = 1.0 + (detectionBoxLength - posOfClosestObstacle.X) / detectionBoxLength;
+        //         steeringForce.Y = (closestIntersectingObstacle.BoundingRadius - posOfClosestObstacle.Y) * multiplier;
+        //         double brakingWeight = 0.2;
+        //
+        //         steeringForce.X = (closestIntersectingObstacle.BoundingRadius - posOfClosestObstacle.X) * brakingWeight;
+        //     }
+        //
+        //
+        //     return null;
+        // }
+
         public Vector2D CalculateObstacleAvoidance()
         {
-            // A. only consider obstacle in range of detection box 
-            // loop to all objects to tag them if they are in range
-            // B. transforms all tagged obstacle to vehicle local space
-            // C. check obstacles for overlap of detection box 
-            // D. got objects that ar e in detection box
-            // 
+            double maxAhead = 5;
+            Vector2D aheadVector2D = ME.Pos.Add(ME.Velocity.Normalize()).Multiply(maxAhead).Clone();
+            Vector2D aheadVector2DHalf = aheadVector2D.Multiply(0.5).Clone();
 
+            ObstacleEntity closestObstacle = null;
+            Vector2D avoidance = new Vector2D();
 
-            //  min length of detection box
-            double minLength = 2;
-
-            // calculate length of detection box considering velocity 
-            double detectionBoxLength = minLength + (ME.Velocity.Length() / ME.MaxSpeed) * minLength;
-
-            // tag obstacles in range of box 
-            ME.TagObstacles(detectionBoxLength);
-
-            // keep track of closest obstacle 
-            Obstacle closestIntersectingObstacle = null;
-            double distanceToClosestObstacle = Double.MaxValue;
-            Vector2D posOfClosestObstacle = null;
-
-            foreach (Obstacle obstacle in ME.World.Obstacles)
+            // todo fix obstacles/circle 
+            foreach (Circle obstacle in ME.World.Obstacles)
             {
-                if (obstacle.IsTagged)
-                {
-                    Vector2D localPos = Matrix2D.PointToLocalSpace(obstacle.Pos, ME.Heading, ME.Side, ME.Pos).Clone();
-                    if (localPos.X >= 0)
-                    {
-                        double expandRadius = obstacle.BoundingRadius + ME.BoundingRadius;
-                        if (Math.Abs(localPos.Y) < expandRadius)
-                        {
-                            double cX = localPos.X;
-                            double cY = localPos.Y;
-                            double SqrtPart = Math.Sqrt(expandRadius * expandRadius - cY * cY);
-                            double ip = cX - SqrtPart;
-
-                            if (ip < distanceToClosestObstacle)
-                            {
-                                distanceToClosestObstacle = ip;
-                                closestIntersectingObstacle = obstacle;
-                                posOfClosestObstacle = localPos;
-                            }
-                        }
-                    }
-                }
+                bool collision = LineInCircle(aheadVector2D, aheadVector2DHalf, obstacle);
+                // todo possible null 
+                if (collision && closestObstacle == null ||
+                    ME.Pos.Distance(obstacle.Pos) < ME.Pos.Distance(closestObstacle.Pos)) closestObstacle = obstacle;
             }
 
-            Vector2D steeringForce = new Vector2D();
-
-            if (closestIntersectingObstacle != null)
+            if (closestObstacle != null)
             {
-                double multiplier = 1.0 + (detectionBoxLength - posOfClosestObstacle.X) / detectionBoxLength;
-                steeringForce.Y = (closestIntersectingObstacle.BoundingRadius - posOfClosestObstacle.Y) * multiplier;
-                double brakingWeight = 0.2;
-
-                steeringForce.X = (closestIntersectingObstacle.BoundingRadius - posOfClosestObstacle.X) * brakingWeight;
+              return avoidance.Sub(closestObstacle.Pos).Clone();
+            }
+            else
+            {
+                return new Vector2D();
             }
 
 
             return null;
+        }
+
+        public bool LineInCircle(Vector2D ahead, Vector2D aheadHalf, Circle circle)
+        {
+            double distanceAhead = ahead.Distance(circle.Pos);
+            double distanceAheadHalf = aheadHalf.Distance(circle.Pos);
+
+            return distanceAhead <= circle.Radius || distanceAheadHalf <= circle.Radius;
         }
     }
 }

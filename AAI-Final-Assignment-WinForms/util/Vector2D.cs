@@ -61,6 +61,7 @@ namespace AAI_Final_Assignment_WinForms.util
             return this;
         }
 
+        // todo: remove? 
         public Double Dot(Vector2D v2)
         {
             this.X *= v2.X;

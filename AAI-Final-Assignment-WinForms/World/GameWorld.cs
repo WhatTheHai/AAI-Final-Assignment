@@ -54,7 +54,7 @@ namespace AAI_Final_Assignment_WinForms.World
                 _movingEntities.Add(t);
             }
 
-            Obstacle o = new Obstacle(new Vector2D(100, 100), this);
+            Circle o = new Circle(new Vector2D(100, 100), this);
             Obstacles.Add(o);
         }
     }
