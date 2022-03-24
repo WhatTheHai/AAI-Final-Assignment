@@ -13,36 +13,61 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
     public class SteeringBehaviour
     {
         public bool Seek, Flee, Arrive, ObstacleAvoidance;
+        Vector2D totalForce;
+        Vector2D currentForce;
         private MovingEntity ME { get; set; }
 
-        public Vector2D Calculate()
-        {
+        public Vector2D Calculate() {
+            totalForce = new Vector2D();
             if (Seek)
             {
-                return CalculateSeek();
+                currentForce = CalculateSeek();
+                if (!AccumulateForce(totalForce, currentForce)) return totalForce;
             }
 
             if (Flee)
             {
-                return CalculateFlee();
+                currentForce = CalculateFlee();
+                if (!AccumulateForce(totalForce, currentForce)) return totalForce;
             }
 
             if (Arrive)
             {
-                return CalculateArrive();
+                currentForce = CalculateArrive();
+                if (!AccumulateForce(totalForce, currentForce)) return totalForce;
             }
-
             if (ObstacleAvoidance)
             {
                 return new Vector2D(0, 0);
             }
 
-            return new Vector2D(0, 0);
+            return currentForce;
+
+            //return new Vector2D(0, 0);
         }
 
         public SteeringBehaviour(MovingEntity me)
         {
             ME = me;
+        }
+
+        public bool AccumulateForce(Vector2D runningTotal, Vector2D forceToAdd) {
+            double magnitudeSoFar = runningTotal.Length();
+            double magnitudeRemaining = ME.MaxForce - magnitudeSoFar;
+            if (magnitudeRemaining < 0.0) {
+                return false;
+            }
+            double magnitudeToAdd = forceToAdd.Length();
+
+            if (magnitudeToAdd < magnitudeRemaining) 
+            {
+                runningTotal.Add(forceToAdd);
+            }
+            else 
+            {
+                runningTotal.Add(forceToAdd.Normalize().Multiply(magnitudeRemaining));
+            }
+            return true;
         }
 
         public Vector2D CalculateSeek()

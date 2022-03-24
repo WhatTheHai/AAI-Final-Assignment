@@ -18,6 +18,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             Scale = scale;
             Color = Color.DarkOrchid;
             SteeringBehaviour.Arrive = true;
+            SteeringBehaviour.Seek = true;
         }
 
         public override void Render(Graphics g)
