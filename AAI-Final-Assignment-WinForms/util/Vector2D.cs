@@ -21,7 +21,7 @@ namespace AAI_Final_Assignment_WinForms.util
 
         public double Length()
         {
-            return Math.Sqrt(LengthSquared());
+            return Math.Sqrt((X * X) + (Y * Y));
         }
 
         public double LengthSquared()
