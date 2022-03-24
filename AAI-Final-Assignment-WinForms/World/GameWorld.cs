@@ -48,11 +48,14 @@ namespace AAI_Final_Assignment_WinForms.World
 
         private void Populate()
         {
-            for (int i = 0; i < 10; i++)
-            {
-                TestEnemy t = new TestEnemy(new Vector2D(10, i * 10), this, 5);
-                _movingEntities.Add(t);
-            }
+            // for (int i = 0; i < 10; i++)
+            // {
+            //     TestEnemy t = new TestEnemy(new Vector2D(10, i * 10), this, 5);
+            //     _movingEntities.Add(t);
+            // }
+
+            TestEnemy t = new TestEnemy(new Vector2D(10, 10), this, 5);
+            _movingEntities.Add(t);
 
             Circle o = new Circle(new Vector2D(100, 100), this);
             Obstacles.Add(o);

@@ -38,7 +38,8 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             }
             if (ObstacleAvoidance)
             {
-                return CalculateObstacleAvoidance();
+                currentForce = CalculateObstacleAvoidance();
+                if (!AccumulateForce(totalForce, currentForce)) return totalForce;
             }
 
             return currentForce;
@@ -192,7 +193,8 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
         public Vector2D CalculateObstacleAvoidance()
         {
-            double maxAhead = 5;
+            if (ME.Velocity.X == 0 && ME.Velocity.Y == 0) return new Vector2D();
+            double maxAhead = 2;
             Vector2D aheadVector2D = ME.Pos.Add(ME.Velocity.Normalize()).Multiply(maxAhead).Clone();
             Vector2D aheadVector2DHalf = aheadVector2D.Multiply(0.5).Clone();
 
@@ -203,22 +205,21 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             foreach (Circle obstacle in ME.World.Obstacles)
             {
                 bool collision = LineInCircle(aheadVector2D, aheadVector2DHalf, obstacle);
+
                 // todo possible null 
-                if (collision && closestObstacle == null ||
-                    ME.Pos.Distance(obstacle.Pos) < ME.Pos.Distance(closestObstacle.Pos)) closestObstacle = obstacle;
+                if (collision && (closestObstacle == null ||
+                    ME.Pos.Distance(obstacle.Pos) < ME.Pos.Distance(closestObstacle.Pos))) closestObstacle = obstacle;
             }
 
             if (closestObstacle != null)
             {
-              return avoidance.Sub(closestObstacle.Pos).Clone();
+              return aheadVector2D.Sub(closestObstacle.Pos).Clone();
             }
             else
             {
                 return new Vector2D();
             }
 
-
-            return null;
         }
 
         public bool LineInCircle(Vector2D ahead, Vector2D aheadHalf, Circle circle)
