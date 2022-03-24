@@ -13,17 +13,26 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
     public class SteeringBehaviour
     {
         public bool Seek, Flee, Arrive, ObstacleAvoidance;
-        Vector2D totalForce;
+        public Vector2D totalForce { get; set; }
         Vector2D currentForce;
+        public Vector2D AheadVector2D { get; set; }
         private MovingEntity ME { get; set; }
 
-        public Vector2D Calculate() {
+        public Vector2D Calculate()
+        {
             totalForce = new Vector2D();
+            if (ObstacleAvoidance)
+            {
+                currentForce = CalculateObstacleAvoidance();
+                if (!AccumulateForce(totalForce, currentForce)) return totalForce;
+            }
+
             if (Flee)
             {
                 currentForce = CalculateFlee();
                 if (!AccumulateForce(totalForce, currentForce)) return totalForce;
             }
+
             if (Seek)
             {
                 currentForce = CalculateSeek();
@@ -35,11 +44,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
                 currentForce = CalculateArrive();
                 if (!AccumulateForce(totalForce, currentForce)) return totalForce;
             }
-            if (ObstacleAvoidance)
-            {
-                currentForce = CalculateObstacleAvoidance();
-                if (!AccumulateForce(totalForce, currentForce)) return totalForce;
-            }
+
 
             return totalForce;
         }
@@ -49,22 +54,26 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             ME = me;
         }
 
-        public bool AccumulateForce(Vector2D runningTotal, Vector2D forceToAdd) {
+        public bool AccumulateForce(Vector2D runningTotal, Vector2D forceToAdd)
+        {
             double magnitudeSoFar = runningTotal.Length();
             double magnitudeRemaining = ME.MaxForce - magnitudeSoFar;
-            if (magnitudeRemaining <= 0.0) {
+            if (magnitudeRemaining <= 0.0)
+            {
                 return false;
             }
+
             double magnitudeToAdd = forceToAdd.Length();
 
-            if (magnitudeToAdd < magnitudeRemaining) 
+            if (magnitudeToAdd < magnitudeRemaining)
             {
                 totalForce.Add(forceToAdd);
             }
-            else 
+            else
             {
                 totalForce.Add(forceToAdd.Normalize().Multiply(magnitudeRemaining));
             }
+
             return true;
         }
 
@@ -105,14 +114,15 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             const double decelerationTweaker = 0.8;
             //1 = fast, 2 = normal, 3 = slow
             const double deceleration = 1;
-            
+
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
             Vector2D toTarget = targetPos.Sub(mePos);
 
             double dist = toTarget.Length();
 
-            if (dist > 0.0001) {
+            if (dist > 0.0001)
+            {
                 double speed = dist / (deceleration * decelerationTweaker);
                 speed = Math.Min(speed, ME.MaxSpeed);
                 Vector2D desiredVelocity = toTarget.Multiply(speed / dist);
@@ -191,40 +201,46 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public Vector2D CalculateObstacleAvoidance()
         {
             if (ME.Velocity.X == 0 && ME.Velocity.Y == 0) return new Vector2D();
-            double maxAhead = 2;
-            Vector2D aheadVector2D = ME.Pos.Add(ME.Velocity.Normalize()).Multiply(maxAhead).Clone();
-            Vector2D aheadVector2DHalf = aheadVector2D.Multiply(0.5).Clone();
 
-            ObstacleEntity closestObstacle = null;
+            AheadVector2D = ME.Pos.Add(ME.Heading);
+            Vector2D aheadVector2DHalf = AheadVector2D.Clone().Multiply(0.5);
+
+            // Vector2D aheadVector2D = ME.Pos.Add(ME.Velocity.Normalize()).Multiply(maxAhead).Clone();
+            //Vector2D aheadVector2DHalf = aheadVector2D.Multiply(0.5).Clone();
+
+            Circle closestObstacle = null;
             Vector2D avoidance = new Vector2D();
 
             // todo fix obstacles/circle 
             foreach (Circle obstacle in ME.World.Obstacles)
             {
-                bool collision = LineInCircle(aheadVector2D, aheadVector2DHalf, obstacle);
+                bool collision = LineInCircle(AheadVector2D, aheadVector2DHalf, obstacle);
 
                 // todo possible null 
                 if (collision && (closestObstacle == null ||
-                    ME.Pos.Distance(obstacle.Pos) < ME.Pos.Distance(closestObstacle.Pos))) closestObstacle = obstacle;
+                                  ME.Pos.Distance(obstacle.Center) < ME.Pos.Distance(closestObstacle.Center)))
+                    closestObstacle = obstacle;
             }
 
             if (closestObstacle != null)
             {
-              return aheadVector2D.Sub(closestObstacle.Pos).Clone();
+                AheadVector2D = AheadVector2D.Clone().Sub(closestObstacle.Pos).Clone();
+                return AheadVector2D;
             }
             else
             {
                 return new Vector2D();
             }
-
         }
 
         public bool LineInCircle(Vector2D ahead, Vector2D aheadHalf, Circle circle)
         {
-            double distanceAhead = ahead.Distance(circle.Pos);
-            double distanceAheadHalf = aheadHalf.Distance(circle.Pos);
+            double distanceAhead = ahead.Distance(circle.Center);
+            double distanceAheadHalf = aheadHalf.Distance(circle.Center);
+            double distanceME = ME.Pos.Distance(circle.Center);
 
-            return distanceAhead <= circle.Radius || distanceAheadHalf <= circle.Radius;
+            return distanceAhead <= (circle.Radius / 2) || distanceAheadHalf <= (circle.Radius / 2) ||
+                   distanceME <= (circle.Radius / 2);
         }
     }
 }

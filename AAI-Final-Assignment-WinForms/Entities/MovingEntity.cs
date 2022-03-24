@@ -31,9 +31,9 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
         protected MovingEntity(Vector2D pos, GameWorld world) : base(pos, world)
         {
-            Mass = 20;
-            MaxSpeed = 10;
-            MaxForce = 100;
+            Mass = 10;
+            MaxSpeed = 50;
+            MaxForce = 75;
             Velocity = new Vector2D();
             Heading = new Vector2D();
             SteeringBehaviour = new SteeringBehaviour(this);
@@ -55,10 +55,10 @@ namespace AAI_Final_Assignment_WinForms.Entities
             Pos.Add(Velocity.Multiply(timeElapsed).Clone());
 
             // update heading and side if moving
-            if (Velocity.LengthSquared() > 0.000000001)
+            if (Velocity.LengthSquared() > 0.000000000001)
             {
                 Heading = Velocity.Normalize().Clone();
-                Side = Heading.Perpendicular();
+                Side = Heading.Perpendicular().Clone();
             }
         }
 

@@ -6,7 +6,7 @@ namespace AAI_Final_Assignment_WinForms.World
 {
     public class GameWorld
     {
-        private List<MovingEntity> _movingEntities;
+        public List<MovingEntity> _movingEntities;
         public List<ObstacleEntity> Obstacles;
         public Witch Witch { get; set; }
         public int Width { get; set; }
@@ -57,8 +57,11 @@ namespace AAI_Final_Assignment_WinForms.World
             TestEnemy t = new TestEnemy(new Vector2D(10, 10), this, 5);
             _movingEntities.Add(t);
 
-            Circle o = new Circle(new Vector2D(100, 100), this);
+            Circle o = new Circle(new Vector2D(200, 200), this);
             Obstacles.Add(o);
+
+            Circle o2 = new Circle(new Vector2D(300, 250), this);
+            Obstacles.Add(o2);
         }
     }
 }

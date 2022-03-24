@@ -26,6 +26,7 @@ namespace AAI_Final_Assignment_WinForms
         {
             _world.Update(timeDelta);
             _mainPanel.Invalidate();
+            label1.Invalidate();
         }
 
         private void MainPanel_Paint(object sender, PaintEventArgs e)
@@ -36,6 +37,11 @@ namespace AAI_Final_Assignment_WinForms
         private void _mainPanel_MouseClick(object sender, MouseEventArgs e)
         {
             _world.Witch.Pos = new Vector2D(e.X, e.Y);
+        }
+
+        private void label1_Paint(object sender, PaintEventArgs e)
+        {
+          label1.Text = _world._movingEntities[0].Heading.ToString();
         }
     }
 }
