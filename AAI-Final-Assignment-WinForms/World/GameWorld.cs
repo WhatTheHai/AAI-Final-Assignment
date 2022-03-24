@@ -50,7 +50,7 @@ namespace AAI_Final_Assignment_WinForms.World
         {
             for (int i = 0; i < 10; i++)
             {
-                TestEnemy t = new TestEnemy(new Vector2D(10, i * 10), this, 5);
+                TestEnemy t = new TestEnemy(new Vector2D(500, i * 10), this, 5);
                 _movingEntities.Add(t);
             }
 

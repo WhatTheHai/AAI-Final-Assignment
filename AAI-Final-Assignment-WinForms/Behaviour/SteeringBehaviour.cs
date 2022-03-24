@@ -19,15 +19,14 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
         public Vector2D Calculate() {
             totalForce = new Vector2D();
-            if (Seek)
-            {
-                currentForce = CalculateSeek();
-                if (!AccumulateForce(totalForce, currentForce)) return totalForce;
-            }
-
             if (Flee)
             {
                 currentForce = CalculateFlee();
+                if (!AccumulateForce(totalForce, currentForce)) return totalForce;
+            }
+            if (Seek)
+            {
+                currentForce = CalculateSeek();
                 if (!AccumulateForce(totalForce, currentForce)) return totalForce;
             }
 
@@ -41,9 +40,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
                 return new Vector2D(0, 0);
             }
 
-            return currentForce;
-
-            //return new Vector2D(0, 0);
+            return totalForce;
         }
 
         public SteeringBehaviour(MovingEntity me)
@@ -54,18 +51,18 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public bool AccumulateForce(Vector2D runningTotal, Vector2D forceToAdd) {
             double magnitudeSoFar = runningTotal.Length();
             double magnitudeRemaining = ME.MaxForce - magnitudeSoFar;
-            if (magnitudeRemaining < 0.0) {
+            if (magnitudeRemaining <= 0.0) {
                 return false;
             }
             double magnitudeToAdd = forceToAdd.Length();
 
             if (magnitudeToAdd < magnitudeRemaining) 
             {
-                runningTotal.Add(forceToAdd);
+                totalForce.Add(forceToAdd);
             }
             else 
             {
-                runningTotal.Add(forceToAdd.Normalize().Multiply(magnitudeRemaining));
+                totalForce.Add(forceToAdd.Normalize().Multiply(magnitudeRemaining));
             }
             return true;
         }
