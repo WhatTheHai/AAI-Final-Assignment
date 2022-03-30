@@ -15,7 +15,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
         public Circle(Vector2D pos, GameWorld world) : base(pos, world)
         {
-            Radius = 50;
+            Radius = 40;
             Center = new Vector2D(Pos.X + (Radius / 2), Pos.Y + (Radius / 2));
         }
 
