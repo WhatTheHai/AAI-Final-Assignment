@@ -32,7 +32,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                 List<Vector2D> edgesList = new List<Vector2D>();
 
                 Vector2D pos = vertex.pos;
-                Vector2D rightUp = new Vector2D(pos.X - vectorDistance, pos.Y - vectorDistance);
+                Vector2D rightUp = new Vector2D(pos.X + vectorDistance, pos.Y - vectorDistance);
                 Vector2D right = new Vector2D(pos.X + vectorDistance, pos.Y);
                 Vector2D rightDown = new Vector2D(pos.X + vectorDistance, pos.Y + vectorDistance);
                 Vector2D down = new Vector2D(pos.X, pos.Y + vectorDistance);
