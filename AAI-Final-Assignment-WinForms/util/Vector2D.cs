@@ -4,7 +4,7 @@ using System.Runtime.Intrinsics;
 namespace AAI_Final_Assignment_WinForms.util
 {
 
-    public class Vector2D
+    public class Vector2D : IEquatable<Vector2D>
     {
         public double X { get; set; }
         public double Y { get; set; }
@@ -107,6 +107,23 @@ namespace AAI_Final_Assignment_WinForms.util
             double yDistance = v1.Y - this.Y;
 
             return Math.Sqrt((xDistance * xDistance) + (yDistance * yDistance));
+        }
+
+        public bool Equals(Vector2D? other) {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return X.Equals(other.X) && Y.Equals(other.Y);
+        }
+
+        public override bool Equals(object? obj) {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((Vector2D)obj);
+        }
+
+        public override int GetHashCode() {
+            return HashCode.Combine(X, Y);
         }
     }
 

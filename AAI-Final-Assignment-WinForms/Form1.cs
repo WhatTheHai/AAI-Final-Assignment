@@ -19,7 +19,6 @@ namespace AAI_Final_Assignment_WinForms
             _timer.Elapsed += Timer_Elapsed;
             _timer.Interval = 20;
             _timer.Enabled = true;
-            
         }
 
         private void Timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -42,6 +41,14 @@ namespace AAI_Final_Assignment_WinForms
         private void label1_Paint(object sender, PaintEventArgs e)
         {
           //label1.Text = _world._movingEntities[0].SteeringBehaviour.DistanceAhead.ToString();
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.G)
+            {
+                _world.GraphEnabled = !_world.GraphEnabled;
+            }
         }
     }
 }

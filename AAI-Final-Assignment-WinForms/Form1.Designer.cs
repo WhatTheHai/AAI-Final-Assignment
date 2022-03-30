@@ -61,6 +61,7 @@
             this.Controls.Add(this._mainPanel);
             this.Name = "Form1";
             this.Text = "Form1";
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this._mainPanel.ResumeLayout(false);
             this._mainPanel.PerformLayout();
             this.ResumeLayout(false);

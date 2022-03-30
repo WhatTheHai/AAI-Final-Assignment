@@ -1,35 +1,61 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using AAI_Final_Assignment_WinForms.util;
+using AAI_Final_Assignment_WinForms.World;
 
 namespace AAI_Final_Assignment_WinForms.Graph {
     public partial class Graph : IGraph {
         public static readonly double INFINITY = System.Double.MaxValue;
 
-        public Dictionary<string, Vertex> vertexMap;
+        public Dictionary<Vector2D, Vertex> vertexMap;
+        public const int vectorDistance = 32;
 
+        public Graph(GameWorld gameWorld) {
+            vertexMap = new Dictionary<Vector2D, Vertex>();
 
-        //----------------------------------------------------------------------
-        // Constructor
-        //----------------------------------------------------------------------
+            // Create initial vertexes on the map
+            for(int y = 0; y <= gameWorld.Height; y += vectorDistance) {
+                for (int x = 0; x <= gameWorld.Width; x += vectorDistance) {
+                    GetVertex(new Vector2D(x, y));
+                }
+            }
 
-        public Graph() {
-            vertexMap = new Dictionary<string, Vertex>();
+            //TODO: Remove vertexes depending on objects
+
+            //Generate edges
+            foreach (Vertex vertex in vertexMap.Values) {
+                List<Vector2D> edgesList = new List<Vector2D>();
+
+                Vector2D pos = vertex.pos;
+                Vector2D rightUp = new Vector2D(pos.X + vectorDistance, pos.Y - vectorDistance);
+                Vector2D right = new Vector2D(pos.X + vectorDistance, pos.Y);
+                Vector2D rightDown = new Vector2D(pos.X + vectorDistance, pos.Y + vectorDistance);
+                Vector2D down = new Vector2D(pos.X, pos.Y + vectorDistance);
+
+                //Diagonals have double the cost
+                if(vertexMap.ContainsKey(rightUp))
+                    AddEdge(pos, rightUp, 2);
+                if (vertexMap.ContainsKey(right))
+                    AddEdge(pos, right, 1);
+                if (vertexMap.ContainsKey(rightDown))
+                    AddEdge(pos, rightDown, 2);
+                if (vertexMap.ContainsKey(down))
+                    AddEdge(pos, down, 1);
+            } 
         }
-
-        //----------------------------------------------------------------------
-        // Interface methods that have to be implemented for exam
-        //----------------------------------------------------------------------
 
         /// <summary>
         ///    Adds a vertex to the graph. If a vertex with the given name
         ///    already exists, no action is performed.
         /// </summary>
         /// <param name="name">The name of the new vertex</param>
-        public void AddVertex(string name) {
-            this.CreateOrReturnVertex(name);
+        public void AddVertex(Vector2D pos) {
+            this.CreateOrReturnVertex(pos);
         }
 
 
@@ -39,32 +65,33 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         /// </summary>
         /// <param name="name">The name of the vertex</param>
         /// <returns>The vertex withe the given name</returns>
-        public Vertex GetVertex(string name) {
-            return CreateOrReturnVertex(name);
+        public Vertex GetVertex(Vector2D pos) {
+            return CreateOrReturnVertex(pos);
         }
 
-        private Vertex CreateOrReturnVertex(string name) {
-            if (vertexMap.ContainsKey(name))
-                return vertexMap[name];
+        private Vertex CreateOrReturnVertex(Vector2D pos) {
+            Vertex vertex;
+            if (vertexMap.ContainsKey(pos))
+                return vertexMap[pos];
 
-            Vertex createVertex = new Vertex(name);
-            vertexMap.Add(name, createVertex);
-            return createVertex;
+            vertex = new Vertex(pos);
+            vertexMap.Add(pos, vertex);
+            return vertex;
         }
-
 
         /// <summary>
         ///    Creates an edge between two vertices. Vertices that are non existing
         ///    will be created before adding the edge.
         ///    There is no check on multiple edges!
         /// </summary>
-        /// <param name="source">The name of the source vertex</param>
-        /// <param name="dest">The name of the destination vertex</param>
+        /// <param name="source">The vector of the source vertex</param>
+        /// <param name="dest">The vector of the destination vertex</param>
         /// <param name="cost">cost of the edge</param>
-        public void AddEdge(string source, string dest, double cost = 1) {
+        public void AddEdge(Vector2D source, Vector2D dest, double cost = 1) {
             Vertex vSource = this.CreateOrReturnVertex(source);
             Vertex vDest = this.CreateOrReturnVertex(dest);
 
+            //Check for duplicates
             vSource.adj.AddFirst(new Edge(vDest, cost));
         }
 
@@ -83,11 +110,11 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         ///    Performs the Breatch-First algorithm for unweighted graphs.
         /// </summary>
         /// <param name="name">The name of the starting vertex</param>
-        public void Unweighted(string name) {
+        public void Unweighted(Vector2D pos) {
             ClearAll();
             Vertex startV;
-            if (vertexMap[name] != null) {
-                startV = vertexMap[name];
+            if (vertexMap[pos] != null) {
+                startV = vertexMap[pos];
             }
             else {
                 throw new SystemException();
@@ -112,11 +139,11 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             }
         }
         
-        public void Dijkstra(string name) {
+        public void Dijkstra(Vector2D pos) {
             ClearAll();
             Vertex startV;
-            if (vertexMap[name] != null) {
-                startV = vertexMap[name];
+            if (vertexMap[pos] != null) {
+                startV = vertexMap[pos];
             }
             else {
                 throw new SystemException();
@@ -155,7 +182,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         /// <returns>The string representation of this Graph instance</returns>
         public override string ToString() {
             string s = "";
-            foreach (string key in vertexMap.Keys.OrderBy(x => x)) {
+            foreach (Vector2D key in vertexMap.Keys.OrderBy(x => x)) {
                 s += vertexMap[key];
             }
 
@@ -163,6 +190,21 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         }
         public bool IsConnected() {
             throw new System.NotImplementedException();
+        }
+
+        public void Render(Graphics g)
+        {
+            Pen p = new Pen(Color.Red, 1);
+            foreach (Vertex vertex in vertexMap.Values) {
+                foreach (Edge edge in vertex.adj) {
+                    g.DrawLine(p, (int)vertex.pos.X, (int)vertex.pos.Y, (int)edge.dest.pos.X, (int)edge.dest.pos.Y);
+                }
+            }
+            //Vertex
+            foreach (Vertex vertex in vertexMap.Values) 
+            {
+                g.DrawEllipse(p, new Rectangle((int)vertex.pos.X-3, (int)vertex.pos.Y-3, 6, 6));
+            }
         }
     }
 }

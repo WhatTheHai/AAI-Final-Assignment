@@ -8,6 +8,8 @@ namespace AAI_Final_Assignment_WinForms.World
     {
         public List<MovingEntity> _movingEntities;
         public List<ObstacleEntity> Obstacles;
+        public Graph.Graph GameGraph;
+        public bool GraphEnabled = true;
         public Witch Witch { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
@@ -29,6 +31,7 @@ namespace AAI_Final_Assignment_WinForms.World
 
             Witch = new Witch(new Vector2D(100, 100), this, 5);
             Populate();
+            GameGraph = new Graph.Graph(this);
         }
 
         public void Update(float timeElapsed)
@@ -41,6 +44,10 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public void Render(Graphics g)
         {
+            if (GraphEnabled)
+            {
+                GameGraph.Render(g);
+            }
             _movingEntities.ForEach(e => e.Render(g));
             Obstacles.ForEach(o => o.Render(g));
             Witch.Render(g);
