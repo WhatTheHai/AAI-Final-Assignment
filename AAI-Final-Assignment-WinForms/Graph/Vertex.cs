@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using AAI_Final_Assignment_WinForms.util;
 
 namespace AAI_Final_Assignment_WinForms.Graph
 {
@@ -13,15 +15,20 @@ namespace AAI_Final_Assignment_WinForms.Graph
         public double distance;
         public Vertex prev;
         public bool known;
-        public Vertex(string name)
+        public Vector2D pos;
+        public Vertex(Vector2D pos)
         {
-            this.name = name;
             this.adj = new LinkedList<Edge>();
+            this.pos = pos;
             this.Reset();
         }
         public string GetName()
         {
             return name;
+        }
+        public Vector2D GetPos()
+        {
+            return pos;
         }
         public LinkedList<Edge> GetAdjacents()
         {
@@ -52,7 +59,7 @@ namespace AAI_Final_Assignment_WinForms.Graph
 
         public override string ToString()
         {
-            string s = name + (distance != Double.MaxValue ? $"({this.distance})" : "") + "[";
+            string s = pos + (distance != Double.MaxValue ? $"({this.distance})" : "") + "[";
             foreach (Edge e in adj.OrderBy(x => x.dest.name))
             {
                 s += $"{e.dest.name}({e.cost})";

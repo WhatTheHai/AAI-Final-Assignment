@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AAI_Final_Assignment_WinForms.util;
 
 namespace AAI_Final_Assignment_WinForms.Graph
 {
     public partial interface IGraph
     {
-        void AddVertex(string name);
-        Vertex GetVertex(string name);
+        void AddVertex(Vector2D pos);
+        Vertex GetVertex(Vector2D pos);
 
-        void AddEdge(string source, string dest, double cost);
+        void AddEdge(Vector2D source, Vector2D dest, double cost);
 
         void ClearAll();
 
-        void Unweighted(string name);
+        void Unweighted(Vector2D pos);
 
-        void Dijkstra(string name);
+        void Dijkstra(Vector2D pos);
         bool IsConnected();
     }
 }
