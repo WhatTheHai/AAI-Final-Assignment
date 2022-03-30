@@ -21,7 +21,9 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
         public override void Render(Graphics g)
         {
-            g.FillEllipse(Brushes.Black, new Rectangle((int)Pos.X, (int)Pos.Y, Radius, Radius));
+            // g.FillEllipse(Brushes.Black, new Rectangle((int)Pos.X, (int)Pos.Y, Radius, Radius));
+            g.DrawEllipse(new Pen(Color.Black, 3), new Rectangle((int)Pos.X, (int)Pos.Y, Radius, Radius));
+            g.FillRectangle(Brushes.Black, new Rectangle((int)Center.X, (int)Center.Y, 1, 1));
         }
     }
 }

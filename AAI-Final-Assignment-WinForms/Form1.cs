@@ -41,7 +41,7 @@ namespace AAI_Final_Assignment_WinForms
 
         private void label1_Paint(object sender, PaintEventArgs e)
         {
-          label1.Text = _world._movingEntities[0].Heading.ToString();
+          //label1.Text = _world._movingEntities[0].SteeringBehaviour.DistanceAhead.ToString();
         }
     }
 }

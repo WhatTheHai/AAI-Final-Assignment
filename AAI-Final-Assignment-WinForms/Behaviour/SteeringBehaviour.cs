@@ -17,6 +17,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         Vector2D currentForce;
         public Vector2D AheadVector2D { get; set; }
         private MovingEntity ME { get; set; }
+        public double DistanceAhead { get; set; }
 
         public Vector2D Calculate()
         {
@@ -52,6 +53,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public SteeringBehaviour(MovingEntity me)
         {
             ME = me;
+            AheadVector2D = new Vector2D();
         }
 
         public bool AccumulateForce(Vector2D runningTotal, Vector2D forceToAdd)
@@ -133,114 +135,55 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             return new Vector2D(0, 0);
         }
 
-        // public Vector2D CalculateObstacleAvoidance()
-        // {
-        //     // A. only consider obstacle in range of detection box 
-        //     // loop to all objects to tag them if they are in range
-        //     // B. transforms all tagged obstacle to vehicle local space
-        //     // C. check obstacles for overlap of detection box 
-        //     // D. got objects that ar e in detection box
-        //     // 
-        //
-        //
-        //     //  min length of detection box
-        //     double minLength = 2;
-        //
-        //     // calculate length of detection box considering velocity 
-        //     double detectionBoxLength = minLength + (ME.Velocity.Length() / ME.MaxSpeed) * minLength;
-        //
-        //     // tag obstacles in range of box 
-        //     ME.TagObstacles(detectionBoxLength);
-        //
-        //     // keep track of closest obstacle 
-        //     Obstacle closestIntersectingObstacle = null;
-        //     double distanceToClosestObstacle = Double.MaxValue;
-        //     Vector2D posOfClosestObstacle = null;
-        //
-        //     foreach (Obstacle obstacle in ME.World.Obstacles)
-        //     {
-        //         if (obstacle.IsTagged)
-        //         {
-        //             Vector2D localPos = Matrix2D.PointToLocalSpace(obstacle.Pos, ME.Heading, ME.Side, ME.Pos).Clone();
-        //             if (localPos.X >= 0)
-        //             {
-        //                 double expandRadius = obstacle.BoundingRadius + ME.BoundingRadius;
-        //                 if (Math.Abs(localPos.Y) < expandRadius)
-        //                 {
-        //                     double cX = localPos.X;
-        //                     double cY = localPos.Y;
-        //                     double SqrtPart = Math.Sqrt(expandRadius * expandRadius - cY * cY);
-        //                     double ip = cX - SqrtPart;
-        //
-        //                     if (ip < distanceToClosestObstacle)
-        //                     {
-        //                         distanceToClosestObstacle = ip;
-        //                         closestIntersectingObstacle = obstacle;
-        //                         posOfClosestObstacle = localPos;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-        //
-        //     Vector2D steeringForce = new Vector2D();
-        //
-        //     if (closestIntersectingObstacle != null)
-        //     {
-        //         double multiplier = 1.0 + (detectionBoxLength - posOfClosestObstacle.X) / detectionBoxLength;
-        //         steeringForce.Y = (closestIntersectingObstacle.BoundingRadius - posOfClosestObstacle.Y) * multiplier;
-        //         double brakingWeight = 0.2;
-        //
-        //         steeringForce.X = (closestIntersectingObstacle.BoundingRadius - posOfClosestObstacle.X) * brakingWeight;
-        //     }
-        //
-        //
-        //     return null;
-        // }
+
+        public bool LineInCircle(Vector2D ahead, Vector2D aheadHalf, Circle circle)
+        {
+            DistanceAhead = circle.Center.Distance(ahead);
+            double distanceAheadHalf = aheadHalf.Distance(circle.Center);
+            double distanceME = ME.Pos.Distance(circle.Center);
+
+            return DistanceAhead <= (circle.Radius / 2) || distanceAheadHalf <= (circle.Radius / 2) ||
+                   distanceME <= (circle.Radius / 2);
+            return DistanceAhead <= (circle.Radius);
+        }
 
         public Vector2D CalculateObstacleAvoidance()
         {
-            if (ME.Velocity.X == 0 && ME.Velocity.Y == 0) return new Vector2D();
+            double maxAhead = 1;
+            double maxAvoidForce = 80;
+            Vector2D ahead = ME.Pos.Clone();
+            ahead.Add(ME.Heading);
+            ahead.Multiply(maxAhead);
 
-            AheadVector2D = ME.Pos.Add(ME.Heading);
-            Vector2D aheadVector2DHalf = AheadVector2D.Clone().Multiply(0.5);
+            AheadVector2D = ahead.Clone();
+            Vector2D aheadHalf = ahead.Clone().Multiply(0.5);
 
-            // Vector2D aheadVector2D = ME.Pos.Add(ME.Velocity.Normalize()).Multiply(maxAhead).Clone();
-            //Vector2D aheadVector2DHalf = aheadVector2D.Multiply(0.5).Clone();
 
+            // nearest obstacle 
             Circle closestObstacle = null;
-            Vector2D avoidance = new Vector2D();
+            Vector2D avoidanceForce = new Vector2D();
 
-            // todo fix obstacles/circle 
+            // foreach circle check if there is a collision if so check if it is closer then other obstacle 
             foreach (Circle obstacle in ME.World.Obstacles)
             {
-                bool collision = LineInCircle(AheadVector2D, aheadVector2DHalf, obstacle);
+                bool collision = LineInCircle(ahead, aheadHalf, obstacle);
 
-                // todo possible null 
                 if (collision && (closestObstacle == null ||
                                   ME.Pos.Distance(obstacle.Center) < ME.Pos.Distance(closestObstacle.Center)))
+                {
                     closestObstacle = obstacle;
+                }
             }
 
             if (closestObstacle != null)
             {
-                AheadVector2D = AheadVector2D.Clone().Sub(closestObstacle.Pos).Clone();
-                return AheadVector2D;
+                avoidanceForce = ahead.Sub(closestObstacle.Center);
+                avoidanceForce.Normalize();
+                avoidanceForce.Multiply(maxAvoidForce);
+                return avoidanceForce;
             }
-            else
-            {
-                return new Vector2D();
-            }
-        }
 
-        public bool LineInCircle(Vector2D ahead, Vector2D aheadHalf, Circle circle)
-        {
-            double distanceAhead = ahead.Distance(circle.Center);
-            double distanceAheadHalf = aheadHalf.Distance(circle.Center);
-            double distanceME = ME.Pos.Distance(circle.Center);
-
-            return distanceAhead <= (circle.Radius / 2) || distanceAheadHalf <= (circle.Radius / 2) ||
-                   distanceME <= (circle.Radius / 2);
+            return new Vector2D();
         }
     }
 }

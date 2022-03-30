@@ -33,7 +33,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
         {
             Mass = 10;
             MaxSpeed = 50;
-            MaxForce = 75;
+            MaxForce = 200;
             Velocity = new Vector2D();
             Heading = new Vector2D();
             SteeringBehaviour = new SteeringBehaviour(this);

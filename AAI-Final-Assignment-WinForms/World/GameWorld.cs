@@ -54,14 +54,26 @@ namespace AAI_Final_Assignment_WinForms.World
             //     _movingEntities.Add(t);
             // }
 
-            TestEnemy t = new TestEnemy(new Vector2D(10, 10), this, 5);
+            TestEnemy t = new TestEnemy(new Vector2D(100, 100), this, 5);
             _movingEntities.Add(t);
 
             Circle o = new Circle(new Vector2D(200, 200), this);
             Obstacles.Add(o);
 
-            Circle o2 = new Circle(new Vector2D(300, 250), this);
-            Obstacles.Add(o2);
+            // Circle o2 = new Circle(new Vector2D(300, 250), this);
+            // Obstacles.Add(o2);
+
+            // Circle o3 = new Circle(new Vector2D(400, 450), this);
+            // Obstacles.Add(o3);
+            //
+            // Circle o4 = new Circle(new Vector2D(350, 250), this);
+            // Obstacles.Add(o4);
+            //
+            // Circle o5 = new Circle(new Vector2D(300, 350), this);
+            // Obstacles.Add(o5);
+            //
+            // Circle o6 = new Circle(new Vector2D(400, 200), this);
+            // Obstacles.Add(o6);
         }
     }
 }
