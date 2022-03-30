@@ -9,7 +9,7 @@ namespace AAI_Final_Assignment_WinForms.World
         public List<MovingEntity> _movingEntities;
         public List<ObstacleEntity> Obstacles;
         public Graph.Graph GameGraph;
-        public bool GraphEnabled = true;
+        public bool GraphEnabled = false;
         public Witch Witch { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
@@ -61,26 +61,26 @@ namespace AAI_Final_Assignment_WinForms.World
             //     _movingEntities.Add(t);
             // }
 
-            TestEnemy t = new TestEnemy(new Vector2D(100, 100), this, 5);
+            TestEnemy t = new TestEnemy(new Vector2D(10, 10), this, 5);
             _movingEntities.Add(t);
 
-            Circle o = new Circle(new Vector2D(200, 200), this);
+            Circle o = new Circle(new Vector2D(100, 100), this);
             Obstacles.Add(o);
 
-            // Circle o2 = new Circle(new Vector2D(300, 250), this);
-            // Obstacles.Add(o2);
+            Circle o2 = new Circle(new Vector2D(150, 150), this);
+            Obstacles.Add(o2);
 
-            // Circle o3 = new Circle(new Vector2D(400, 450), this);
-            // Obstacles.Add(o3);
-            //
-            // Circle o4 = new Circle(new Vector2D(350, 250), this);
-            // Obstacles.Add(o4);
-            //
-            // Circle o5 = new Circle(new Vector2D(300, 350), this);
-            // Obstacles.Add(o5);
-            //
-            // Circle o6 = new Circle(new Vector2D(400, 200), this);
-            // Obstacles.Add(o6);
+            Circle o3 = new Circle(new Vector2D(200, 200), this);
+            Obstacles.Add(o3);
+            
+            Circle o4 = new Circle(new Vector2D(250, 250), this);
+            Obstacles.Add(o4);
+            
+            Circle o5 = new Circle(new Vector2D(300, 300), this);
+            Obstacles.Add(o5);
+            
+            Circle o6 = new Circle(new Vector2D(350, 350), this);
+            Obstacles.Add(o6);
         }
     }
 }

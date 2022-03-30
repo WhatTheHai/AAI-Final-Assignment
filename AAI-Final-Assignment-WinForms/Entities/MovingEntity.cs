@@ -31,12 +31,14 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
         protected MovingEntity(Vector2D pos, GameWorld world) : base(pos, world)
         {
+            
             Mass = 10;
             MaxSpeed = 50;
-            MaxForce = 200;
+            MaxForce = 100;
             Velocity = new Vector2D();
             Heading = new Vector2D();
             SteeringBehaviour = new SteeringBehaviour(this);
+
         }
 
         public override void Update(double timeElapsed)
