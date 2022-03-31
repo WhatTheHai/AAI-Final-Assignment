@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.util;
 using AAI_Final_Assignment_WinForms.World;
 
@@ -27,6 +29,25 @@ namespace AAI_Final_Assignment_WinForms.Graph {
 
             //TODO: Remove vertexes depending on objects
 
+            foreach (StaticEntity entity in gameWorld.StaticEntities) {
+                Vector2D vector = ClosestVertex(entity.Pos);
+
+                int x = (int)vector.X;
+                int y = (int)vector.X;
+
+                int eHeight = (int)(entity.TextureHeight);
+                int eWidth = (int)(entity.TextureWidth);
+
+                for (int i = x; i < (eWidth + x); i += vectorDistance) 
+                {
+                    for (int j = y; j < (eHeight + y); j += vectorDistance) {
+                        Vector2D nearVector = new Vector2D(i, j);
+                        if (vertexMap.ContainsKey(nearVector))
+                            vertexMap.Remove(nearVector);
+                    }
+                }
+            }
+
             //Generate edges
             foreach (Vertex vertex in vertexMap.Values) {
                 List<Vector2D> edgesList = new List<Vector2D>();
@@ -37,16 +58,22 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                 Vector2D rightDown = new Vector2D(pos.X + vectorDistance, pos.Y + vectorDistance);
                 Vector2D down = new Vector2D(pos.X, pos.Y + vectorDistance);
 
-                //Diagonals have double the cost
+                //Diagonals have sqrt 2 cost but rounded to 1.5
                 if(vertexMap.ContainsKey(rightUp))
-                    AddEdge(pos, rightUp, 2);
+                    AddEdge(pos, rightUp, 1.5);
                 if (vertexMap.ContainsKey(right))
                     AddEdge(pos, right, 1);
                 if (vertexMap.ContainsKey(rightDown))
-                    AddEdge(pos, rightDown, 2);
+                    AddEdge(pos, rightDown, 1.5);
                 if (vertexMap.ContainsKey(down))
                     AddEdge(pos, down, 1);
             } 
+        }
+
+        public Vector2D ClosestVertex(Vector2D position) {
+            double nearestX = ((int)position.X / vectorDistance) * vectorDistance + vectorDistance;
+            double nearestY = ((int)position.Y / vectorDistance) * vectorDistance + vectorDistance;
+            return new Vector2D(nearestX, nearestY);
         }
 
         /// <summary>

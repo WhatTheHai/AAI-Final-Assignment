@@ -7,7 +7,7 @@ namespace AAI_Final_Assignment_WinForms.World
     public class GameWorld
     {
         public List<MovingEntity> _movingEntities;
-        public List<ObstacleEntity> Obstacles;
+        public List<StaticEntity> StaticEntities;
         public Graph.Graph GameGraph;
         public bool GraphEnabled = true;
         public Witch Witch { get; set; }
@@ -25,7 +25,7 @@ namespace AAI_Final_Assignment_WinForms.World
         public GameWorld(int w, int h)
         {
             _movingEntities = new List<MovingEntity>();
-            Obstacles = new List<ObstacleEntity>();
+            StaticEntities = new List<StaticEntity>();
             Width = w;
             Height = h;
 
@@ -49,7 +49,7 @@ namespace AAI_Final_Assignment_WinForms.World
                 GameGraph.Render(g);
             }
             _movingEntities.ForEach(e => e.Render(g));
-            Obstacles.ForEach(o => o.Render(g));
+            StaticEntities.ForEach(o => o.Render(g));
             Witch.Render(g);
         }
 
@@ -63,24 +63,23 @@ namespace AAI_Final_Assignment_WinForms.World
 
             TestEnemy t = new TestEnemy(new Vector2D(100, 100), this, 5);
             _movingEntities.Add(t);
-
-            Circle o = new Circle(new Vector2D(200, 200), this);
-            Obstacles.Add(o);
+            Circle o = new Circle(new Vector2D(200, 200), this, 50);
+            StaticEntities.Add(o);
 
             // Circle o2 = new Circle(new Vector2D(300, 250), this);
-            // Obstacles.Add(o2);
+            // StaticEntities.Add(o2);
 
             // Circle o3 = new Circle(new Vector2D(400, 450), this);
-            // Obstacles.Add(o3);
+            // StaticEntities.Add(o3);
             //
             // Circle o4 = new Circle(new Vector2D(350, 250), this);
-            // Obstacles.Add(o4);
+            // StaticEntities.Add(o4);
             //
             // Circle o5 = new Circle(new Vector2D(300, 350), this);
-            // Obstacles.Add(o5);
+            // StaticEntities.Add(o5);
             //
             // Circle o6 = new Circle(new Vector2D(400, 200), this);
-            // Obstacles.Add(o6);
+            // StaticEntities.Add(o6);
         }
     }
 }

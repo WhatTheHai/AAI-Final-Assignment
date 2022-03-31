@@ -142,9 +142,9 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             double distanceAheadHalf = aheadHalf.Distance(circle.Center);
             double distanceME = ME.Pos.Distance(circle.Center);
 
-            return DistanceAhead <= (circle.Radius / 2) || distanceAheadHalf <= (circle.Radius / 2) ||
-                   distanceME <= (circle.Radius / 2);
-            return DistanceAhead <= (circle.Radius);
+            return DistanceAhead <= (circle.Diameter / 2) || distanceAheadHalf <= (circle.Diameter / 2) ||
+                   distanceME <= (circle.Diameter / 2);
+            return DistanceAhead <= (circle.Diameter);
         }
 
         public Vector2D CalculateObstacleAvoidance()
@@ -164,7 +164,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             Vector2D avoidanceForce = new Vector2D();
 
             // foreach circle check if there is a collision if so check if it is closer then other obstacle 
-            foreach (Circle obstacle in ME.World.Obstacles)
+            foreach (Circle obstacle in ME.World.StaticEntities)
             {
                 bool collision = LineInCircle(ahead, aheadHalf, obstacle);
 

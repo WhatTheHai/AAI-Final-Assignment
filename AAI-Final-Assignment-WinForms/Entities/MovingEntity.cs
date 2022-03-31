@@ -65,7 +65,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
         // todo: remove!
         // public void TagObstacles(double boxRadius)
         // {
-        //     foreach (var obstacle in World.Obstacles)
+        //     foreach (var obstacle in World.StaticEntities)
         //     {
         //         // first always set tag to false
         //         obstacle.IsTagged = false;
