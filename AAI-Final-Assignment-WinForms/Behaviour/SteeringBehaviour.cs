@@ -144,17 +144,20 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
             return DistanceAhead <= (circle.Diameter / 2) || distanceAheadHalf <= (circle.Diameter / 2) ||
                    distanceME <= (circle.Diameter / 2);
-            return DistanceAhead <= (circle.Diameter);
         }
 
         public Vector2D CalculateObstacleAvoidance()
         {
-            double maxAhead = 1;
+            // max
+            double maxAhead = 25;
             double maxAvoidForce = 80;
-            Vector2D ahead = ME.Pos.Clone();
-            ahead.Add(ME.Heading);
-            ahead.Multiply(maxAhead);
 
+
+            // fixed length for detection box 
+            Vector2D ahead = ME.Pos.Clone();
+            Vector2D heading = ME.Heading.Clone();
+            heading.Multiply(maxAhead);
+            ahead.Add(heading);
             AheadVector2D = ahead.Clone();
             Vector2D aheadHalf = ahead.Clone().Multiply(0.5);
 

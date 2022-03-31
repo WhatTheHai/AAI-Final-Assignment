@@ -9,7 +9,7 @@ namespace AAI_Final_Assignment_WinForms.World
         public List<MovingEntity> _movingEntities;
         public List<StaticEntity> StaticEntities;
         public Graph.Graph GameGraph;
-        public bool GraphEnabled = true;
+        public bool GraphEnabled = false;
         public Witch Witch { get; set; }
         public int Width { get; set; }
         public int Height { get; set; }
@@ -61,7 +61,7 @@ namespace AAI_Final_Assignment_WinForms.World
             //     _movingEntities.Add(t);
             // }
 
-            TestEnemy t = new TestEnemy(new Vector2D(100, 100), this, 5);
+            TestEnemy t = new TestEnemy(new Vector2D(10, 10), this, 5);
             _movingEntities.Add(t);
             Circle o = new Circle(new Vector2D(200, 200), this, 50);
             StaticEntities.Add(o);
