@@ -221,7 +221,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
 
         public void Render(Graphics g)
         {
-            Pen p = new Pen(Color.Red, 1);
+            Pen p = new Pen(Color.Gray, 1);
             foreach (Vertex vertex in vertexMap.Values) {
                 foreach (Edge edge in vertex.adj) {
                     g.DrawLine(p, (int)vertex.pos.X, (int)vertex.pos.Y, (int)edge.dest.pos.X, (int)edge.dest.pos.Y);
@@ -230,7 +230,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             //Vertex
             foreach (Vertex vertex in vertexMap.Values) 
             {
-                g.DrawEllipse(p, new Rectangle((int)vertex.pos.X-3, (int)vertex.pos.Y-3, 6, 6));
+                g.DrawEllipse(vertex.p, new Rectangle((int)vertex.pos.X-3, (int)vertex.pos.Y-3, 6, 6));
             }
         }
     }

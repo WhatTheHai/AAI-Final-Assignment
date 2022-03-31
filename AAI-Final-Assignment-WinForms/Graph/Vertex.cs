@@ -16,6 +16,7 @@ namespace AAI_Final_Assignment_WinForms.Graph
         public Vertex prev;
         public bool known;
         public Vector2D pos;
+        public Pen p = new Pen(Color.Gray, 1);
         public Vertex(Vector2D pos)
         {
             this.adj = new LinkedList<Edge>();
