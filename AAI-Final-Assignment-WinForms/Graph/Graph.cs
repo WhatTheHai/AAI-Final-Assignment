@@ -38,9 +38,9 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                 int eHeight = (int)(entity.TextureHeight);
                 int eWidth = (int)(entity.TextureWidth);
 
-                for (int i = x; i < (eWidth + x); i += vectorDistance) 
+                for (int i = x; i < (eWidth + x - vectorDistance); i += vectorDistance) 
                 {
-                    for (int j = y; j < (eHeight + y); j += vectorDistance) {
+                    for (int j = y; j < (eHeight + y - vectorDistance); j += vectorDistance) {
                         Vector2D nearVector = new Vector2D(i, j);
                         if (vertexMap.ContainsKey(nearVector))
                             vertexMap.Remove(nearVector);
