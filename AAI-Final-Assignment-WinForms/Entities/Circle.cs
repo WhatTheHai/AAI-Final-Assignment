@@ -8,7 +8,7 @@ using AAI_Final_Assignment_WinForms.World;
 
 namespace AAI_Final_Assignment_WinForms.Entities
 {
-    public class Circle : ObstacleEntity
+    public class Circle : BaseGameEntity
     {
         public int Radius { get; set; }
         public Vector2D Center { get; set; }
