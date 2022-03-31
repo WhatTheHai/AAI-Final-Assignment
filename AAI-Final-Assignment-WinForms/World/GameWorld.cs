@@ -7,7 +7,7 @@ namespace AAI_Final_Assignment_WinForms.World
     public class GameWorld
     {
         public List<MovingEntity> _movingEntities;
-        public List<ObstacleEntity> Obstacles;
+        public List<BaseGameEntity> Obstacles;
         public Graph.Graph GameGraph;
         public bool GraphEnabled = false;
         public Witch Witch { get; set; }
@@ -25,7 +25,7 @@ namespace AAI_Final_Assignment_WinForms.World
         public GameWorld(int w, int h)
         {
             _movingEntities = new List<MovingEntity>();
-            Obstacles = new List<ObstacleEntity>();
+            Obstacles = new List<BaseGameEntity>();
             Width = w;
             Height = h;
 

@@ -26,7 +26,6 @@ namespace AAI_Final_Assignment_WinForms.Entities
             Pos = pos;
             World = world;
             Id = _nextId++;
-            // later constructor met parameters bouwen 
         }
 
         // every entity needs a update function
