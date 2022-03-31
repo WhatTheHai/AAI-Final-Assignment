@@ -10,12 +10,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
 {
     public class StaticEntity : BaseGameEntity
     {
-        public int TextureWidth { get; set; }
-        public int TextureHeight { get; set; }
-
-        public StaticEntity(Vector2D pos, GameWorld world, int w, int h) : base(pos, world) {
-            TextureWidth = w;
-            TextureHeight = h;
+        public StaticEntity(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight) : base(pos, world, scale, textureWidth, textureHeight)
+        {
         }
     }
 }

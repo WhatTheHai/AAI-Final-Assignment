@@ -149,7 +149,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public Vector2D CalculateObstacleAvoidance()
         {
             // max
-            double maxAhead = 25;
+            double maxAhead = 50;
             double maxAvoidForce = 80;
 
 
