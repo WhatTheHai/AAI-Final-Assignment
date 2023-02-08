@@ -69,7 +69,7 @@ namespace AAI_Final_Assignment_WinForms.World
 
             // Circle o2 = new Circle(new Vector2D(300, 250), this);
             // StaticEntities.Add(o2);
-
+            //
             // Circle o3 = new Circle(new Vector2D(400, 450), this);
             // StaticEntities.Add(o3);
             //

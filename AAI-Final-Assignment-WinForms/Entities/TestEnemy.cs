@@ -15,8 +15,10 @@ namespace AAI_Final_Assignment_WinForms.Entities
         public TestEnemy(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight, float mass, float maxSpeed, float maxForce) : base(pos, world, scale, textureWidth, textureHeight, mass, maxSpeed, maxForce)
         {
             Color = Color.DarkOrchid;
-            SteeringBehaviour.Arrive = true;
-            SteeringBehaviour.ObstacleAvoidance = true;
+            SteeringBehaviour.Arrive = false;
+            SteeringBehaviour.Seek = true;
+            SteeringBehaviour.ObstacleAvoidance = false;
+
             Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\sharkboy.png"),
                 new Size(TextureWidth, TextureHeight));
         }
@@ -48,6 +50,21 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 (int)SteeringBehaviour.AheadVector2D.Y);
 
             g.DrawImage(Texture, (int)Pos.X - TextureWidth / 2, (int)Pos.Y - TextureHeight / 2);
+
+            Font drawFont = new Font("Arial", 10);
+            SolidBrush drawBrush = new SolidBrush(Color.Black);
+            float x = (float)Pos.X - 20;
+            float y = (float)Pos.Y - 80;
+            StringFormat drawFormat = new StringFormat();
+            //drawFormat.FormatFlags = StringFormatFlags.NoWrap;
+
+            g.DrawString($"Velocity: {Velocity}", drawFont, drawBrush, x, y, drawFormat);
+            g.DrawString($"Heading: {Heading}", drawFont, drawBrush, x, y + 20, drawFormat);
+            g.DrawString($"Forces: {SteeringBehaviour.totalForce}", drawFont, drawBrush, x, y + 40, drawFormat);
+            // g.DrawString($"Velocity: {Velocity}", drawFont, drawBrush, x, y, drawFormat);
+            // g.DrawString($"Velocity: {Velocity}", drawFont, drawBrush, x, y, drawFormat);
+            // g.DrawString($"Velocity: {Velocity}", drawFont, drawBrush, x, y, drawFormat);
+            // g.DrawString($"Velocity: {Velocity}", drawFont, drawBrush, x, y, drawFormat);
         }
 
        

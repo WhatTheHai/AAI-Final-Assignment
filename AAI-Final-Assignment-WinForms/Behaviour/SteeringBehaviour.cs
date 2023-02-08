@@ -81,7 +81,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
         public Vector2D CalculateSeek()
         {
-            double MaxCloseDistance = 10.0;
+            double MaxCloseDistance = 100.0;
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
             if (mePos.Distance(targetPos) < MaxCloseDistance)
@@ -115,7 +115,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         {
             const double decelerationTweaker = 0.8;
             //1 = fast, 2 = normal, 3 = slow
-            const double deceleration = 1;
+            const double deceleration = 3;
 
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
