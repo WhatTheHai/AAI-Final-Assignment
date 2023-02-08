@@ -11,7 +11,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
         public Vector2D Pos { get; set; }
 
         // scale size of entity
-        public float Scale { get; set; }
+        public double Scale { get; set; }
 
         // world that contains the entity
         public GameWorld World { get; set; }
@@ -31,7 +31,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
         public Bitmap Texture { get; set; }
 
 
-        protected BaseGameEntity(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight)
+        protected BaseGameEntity(Vector2D pos, GameWorld world, double scale, int textureWidth, int textureHeight)
         {
             Pos = pos;
             World = world;

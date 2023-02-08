@@ -12,26 +12,26 @@ namespace AAI_Final_Assignment_WinForms.Entities
         // direction of entity
         public Vector2D Heading { get; set; }
 
-        // Perpendicular direction of entity
-        //public Vector2D Side { get; set; }
+        //Perpendicular direction of entity
+        public Vector2D Side { get; set; }
 
         // Mass of entity
-        public float Mass { get; set; }
+        public double Mass { get; set; }
 
         //Maximum speed of entity 
-        public float MaxSpeed { get; set; }
+        public double MaxSpeed { get; set; }
 
         //Maximum force on entity
-        public float MaxForce { get; set; }
+        public double MaxForce { get; set; }
 
         // todo not using TURNRATE
         //Maximum turn rate 
-        //public float MaxTurnRate { get; set; }
+        public double MaxTurnRate { get; set; }
 
         public SteeringBehaviour SteeringBehaviour { get; set; }
 
-        protected MovingEntity(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight,
-            float mass, float maxSpeed, float maxForce
+        protected MovingEntity(Vector2D pos, GameWorld world, double scale, int textureWidth, int textureHeight,
+            double mass, double maxSpeed, double maxForce
         ) : base(pos, world, scale, textureWidth, textureHeight)
         {
             Mass = mass;
@@ -45,25 +45,27 @@ namespace AAI_Final_Assignment_WinForms.Entities
         public override void Update(double timeElapsed)
         {
             // calculate steering force
-            Vector2D steeringForce = SteeringBehaviour.Calculate().Clone();
+            Vector2D steeringForce = SteeringBehaviour.Calculate();
 
             // acceleratie force/mass 
-            Vector2D acceleration = steeringForce.Divide(Mass).Clone();
+            Vector2D acceleration = steeringForce.Divide(Mass);
 
-            Velocity.Add(acceleration.Multiply(timeElapsed).Clone());
+            // update velocity
+            Velocity.Add(acceleration.Multiply(timeElapsed));
             // dont exeed max velocity 
             Velocity.Truncate(MaxSpeed);
 
             // update position 
-            Pos.Add(Velocity.Multiply(timeElapsed).Clone());
+            Pos.Add(Velocity.Clone().Multiply(timeElapsed));
 
             // update heading and side if moving
-            if (Velocity.LengthSquared() > 0.000000000001)
+            if (Velocity.LengthSquared() > 0.00000001)
             {
-                Heading = Velocity.Normalize().Clone();
-                //todo not using SIDE? 
-                // Side = Heading.Perpendicular().Clone();
+                Heading = Velocity.Clone().Normalize();
+                Side = Heading.Clone().Perpendicular();
             }
+
+            //check screen boundaries?
         }
     }
 }

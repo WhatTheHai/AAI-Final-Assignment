@@ -13,41 +13,44 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
     public class SteeringBehaviour
     {
         public bool Seek, Flee, Arrive, ObstacleAvoidance;
-        public Vector2D totalForce { get; set; }
-        Vector2D currentForce;
+        public Vector2D TotalForce { get; set; }
+        public Vector2D CurrentForce;
         public Vector2D AheadVector2D { get; set; }
         private MovingEntity ME { get; set; }
         public double DistanceAhead { get; set; }
 
+        public Vector2D CurrentObstacleAvoidance;
+
         public Vector2D Calculate()
         {
-            totalForce = new Vector2D();
+            TotalForce = new Vector2D();
             if (ObstacleAvoidance)
             {
-                currentForce = CalculateObstacleAvoidance();
-                if (!AccumulateForce(totalForce, currentForce)) return totalForce;
+                CurrentForce = CalculateObstacleAvoidance();
+                if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
             }
 
             if (Flee)
             {
-                currentForce = CalculateFlee();
-                if (!AccumulateForce(totalForce, currentForce)) return totalForce;
+                CurrentForce = CalculateFlee();
+                if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
             }
 
             if (Seek)
             {
-                currentForce = CalculateSeek();
-                if (!AccumulateForce(totalForce, currentForce)) return totalForce;
+                //CurrentForce = CalculateSeek();
+                // if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
+                TotalForce = CalculateSeek();
             }
 
             if (Arrive)
             {
-                currentForce = CalculateArrive();
-                if (!AccumulateForce(totalForce, currentForce)) return totalForce;
+                CurrentForce = CalculateArrive();
+                if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
             }
 
 
-            return totalForce;
+            return TotalForce;
         }
 
         public SteeringBehaviour(MovingEntity me)
@@ -69,11 +72,11 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
             if (magnitudeToAdd < magnitudeRemaining)
             {
-                totalForce.Add(forceToAdd);
+                TotalForce.Add(forceToAdd);
             }
             else
             {
-                totalForce.Add(forceToAdd.Normalize().Multiply(magnitudeRemaining));
+                TotalForce.Add(forceToAdd.Normalize().Multiply(magnitudeRemaining));
             }
 
             return true;
@@ -81,17 +84,16 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
         public Vector2D CalculateSeek()
         {
-            double MaxCloseDistance = 100.0;
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
-            if (mePos.Distance(targetPos) < MaxCloseDistance)
-            {
-                return new Vector2D(0, 0);
-            }
 
-            Vector2D desiredVelocity = targetPos.Sub(mePos).Normalize().Multiply(ME.MaxSpeed);
+            //Vector2D desiredVelocity = targetPos.Sub(mePos).Normalize().Multiply(ME.MaxSpeed);
+            Vector2D desiredVelocity = targetPos.Sub(mePos);
+            desiredVelocity.Normalize();
+            desiredVelocity.Multiply(ME.MaxSpeed);
 
-            return desiredVelocity.Sub(ME.Velocity.Clone());
+
+            return desiredVelocity.Sub(ME.Velocity);
         }
 
         public Vector2D CalculateFlee()
@@ -113,7 +115,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
         public Vector2D CalculateArrive()
         {
-            const double decelerationTweaker = 0.8;
+            const double decelerationTweaker = 75;
             //1 = fast, 2 = normal, 3 = slow
             const double deceleration = 3;
 
@@ -149,8 +151,8 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public Vector2D CalculateObstacleAvoidance()
         {
             // max
-            double maxAhead = 50;
-            double maxAvoidForce = 80;
+            double maxAhead = 100;
+            double maxAvoidForce = 50;
 
 
             // fixed length for detection box 

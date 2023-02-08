@@ -12,7 +12,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
     {
         public Color Color { get; set; }
 
-        public TestEnemy(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight, float mass, float maxSpeed, float maxForce) : base(pos, world, scale, textureWidth, textureHeight, mass, maxSpeed, maxForce)
+        public TestEnemy(Vector2D pos, GameWorld world, double scale, int textureWidth, int textureHeight, double mass, double maxSpeed, double maxForce) : base(pos, world, scale, textureWidth, textureHeight, mass, maxSpeed, maxForce)
         {
             Color = Color.DarkOrchid;
             SteeringBehaviour.Arrive = false;
@@ -41,8 +41,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
             // // g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2),
             // //     (int)Pos.Y + (int)(Velocity.Y * 2));
             //
-            // g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)SteeringBehaviour.totalForce.X + (int)Pos.X,
-            //     (int)SteeringBehaviour.totalForce.Y + (int)Pos.Y);
+            // g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)SteeringBehaviour.TotalForce.X + (int)Pos.X,
+            //     (int)SteeringBehaviour.TotalForce.Y + (int)Pos.Y);
             // //
             // length of detection box 
             g.DrawLine(new Pen(Color.Orange, 5), (int)Pos.X, (int)Pos.Y,
@@ -53,14 +53,14 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
             Font drawFont = new Font("Arial", 10);
             SolidBrush drawBrush = new SolidBrush(Color.Black);
-            float x = (float)Pos.X - 20;
-            float y = (float)Pos.Y - 80;
+            float x = (float)10;
+            float y = (float)10;
             StringFormat drawFormat = new StringFormat();
             //drawFormat.FormatFlags = StringFormatFlags.NoWrap;
 
             g.DrawString($"Velocity: {Velocity}", drawFont, drawBrush, x, y, drawFormat);
             g.DrawString($"Heading: {Heading}", drawFont, drawBrush, x, y + 20, drawFormat);
-            g.DrawString($"Forces: {SteeringBehaviour.totalForce}", drawFont, drawBrush, x, y + 40, drawFormat);
+            g.DrawString($"Forces: {SteeringBehaviour.TotalForce}", drawFont, drawBrush, x, y + 40, drawFormat);
             // g.DrawString($"Velocity: {Velocity}", drawFont, drawBrush, x, y, drawFormat);
             // g.DrawString($"Velocity: {Velocity}", drawFont, drawBrush, x, y, drawFormat);
             // g.DrawString($"Velocity: {Velocity}", drawFont, drawBrush, x, y, drawFormat);

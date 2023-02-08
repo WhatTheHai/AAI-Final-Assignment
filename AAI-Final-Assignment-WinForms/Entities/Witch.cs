@@ -10,8 +10,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
 {
     public class Witch : MovingEntity
     {
-        public Witch(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight, float mass,
-            float maxSpeed, float maxForce
+        public Witch(Vector2D pos, GameWorld world, double scale, int textureWidth, int textureHeight, double mass,
+            double maxSpeed, double maxForce
         ) : base(pos,
             world, scale, textureWidth, textureHeight, mass, maxSpeed, maxForce)
         {
