@@ -30,6 +30,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             //g.DrawEllipse(new Pen(Color.Orange, 3), new Rectangle((int)Pos.X, (int)Pos.Y, TextureWidth, TextureHeight));
 
             g.DrawImage(Texture, (int)Pos.X - TextureWidth / 2, (int)Pos.Y - TextureHeight / 2);
+
         }
     }
 }

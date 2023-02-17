@@ -23,6 +23,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
         //Maximum force on entity
         public double MaxForce { get; set; }
+        private Vector2D currentSteeringForce;
+
 
         // todo not using TURNRATE
         //Maximum turn rate 
@@ -46,9 +48,10 @@ namespace AAI_Final_Assignment_WinForms.Entities
         {
             // calculate steering force
             Vector2D steeringForce = SteeringBehaviour.Calculate();
+            currentSteeringForce = steeringForce.Clone();
 
             // acceleratie force/mass 
-            Vector2D acceleration = steeringForce.Divide(Mass);
+            Vector2D acceleration = steeringForce.Clone().Divide(Mass);
 
             // update velocity
             Velocity.Add(acceleration.Multiply(timeElapsed));
@@ -68,6 +71,51 @@ namespace AAI_Final_Assignment_WinForms.Entities
             }
 
             //check screen boundaries?
+        }
+
+
+        public override void Render(Graphics g)
+        {
+            Font drawFont = new Font("Arial", 10);
+            SolidBrush drawBrush = new SolidBrush(Color.Black);
+            float x = (float)Pos.X;
+            float y = (float)Pos.Y;
+            StringFormat drawFormat = new StringFormat();
+            //drawFormat.FormatFlags = StringFormatFlags.NoWrap;
+
+            g.DrawString($"Velocity: {Velocity}", drawFont, drawBrush, x, y, drawFormat);
+            g.DrawString($"Heading: {Heading}", drawFont, drawBrush, x, y + 20, drawFormat);
+
+            RenderInfo(g);
+        }
+
+        protected void RenderInfo(Graphics g)
+        {
+            int width = 6;
+            double multiplier = 5;
+
+            // current velocity
+            DrawLineFromEntity(g, Pos, Velocity.Clone().Multiply(multiplier), Color.Green, width);
+
+            // desired velocity
+
+            DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentDesiredVelocitySeek.Clone().Multiply(multiplier),
+                Color.Gray,
+                width);
+
+            // steering force
+            DrawLineFromEntity(g, Pos, currentSteeringForce.Clone().Multiply(multiplier), Color.Red, width);
+            // Vector2D currentSteeringForceEndPoint = currentVelocity.Clone().Add(currentSteeringForce.Clone());
+            //DrawLineFromEntity(g, Pos, currentSteeringForceEndPoint, Color.Blue, width);
+        }
+
+        protected void DrawLineFromEntity(Graphics g, Vector2D start, Vector2D end, Color color, int width)
+        {
+            //g.DrawLine(new Pen(color, width), (int)start.X, (int)start.Y, (int)end.X, (int)end.Y);
+            PointF startPoint = new PointF((float)start.X, (float)start.Y);
+            PointF endPoint = new PointF((float)end.X + (float)start.X, (float)end.Y + (float)start.Y);
+
+            g.DrawLine(new Pen(color, width), startPoint, endPoint);
         }
     }
 }

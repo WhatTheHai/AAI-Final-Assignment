@@ -20,7 +20,8 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public double DistanceAhead { get; set; }
 
         public Vector2D CurrentObstacleAvoidance;
-        public Vector2D CurrentSeek;
+        public Vector2D CurrentDesiredVelocitySeek;
+
         public Vector2D CurrentArrive;
         //public Vector2D CurrentObstacleAvoidance;
 
@@ -41,10 +42,9 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
             if (Seek)
             {
-               // CurrentForce = CalculateSeek();
-                 //if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
-                TotalForce = CalculateSeek();
+                CurrentForce = CalculateSeek();
 
+                if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
             }
 
             if (Arrive)
@@ -63,28 +63,28 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             AheadVector2D = new Vector2D();
         }
 
-        // public bool AccumulateForce(Vector2D runningTotal, Vector2D forceToAdd)
-        // {
-        //     double magnitudeSoFar = runningTotal.Length();
-        //     double magnitudeRemaining = ME.MaxForce - magnitudeSoFar;
-        //     if (magnitudeRemaining <= 0.0)
-        //     {
-        //         return false;
-        //     }
-        //
-        //     double magnitudeToAdd = forceToAdd.Length();
-        //
-        //     if (magnitudeToAdd < magnitudeRemaining)
-        //     {
-        //         TotalForce.Add(forceToAdd);
-        //     }
-        //     else
-        //     {
-        //         TotalForce.Add(forceToAdd.Normalize().Multiply(magnitudeRemaining));
-        //     }
-        //
-        //     return true;
-        // }
+        public bool AccumulateForce(Vector2D runningTotal, Vector2D forceToAdd)
+        {
+            double magnitudeSoFar = runningTotal.Length();
+            double magnitudeRemaining = ME.MaxForce - magnitudeSoFar;
+            if (magnitudeRemaining <= 0.0)
+            {
+                return false;
+            }
+
+            double magnitudeToAdd = forceToAdd.Length();
+
+            if (magnitudeToAdd < magnitudeRemaining)
+            {
+                TotalForce.Add(forceToAdd);
+            }
+            else
+            {
+                TotalForce.Add(forceToAdd.Normalize().Multiply(magnitudeRemaining));
+            }
+
+            return true;
+        }
 
         public Vector2D CalculateSeek()
         {
@@ -96,9 +96,10 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             desiredVelocity.Normalize();
             desiredVelocity.Multiply(ME.MaxSpeed);
 
+            CurrentDesiredVelocitySeek = desiredVelocity.Clone();
 
-            //return desiredVelocity.Sub(ME.Velocity);
-            return desiredVelocity;
+            return desiredVelocity.Sub(ME.Velocity);
+            // return desiredVelocity;
         }
 
         public Vector2D CalculateFlee()
@@ -120,9 +121,9 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
         public Vector2D CalculateArrive()
         {
-            const double decelerationTweaker = 75;
+            const double decelerationTweaker = 2;
             //1 = fast, 2 = normal, 3 = slow
-            const double deceleration = 3;
+            const double deceleration = 1;
 
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
