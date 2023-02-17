@@ -31,8 +31,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
         // }
 
         public override void Render(Graphics g)
-        {
-            // double leftCorner = Pos.X - Scale;
+        {   // double leftCorner = Pos.X - Scale;
             // double rightCorner = Pos.Y - Scale;
             // double size = Scale * 2;
             //
@@ -45,10 +44,11 @@ namespace AAI_Final_Assignment_WinForms.Entities
             //     (int)SteeringBehaviour.TotalForce.Y + (int)Pos.Y);
             // //
             // length of detection box 
-            g.DrawLine(new Pen(Color.Orange, 5), (int)Pos.X, (int)Pos.Y,
-                (int)SteeringBehaviour.AheadVector2D.X,
-                (int)SteeringBehaviour.AheadVector2D.Y);
+            // g.DrawLine(new Pen(Color.Orange, 5), (int)Pos.X, (int)Pos.Y,
+            //     (int)SteeringBehaviour.AheadVector2D.X,
+            //     (int)SteeringBehaviour.AheadVector2D.Y);
 
+         
             g.DrawImage(Texture, (int)Pos.X - TextureWidth / 2, (int)Pos.Y - TextureHeight / 2);
 
             Font drawFont = new Font("Arial", 10);
@@ -61,6 +61,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             g.DrawString($"Velocity: {Velocity}", drawFont, drawBrush, x, y, drawFormat);
             g.DrawString($"Heading: {Heading}", drawFont, drawBrush, x, y + 20, drawFormat);
             g.DrawString($"Forces: {SteeringBehaviour.TotalForce}", drawFont, drawBrush, x, y + 40, drawFormat);
+            g.DrawString($"SeekForce: {SteeringBehaviour.CurrentSeek}", drawFont, drawBrush, x, y + 60, drawFormat);
             // g.DrawString($"Velocity: {Velocity}", drawFont, drawBrush, x, y, drawFormat);
             // g.DrawString($"Velocity: {Velocity}", drawFont, drawBrush, x, y, drawFormat);
             // g.DrawString($"Velocity: {Velocity}", drawFont, drawBrush, x, y, drawFormat);

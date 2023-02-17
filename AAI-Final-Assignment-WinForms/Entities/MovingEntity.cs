@@ -52,6 +52,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
             // update velocity
             Velocity.Add(acceleration.Multiply(timeElapsed));
+            //Velocity.Add(steeringForce);
+
             // dont exeed max velocity 
             Velocity.Truncate(MaxSpeed);
 
@@ -59,7 +61,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             Pos.Add(Velocity.Clone().Multiply(timeElapsed));
 
             // update heading and side if moving
-            if (Velocity.LengthSquared() > 0.00000001)
+            if (Velocity.LengthSquared() > 0.000000001)
             {
                 Heading = Velocity.Clone().Normalize();
                 Side = Heading.Clone().Perpendicular();

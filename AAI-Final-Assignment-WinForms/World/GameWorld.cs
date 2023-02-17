@@ -6,7 +6,7 @@ namespace AAI_Final_Assignment_WinForms.World
 {
     public class GameWorld
     {
-        public List<MovingEntity> _movingEntities;
+        public List<MovingEntity> MovingEntities;
         public List<StaticEntity> StaticEntities;
         public Graph.Graph GameGraph;
         public bool GraphEnabled = false;
@@ -24,19 +24,19 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public GameWorld(int w, int h)
         {
-            _movingEntities = new List<MovingEntity>();
+            MovingEntities = new List<MovingEntity>();
             StaticEntities = new List<StaticEntity>();
             Width = w;
             Height = h;
 
-            Witch = new Witch(new Vector2D(10, 10), this, 1, 50, 50, 10, 50, 100);
+            Witch = new Witch(new Vector2D(10, 10), this, 1, 50, 50, 0, 1000, 2);
             Populate();
             GameGraph = new Graph.Graph(this);
         }
 
         public void Update(float timeElapsed)
         {
-            foreach (MovingEntity me in _movingEntities)
+            foreach (MovingEntity me in MovingEntities)
             {
                 me.Update(timeElapsed);
             }
@@ -49,7 +49,7 @@ namespace AAI_Final_Assignment_WinForms.World
                 GameGraph.Render(g);
             }
 
-            _movingEntities.ForEach(e => e.Render(g));
+            MovingEntities.ForEach(e => e.Render(g));
             StaticEntities.ForEach(o => o.Render(g));
             Witch.Render(g);
         }
@@ -59,13 +59,13 @@ namespace AAI_Final_Assignment_WinForms.World
             // for (int i = 0; i < 10; i++)
             // {
             //     TestEnemy t = new TestEnemy(new Vector2D(10, i * 10), this, 5);
-            //     _movingEntities.Add(t);
+            //     MovingEntities.Add(t);
             // }
 
-            TestEnemy t = new TestEnemy(new Vector2D(200, 200), this, 1, 50, 50, 1000, 2, 2);
-            _movingEntities.Add(t);
-            // Circle o = new Circle(new Vector2D(200, 200), this, 2, 30, 25, 25);
-            // StaticEntities.Add(o);
+            TestEnemy t = new TestEnemy(new Vector2D(200, 200), this, 1, 50, 50, 80 , 30, 2);
+            MovingEntities.Add(t);
+            Circle o = new Circle(new Vector2D(200, 200), this, 2, 30, 25, 25);
+            StaticEntities.Add(o);
 
             // Circle o2 = new Circle(new Vector2D(300, 250), this);
             // StaticEntities.Add(o2);
