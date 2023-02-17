@@ -20,10 +20,11 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public double DistanceAhead { get; set; }
 
         public Vector2D CurrentObstacleAvoidance;
-        public Vector2D CurrentDesiredVelocitySeek;
+        public Vector2D CurrentDesiredForceSeek = new ();
 
         public Vector2D CurrentArrive;
-        //public Vector2D CurrentObstacleAvoidance;
+
+        public Vector2D CurrentDesiredForceObstacle = new();
 
         public Vector2D Calculate()
         {
@@ -31,7 +32,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             if (ObstacleAvoidance)
             {
                 CurrentForce = CalculateObstacleAvoidance();
-                //if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
+                if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
             }
 
             if (Flee)
@@ -96,7 +97,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             desiredVelocity.Normalize();
             desiredVelocity.Multiply(ME.MaxSpeed);
 
-            CurrentDesiredVelocitySeek = desiredVelocity.Clone();
+            CurrentDesiredForceSeek = desiredVelocity.Clone();
 
             return desiredVelocity.Sub(ME.Velocity);
             // return desiredVelocity;
@@ -158,7 +159,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         {
             // max
             double maxAhead = 100;
-            double maxAvoidForce = 50;
+            double maxAvoidForce = 10000;
 
 
             // fixed length for detection box 
@@ -191,9 +192,13 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
                 avoidanceForce = ahead.Sub(closestObstacle.Center);
                 avoidanceForce.Normalize();
                 avoidanceForce.Multiply(maxAvoidForce);
+
+                CurrentDesiredForceObstacle = avoidanceForce;
+
                 return avoidanceForce;
             }
 
+            CurrentDesiredForceObstacle = new Vector2D();
             return new Vector2D();
         }
     }

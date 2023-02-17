@@ -91,16 +91,21 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
         protected void RenderInfo(Graphics g)
         {
-            int width = 6;
+            int width = 3;
             double multiplier = 5;
 
             // current velocity
             DrawLineFromEntity(g, Pos, Velocity.Clone().Multiply(multiplier), Color.Green, width);
 
-            // desired velocity
+            // desired seek force
 
-            DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentDesiredVelocitySeek.Clone().Multiply(multiplier),
+            DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentDesiredForceSeek.Clone().Multiply(multiplier),
                 Color.Gray,
+                width);
+
+            // desired obstacle force
+            DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentDesiredForceObstacle.Clone().Multiply(multiplier),
+                Color.Yellow,
                 width);
 
             // steering force
