@@ -33,14 +33,13 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                 Vector2D vector = ClosestVertex(entity.Pos);
 
                 int x = (int)vector.X;
-                int y = (int)vector.X;
+                int y = (int)vector.Y;
 
                 int eHeight = (int)(entity.TextureHeight);
                 int eWidth = (int)(entity.TextureWidth);
 
-                for (int i = x; i < (eWidth + x - vectorDistance); i += vectorDistance) 
-                {
-                    for (int j = y; j < (eHeight + y - vectorDistance); j += vectorDistance) {
+                for (int i = x; i < (eWidth + x); i += vectorDistance) {
+                    for (int j = y; j < (eHeight + y); j += vectorDistance) {
                         Vector2D nearVector = new Vector2D(i, j);
                         if (vertexMap.ContainsKey(nearVector))
                             vertexMap.Remove(nearVector);
