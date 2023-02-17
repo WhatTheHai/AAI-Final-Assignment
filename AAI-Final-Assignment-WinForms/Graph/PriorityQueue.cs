@@ -131,12 +131,22 @@ namespace AAI_Final_Assignment_WinForms.Graph
         }
         public void AddFreely(T x)
         {
-            throw new System.NotImplementedException();
+            // Add element to the end of the heap
+            if (size + 1 == array.Length)
+            {
+                DoubleArray();
+            }
+
+            array[++size] = x;
         }
 
         public void BuildHeap()
         {
-            throw new System.NotImplementedException();
+            // Build the heap in linear time using Floyd's algorithm
+            for (int i = size / 2; i >= 1; i--)
+            {
+                PercolateDown(i);
+            }
         }
 
     }

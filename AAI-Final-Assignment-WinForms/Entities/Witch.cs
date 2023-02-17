@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using AAI_Final_Assignment_WinForms.Graph;
 using AAI_Final_Assignment_WinForms.util;
 using AAI_Final_Assignment_WinForms.World;
 
@@ -10,6 +12,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
 {
     public class Witch : MovingEntity
     {
+        private Vector2D currentVertex;
+        private Vector2D desiredVertex;
         public Witch(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight, float mass,
             float maxSpeed, float maxForce
         ) : base(pos,
@@ -17,6 +21,11 @@ namespace AAI_Final_Assignment_WinForms.Entities
         {
             Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\Wizard.png"),
                 new Size(TextureWidth, TextureHeight));
+        }
+
+        public void setDestination(Vector2D destinationPos)
+        {
+            desiredVertex = World.GameGraph.ClosestVertex(destinationPos);
         }
 
         public override void Render(Graphics g)
@@ -29,7 +38,25 @@ namespace AAI_Final_Assignment_WinForms.Entities
             // g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
             //g.DrawEllipse(new Pen(Color.Orange, 3), new Rectangle((int)Pos.X, (int)Pos.Y, TextureWidth, TextureHeight));
 
+            Font drawFont = new Font("Arial", 10);
+            SolidBrush drawBrush = new SolidBrush(Color.Black);
+            float x = (float)Pos.X - 20;
+            float y = (float)Pos.Y - 80;
+            StringFormat drawFormat = new StringFormat();
             g.DrawImage(Texture, (int)Pos.X - TextureWidth / 2, (int)Pos.Y - TextureHeight / 2);
+            g.DrawString($"Vertex: {currentVertex}", drawFont, drawBrush, x+100, y+200, drawFormat);
+            g.DrawString($"Vertex: {desiredVertex}", drawFont, drawBrush, x+100, y+250, drawFormat);
+            
+        }
+        public override void Update(double timeElapsed)
+        {
+            currentVertex = World.GameGraph.ClosestVertex(Pos);
+            Vector2D desiredVelocity = (desiredVertex.Sub(currentVertex)).Normalize().Multiply(MaxSpeed);
+            Vector2D steeringForce = desiredVelocity.Sub(Velocity);
+            steeringForce.Truncate(MaxForce);
+            Vector2D acceleration = steeringForce.Divide(Mass);
+            acceleration.Truncate(MaxSpeed);
+            Pos.Add(Velocity.Multiply(timeElapsed));
         }
     }
 }

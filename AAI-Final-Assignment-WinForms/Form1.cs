@@ -35,7 +35,8 @@ namespace AAI_Final_Assignment_WinForms
 
         private void _mainPanel_MouseClick(object sender, MouseEventArgs e)
         {
-            _world.Witch.Pos = new Vector2D(e.X, e.Y);
+            _world.Witch.setDestination(new Vector2D(e.X, e.Y));
+            //_world.Witch.Pos = new Vector2D(e.X, e.Y);
         }
 
         private void label1_Paint(object sender, PaintEventArgs e)

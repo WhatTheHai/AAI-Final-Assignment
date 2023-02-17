@@ -200,6 +200,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
 
             }
         }
+
         /// <summary>
         ///    Converts this instance of Graph to its string representation.
         ///    It will call the ToString method of each Vertex. The output is
