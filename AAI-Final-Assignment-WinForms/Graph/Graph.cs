@@ -133,7 +133,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         }
 
         /// <summary>
-        ///    Performs the Breatch-First algorithm for unweighted graphs.
+        ///    Performs the Breadth-First algorithm for unweighted graphs.
         /// </summary>
         /// <param name="name">The name of the starting vertex</param>
         public void Unweighted(Vector2D pos) {
@@ -199,6 +199,11 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                 }
 
             }
+        }
+
+        public void AStar(Vector2D start, Vector2D goal)
+        {
+
         }
 
         /// <summary>
