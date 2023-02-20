@@ -12,7 +12,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 {
     public class SteeringBehaviour
     {
-        public bool Seek, Flee, Arrive, ObstacleAvoidance;
+        public bool Seek, Flee, Arrive, ObstacleAvoidance, Pursuit;
         public Vector2D TotalForce { get; set; }
         public Vector2D CurrentForce;
         public Vector2D AheadVector2D { get; set; }
@@ -20,11 +20,16 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public double DistanceAhead { get; set; }
 
         public Vector2D CurrentObstacleAvoidance;
-        public Vector2D CurrentDesiredForceSeek = new ();
+        public Vector2D CurrentDesiredForceSeek = new();
 
         public Vector2D CurrentArrive;
 
         public Vector2D CurrentDesiredForceObstacle = new();
+        public Vector2D CurrentDesiredForceArrive = new();
+        public int IdClosestObject = -1;
+        public int LastSeen = -1;
+
+        public double Dist;
 
         public Vector2D Calculate()
         {
@@ -48,10 +53,16 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
                 if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
             }
 
+            if (Pursuit)
+            {
+                CurrentForce = CalculateArrive();
+                if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
+            }
+
             if (Arrive)
             {
-                //CurrentForce = CalculateArrive();
-                //if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
+                CurrentForce = CalculateArrive();
+                if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
             }
 
 
@@ -96,10 +107,12 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             Vector2D desiredVelocity = targetPos.Sub(mePos);
             desiredVelocity.Normalize();
             desiredVelocity.Multiply(ME.MaxSpeed);
+            desiredVelocity.Sub(ME.Velocity);
 
             CurrentDesiredForceSeek = desiredVelocity.Clone();
 
-            return desiredVelocity.Sub(ME.Velocity);
+
+            return desiredVelocity;
             // return desiredVelocity;
         }
 
@@ -120,28 +133,65 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             return desiredVelocity.Sub(ME.Velocity.Clone());
         }
 
+        // public Vector2D CalculatePursuit()
+        // {
+        //     Vector2D ToEvader = ME.World.Witch.Pos.Clone();
+        //
+        //     double relativeHeading = ME.Heading.Clone().Dot()
+        // }
+
+        // public Vector2D CalculateArriveOLD()
+        // {
+        //     const double decelerationTweaker = 2;
+        //     //1 = fast, 2 = normal, 3 = slow
+        //     const double deceleration = 46;
+        //
+        //     Vector2D mePos = ME.Pos.Clone();
+        //     Vector2D targetPos = ME.World.Witch.Pos.Clone();
+        //     Vector2D toTarget = targetPos.Sub(mePos);
+        //
+        //      Dist = toTarget.Length();
+        //
+        //     if (Dist > 0.0001)
+        //     {
+        //         double speed = Dist / (deceleration * decelerationTweaker);
+        //         speed = Math.Min(speed, ME.MaxSpeed);
+        //         Vector2D desiredVelocity = toTarget.Multiply(speed / Dist);
+        //         desiredVelocity.Sub(ME.Velocity);
+        //         CurrentDesiredForceArrive = desiredVelocity;
+        //         return desiredVelocity;
+        //     }
+        //
+        //     CurrentDesiredForceArrive = new Vector2D();
+        //
+        //     return new Vector2D();
+        // }
+
         public Vector2D CalculateArrive()
         {
-            const double decelerationTweaker = 2;
-            //1 = fast, 2 = normal, 3 = slow
-            const double deceleration = 1;
+            const double deceleration = 175;
+
 
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
             Vector2D toTarget = targetPos.Sub(mePos);
 
-            double dist = toTarget.Length();
+            Dist = toTarget.Length();
 
-            if (dist > 0.0001)
+            if (Dist > 0.0001)
             {
-                double speed = dist / (deceleration * decelerationTweaker);
+                double speed = Dist / deceleration;
                 speed = Math.Min(speed, ME.MaxSpeed);
-                Vector2D desiredVelocity = toTarget.Multiply(speed / dist);
 
-                return (desiredVelocity.Sub(ME.Velocity));
+                Vector2D desiredVelocity = toTarget.Multiply(speed / Dist);
+                desiredVelocity.Sub(ME.Velocity);
+                CurrentDesiredForceArrive = desiredVelocity;
+                return desiredVelocity;
             }
 
-            return new Vector2D(0, 0);
+            CurrentDesiredForceArrive = new Vector2D();
+
+            return new Vector2D();
         }
 
 
@@ -158,8 +208,8 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public Vector2D CalculateObstacleAvoidance()
         {
             // max
-            double maxAhead = 100;
-            double maxAvoidForce = 10000;
+            double maxAhead = 0.5;
+            double maxAvoidForce = 50;
 
 
             // fixed length for detection box 
@@ -194,10 +244,12 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
                 avoidanceForce.Multiply(maxAvoidForce);
 
                 CurrentDesiredForceObstacle = avoidanceForce;
-
+                IdClosestObject = closestObstacle.Id;
+                LastSeen = closestObstacle.Id;
                 return avoidanceForce;
             }
 
+            IdClosestObject = -1;
             CurrentDesiredForceObstacle = new Vector2D();
             return new Vector2D();
         }

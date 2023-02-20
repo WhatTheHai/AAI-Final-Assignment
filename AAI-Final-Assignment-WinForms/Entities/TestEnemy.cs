@@ -35,6 +35,9 @@ namespace AAI_Final_Assignment_WinForms.Entities
         public override void Render(Graphics g)
         {
             g.DrawImage(Texture, (int)Pos.X - TextureWidth / 2, (int)Pos.Y - TextureHeight / 2);
+            g.DrawLine(new Pen(Color.Orange, 5), (int)Pos.X, (int)Pos.Y,
+                (int)SteeringBehaviour.AheadVector2D.X,
+                (int)SteeringBehaviour.AheadVector2D.Y);
             base.Render(g);
            
         }

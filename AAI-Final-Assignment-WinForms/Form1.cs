@@ -25,7 +25,7 @@ namespace AAI_Final_Assignment_WinForms
         {
             _world.Update(timeDelta);
             _mainPanel.Invalidate();
-            label1.Invalidate();
+            //label1.Invalidate();
         }
 
         private void MainPanel_Paint(object sender, PaintEventArgs e)

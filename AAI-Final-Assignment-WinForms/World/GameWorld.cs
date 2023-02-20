@@ -34,7 +34,7 @@ namespace AAI_Final_Assignment_WinForms.World
             GameGraph = new Graph.Graph(this);
         }
 
-        public void Update(float timeElapsed)
+        public void Update(double timeElapsed)
         {
             foreach (MovingEntity me in MovingEntities)
             {
@@ -58,28 +58,28 @@ namespace AAI_Final_Assignment_WinForms.World
         {
             // for (int i = 0; i < 10; i++)
             // {
-            //     TestEnemy t = new TestEnemy(new Vector2D(10, i * 10), this, 5);
+            //     TestEnemy t = new TestEnemy(new Vector2D(100, 100 + (i * 100)), this, 1, 50, 50, 50, 5, 10000); // 50 5 100000
             //     MovingEntities.Add(t);
             // }
 
-            TestEnemy t = new TestEnemy(new Vector2D(200, 200), this, 1, 25, 25, 80 , 2, 10);
+            TestEnemy t = new TestEnemy(new Vector2D(1000, 1000), this, 1, 50, 50, 50, 5, 10000); // 50 5 100000
             MovingEntities.Add(t);
             Circle o = new Circle(new Vector2D(200, 200), this, 2, 30, 25, 25);
             StaticEntities.Add(o);
-
-            // Circle o2 = new Circle(new Vector2D(300, 250), this);
+            //
+            // Circle o2 = new Circle(new Vector2D(500, 250), this, 2 , 60, 50, 50);
             // StaticEntities.Add(o2);
-            //
-            // Circle o3 = new Circle(new Vector2D(400, 450), this);
+            // //
+            // Circle o3 = new Circle(new Vector2D(400, 450), this, 2, 60, 50, 50);
             // StaticEntities.Add(o3);
-            //
-            // Circle o4 = new Circle(new Vector2D(350, 250), this);
+            // //
+            // Circle o4 = new Circle(new Vector2D(350, 250), this, 2, 60, 50, 50);
             // StaticEntities.Add(o4);
-            //
-            // Circle o5 = new Circle(new Vector2D(300, 350), this);
+            // //
+            // Circle o5 = new Circle(new Vector2D(600, 350), this, 2, 60, 50, 50);
             // StaticEntities.Add(o5);
             //
-            // Circle o6 = new Circle(new Vector2D(400, 200), this);
+            // Circle o6 = new Circle(new Vector2D(400, 200), this, 2, 12, 50, 50);
             // StaticEntities.Add(o6);
         }
     }

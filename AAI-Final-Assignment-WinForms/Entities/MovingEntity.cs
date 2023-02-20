@@ -83,9 +83,25 @@ namespace AAI_Final_Assignment_WinForms.Entities
             StringFormat drawFormat = new StringFormat();
             //drawFormat.FormatFlags = StringFormatFlags.NoWrap;
 
-            g.DrawString($"Velocity: {Velocity}", drawFont, drawBrush, x, y, drawFormat);
-            g.DrawString($"Heading: {Heading}", drawFont, drawBrush, x, y + 20, drawFormat);
 
+            g.DrawString($"Velocity: {Velocity.ToStringRounded()}", drawFont, drawBrush, x, y, drawFormat);
+            g.DrawString($"Heading: {Heading.ToStringRounded()}", drawFont, drawBrush, x, y + 20, drawFormat);
+            g.DrawString($"Seek forces: {SteeringBehaviour.CurrentDesiredForceSeek.ToStringRounded()}", drawFont,
+                drawBrush, x, y + 40,
+                drawFormat);
+            // g.DrawString($"Arrive forces: {SteeringBehaviour.CurrentDesiredForceArrive.ToStringRounded()}", drawFont,
+            //     drawBrush, x, y + 60,
+            //     drawFormat);
+            g.DrawString($"obstacle forces: {SteeringBehaviour.CurrentDesiredForceObstacle.ToStringRounded()}",
+                drawFont,
+                drawBrush, x, y + 60,
+                drawFormat);
+            g.DrawString($"Added forces: {currentSteeringForce.ToStringRounded()}", drawFont, drawBrush, x, y + 80,
+                drawFormat);
+            g.DrawString($"current closest: {SteeringBehaviour.IdClosestObject} :", drawFont, drawBrush, x, y + 100,
+                drawFormat);
+            g.DrawString($"last seen: {SteeringBehaviour.LastSeen} :", drawFont, drawBrush, x, y + 120,
+                drawFormat);
             RenderInfo(g);
         }
 
@@ -95,21 +111,21 @@ namespace AAI_Final_Assignment_WinForms.Entities
             double multiplier = 5;
 
             // current velocity
-            DrawLineFromEntity(g, Pos, Velocity.Clone().Multiply(multiplier), Color.Green, width);
+            // DrawLineFromEntity(g, Pos, Velocity.Clone().Multiply(multiplier), Color.Green, width);
 
             // desired seek force
 
-            DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentDesiredForceSeek.Clone().Multiply(multiplier),
-                Color.Gray,
-                width);
+            // DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentDesiredForceSeek.Clone().Multiply(multiplier),
+            //     Color.Gray,
+            //     width);
 
             // desired obstacle force
-            DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentDesiredForceObstacle.Clone().Multiply(multiplier),
-                Color.Yellow,
-                width);
+            // DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentDesiredForceObstacle.Clone().Multiply(multiplier),
+            //     Color.Yellow,
+            //     width);
 
             // steering force
-            DrawLineFromEntity(g, Pos, currentSteeringForce.Clone().Multiply(multiplier), Color.Red, width);
+            // DrawLineFromEntity(g, Pos, currentSteeringForce.Clone().Multiply(multiplier), Color.Red, width);
             // Vector2D currentSteeringForceEndPoint = currentVelocity.Clone().Add(currentSteeringForce.Clone());
             //DrawLineFromEntity(g, Pos, currentSteeringForceEndPoint, Color.Blue, width);
         }
