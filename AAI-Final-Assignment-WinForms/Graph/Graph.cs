@@ -201,9 +201,65 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             }
         }
 
-        public void AStar(Vector2D start, Vector2D goal)
+        /// <summary>
+        ///    Performs the AStar algorithm for graphs.
+        /// </summary>
+        /// <param name="name">The name of the starting vertex</param>
+        public List<Vector2D>? AStar(Vector2D start, Vector2D goal)
         {
+            ClearAll();
+            Vertex startVertex = CreateOrReturnVertex(ClosestVertex(start));
+            Vertex goalVertex = CreateOrReturnVertex(ClosestVertex(goal));
 
+            PriorityQueue<Vertex> openSet = new PriorityQueue<Vertex>();
+            HashSet<Vertex> closedSet = new HashSet<Vertex>();
+
+            //Adjusted node cost = cost to reach a node + estimate cost to target
+            // F Score = G score + H score
+            // G: distance from node to start node
+            // H: distance from nod to the target node
+
+            startVertex.gScore = 0;
+            startVertex.hScore = startVertex.EuclideanDistance(goalVertex);
+            startVertex.fScore = startVertex.gScore + startVertex.hScore;
+            openSet.Add(startVertex);
+
+            // Continue until the queue is empty and all vertices are seen.
+            // 
+            while (openSet.size > 0)
+            {
+                Vertex currentVertex = openSet.Remove();
+
+                if (currentVertex == goalVertex)
+                {
+                    //TODO: Implement pathconstructor when goal has been found
+                    return new List<Vector2D>();
+                }
+
+                closedSet.Add(currentVertex);
+
+                foreach (Edge edge in currentVertex.GetAdjacents())
+                {
+                    Vertex nearVertex = edge.dest;
+
+                    if (closedSet.Contains(nearVertex)) {
+                        continue;
+                    }
+                }
+            }
+
+            return null;
+        }
+        
+        /// <summary>
+        /// Calculates heuristics based on the euclidean distance.  
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        private static double Heuristic(Vector2D a, Vector2D b)
+        {
+            return a.Distance(b);
         }
 
         /// <summary>
@@ -227,8 +283,12 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         public void Render(Graphics g)
         {
             Pen p = new Pen(Color.Gray, 1);
+            Pen p1 = p;
+            Pen p2 = new Pen(Color.Red, 1);
             foreach (Vertex vertex in vertexMap.Values) {
-                foreach (Edge edge in vertex.adj) {
+                foreach (Edge edge in vertex.adj)
+                {
+                    p = edge.dest.GetKnown() ? p2 : p1;
                     g.DrawLine(p, (int)vertex.pos.X, (int)vertex.pos.Y, (int)edge.dest.pos.X, (int)edge.dest.pos.Y);
                 }
             }

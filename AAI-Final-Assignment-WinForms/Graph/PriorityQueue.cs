@@ -147,7 +147,7 @@ namespace AAI_Final_Assignment_WinForms.Graph
             {
                 PercolateDown(i);
             }
-        }
+        } 
 
     }
 }

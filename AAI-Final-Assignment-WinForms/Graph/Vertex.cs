@@ -13,6 +13,8 @@ namespace AAI_Final_Assignment_WinForms.Graph
         public string name;
         public LinkedList<Edge> adj;
         public double distance;
+        public double fScore;
+        public double gScore { get; set; }
         public Vertex prev;
         public bool known;
         public Vector2D pos;
@@ -56,6 +58,8 @@ namespace AAI_Final_Assignment_WinForms.Graph
             prev = null;
             distance = Double.MaxValue;
             known = false;
+            fScore = Double.MaxValue;
+            gScore = Double.MaxValue;
         }
 
         public override string ToString()
@@ -69,9 +73,21 @@ namespace AAI_Final_Assignment_WinForms.Graph
 
             return s;
         }
-        public int CompareTo(Vertex other)
+
+        //Heuristic Score
+        public double GetHScore(Vertex Goal)
         {
-            return distance.CompareTo(other.distance);
+            return EuclideanDistance(Goal);
+        }
+
+        public double EuclideanDistance(Vertex other)
+        {
+            return Math.Sqrt(Math.Pow(pos.X - other.pos.X, 2) + Math.Pow(pos.Y - other.pos.Y, 2));
+        }
+
+        public int CompareTo(Vertex? other)
+        {
+            return other == null ? 1 : fScore.CompareTo(other.fScore);
         }
     }
 }
