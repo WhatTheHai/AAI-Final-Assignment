@@ -15,6 +15,7 @@ namespace AAI_Final_Assignment_WinForms.Graph
         public double distance;
         public double fScore;
         public double gScore { get; set; }
+        public double hScore { get; set; }
         public Vertex prev;
         public bool known;
         public Vector2D pos;
@@ -73,13 +74,6 @@ namespace AAI_Final_Assignment_WinForms.Graph
 
             return s;
         }
-
-        //Heuristic Score
-        public double GetHScore(Vertex Goal)
-        {
-            return EuclideanDistance(Goal);
-        }
-
         public double EuclideanDistance(Vertex other)
         {
             return Math.Sqrt(Math.Pow(pos.X - other.pos.X, 2) + Math.Pow(pos.Y - other.pos.Y, 2));
