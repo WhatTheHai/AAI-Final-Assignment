@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms.VisualStyles;
 using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.util;
 using AAI_Final_Assignment_WinForms.World;
@@ -14,15 +15,16 @@ namespace AAI_Final_Assignment_WinForms.Graph {
     public partial class Graph : IGraph {
         public static readonly double INFINITY = System.Double.MaxValue;
 
-        public Dictionary<Vector2D, Vertex> vertexMap;
-        public const int vectorDistance = 32;
+        public Dictionary<Vector2D, Vertex> VertexMap;
+        public const int VectorDistance = 32;
+        public List<Vector2D>? MovePath;
 
         public Graph(GameWorld gameWorld) {
-            vertexMap = new Dictionary<Vector2D, Vertex>();
+            VertexMap = new Dictionary<Vector2D, Vertex>();
 
             // Create initial vertexes on the map
-            for(int y = 0; y <= gameWorld.Height; y += vectorDistance) {
-                for (int x = 0; x <= gameWorld.Width; x += vectorDistance) {
+            for(int y = 0; y < gameWorld.Height; y += VectorDistance) {
+                for (int x = 0; x < gameWorld.Width; x += VectorDistance) {
                     GetVertex(new Vector2D(x, y));
                 }
             }
@@ -38,40 +40,53 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                 int eHeight = (int)(entity.TextureHeight);
                 int eWidth = (int)(entity.TextureWidth);
 
-                for (int i = x; i < (eWidth + x); i += vectorDistance) {
-                    for (int j = y; j < (eHeight + y); j += vectorDistance) {
+                for (int i = x; i < (eWidth + x); i += VectorDistance) {
+                    for (int j = y; j < (eHeight + y); j += VectorDistance) {
                         Vector2D nearVector = new Vector2D(i, j);
-                        if (vertexMap.ContainsKey(nearVector))
-                            vertexMap.Remove(nearVector);
+                        if (VertexMap.ContainsKey(nearVector))
+                            VertexMap.Remove(nearVector);
                     }
                 }
             }
 
             //Generate edges
-            foreach (Vertex vertex in vertexMap.Values) {
+            foreach (Vertex vertex in VertexMap.Values) {
                 List<Vector2D> edgesList = new List<Vector2D>();
 
                 Vector2D pos = vertex.pos;
-                Vector2D rightUp = new Vector2D(pos.X + vectorDistance, pos.Y - vectorDistance);
-                Vector2D right = new Vector2D(pos.X + vectorDistance, pos.Y);
-                Vector2D rightDown = new Vector2D(pos.X + vectorDistance, pos.Y + vectorDistance);
-                Vector2D down = new Vector2D(pos.X, pos.Y + vectorDistance);
+                Vector2D up = new Vector2D(pos.X, pos.Y - VectorDistance);
+                Vector2D rightUp = new Vector2D(pos.X + VectorDistance, pos.Y - VectorDistance);
+                Vector2D right = new Vector2D(pos.X + VectorDistance, pos.Y);
+                Vector2D rightDown = new Vector2D(pos.X + VectorDistance, pos.Y + VectorDistance);
+                Vector2D down = new Vector2D(pos.X, pos.Y + VectorDistance);
+                Vector2D downLeft = new Vector2D(pos.X - VectorDistance, pos.Y + VectorDistance);
+                Vector2D left = new Vector2D(pos.X - VectorDistance, pos.Y);
+                Vector2D leftUp = new Vector2D(pos.X - VectorDistance, pos.Y - VectorDistance);
 
-                //Diagonals have sqrt 2 cost but rounded to 1.5
-                if(vertexMap.ContainsKey(rightUp))
-                    AddEdge(pos, rightUp, 1.5);
-                if (vertexMap.ContainsKey(right))
+                //Diagonals have sqrt 2 cost but rounded to 1.4
+                if(VertexMap.ContainsKey(up))
+                    AddEdge(pos, up, 1);
+                if(VertexMap.ContainsKey(rightUp))
+                    AddEdge(pos, rightUp, 1.4);
+                if (VertexMap.ContainsKey(right))
                     AddEdge(pos, right, 1);
-                if (vertexMap.ContainsKey(rightDown))
-                    AddEdge(pos, rightDown, 1.5);
-                if (vertexMap.ContainsKey(down))
+                if (VertexMap.ContainsKey(rightDown))
+                    AddEdge(pos, rightDown, 1.4);
+                if (VertexMap.ContainsKey(down))
                     AddEdge(pos, down, 1);
+                if (VertexMap.ContainsKey(downLeft))
+                    AddEdge(pos, downLeft, 1.4);
+                if (VertexMap.ContainsKey(left))
+                    AddEdge(pos, left, 1);
+                if (VertexMap.ContainsKey(leftUp))
+                    AddEdge(pos, leftUp, 1);
             } 
         }
 
-        public Vector2D ClosestVertex(Vector2D position) {
-            double nearestX = ((int)position.X / vectorDistance) * vectorDistance + vectorDistance;
-            double nearestY = ((int)position.Y / vectorDistance) * vectorDistance + vectorDistance;
+        public Vector2D ClosestVertex(Vector2D position)
+        {
+            double nearestX = Math.Round(position.X / VectorDistance) * VectorDistance;
+            double nearestY = Math.Round(position.Y / VectorDistance) * VectorDistance;
             return new Vector2D(nearestX, nearestY);
         }
 
@@ -97,11 +112,11 @@ namespace AAI_Final_Assignment_WinForms.Graph {
 
         private Vertex CreateOrReturnVertex(Vector2D pos) {
             Vertex vertex;
-            if (vertexMap.ContainsKey(pos))
-                return vertexMap[pos];
+            if (VertexMap.ContainsKey(pos))
+                return VertexMap[pos];
 
             vertex = new Vertex(pos);
-            vertexMap.Add(pos, vertex);
+            VertexMap.Add(pos, vertex);
             return vertex;
         }
 
@@ -117,7 +132,11 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             Vertex vSource = this.CreateOrReturnVertex(source);
             Vertex vDest = this.CreateOrReturnVertex(dest);
 
-            //Check for duplicates
+            // Check for duplicates
+            if (vSource.adj.Any(edge => edge.dest == vDest)) {
+                return;
+            }
+
             vSource.adj.AddFirst(new Edge(vDest, cost));
         }
 
@@ -127,7 +146,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         ///    vertices or edges.
         /// </summary>
         public void ClearAll() {
-            foreach (var vertex in vertexMap) {
+            foreach (var vertex in VertexMap) {
                 vertex.Value.Reset();
             }
         }
@@ -139,8 +158,8 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         public void Unweighted(Vector2D pos) {
             ClearAll();
             Vertex startV;
-            if (vertexMap[pos] != null) {
-                startV = vertexMap[pos];
+            if (VertexMap[pos] != null) {
+                startV = VertexMap[pos];
             }
             else {
                 throw new SystemException();
@@ -152,7 +171,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
 
             while (q.Any()) {
                 Vertex prev = q.Dequeue();
-                //Check every adj
+                //Check every adjadj
                 foreach (var edge in prev.adj) {
                     Vertex next = edge.dest;
                     //If it's not infinity it's checked
@@ -168,8 +187,8 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         public void Dijkstra(Vector2D pos) {
             ClearAll();
             Vertex startV;
-            if (vertexMap[pos] != null) {
-                startV = vertexMap[pos];
+            if (VertexMap[pos] != null) {
+                startV = VertexMap[pos];
             }
             else {
                 throw new SystemException();
@@ -202,12 +221,15 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         }
 
         /// <summary>
-        ///    Performs the AStar algorithm for graphs.
+        /// Performs the A* algorithm to find the shortest path between two points in the graph.
         /// </summary>
-        /// <param name="name">The name of the starting vertex</param>
+        /// <param name="start">The starting point of the path.</param>
+        /// <param name="goal">The goal point of the path.</param>
+        /// <returns>A list of vertices that represents the shortest path from the starting point to the goal point, or null if a path cannot be found.</returns>
         public List<Vector2D>? AStar(Vector2D start, Vector2D goal)
         {
             ClearAll();
+
             Vertex startVertex = CreateOrReturnVertex(ClosestVertex(start));
             Vertex goalVertex = CreateOrReturnVertex(ClosestVertex(goal));
 
@@ -220,20 +242,19 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             // H: distance from nod to the target node
 
             startVertex.gScore = 0;
-            startVertex.hScore = startVertex.EuclideanDistance(goalVertex);
+            startVertex.hScore = startVertex.Heuristic(goalVertex);
             startVertex.fScore = startVertex.gScore + startVertex.hScore;
             openSet.Add(startVertex);
 
             // Continue until the queue is empty and all vertices are seen.
-            // 
             while (openSet.size > 0)
             {
                 Vertex currentVertex = openSet.Remove();
 
                 if (currentVertex == goalVertex)
                 {
-                    //TODO: Implement pathconstructor when goal has been found
-                    return new List<Vector2D>();
+                    //Goal found, make the path.
+                    return BuildPath(startVertex, goalVertex);
                 }
 
                 closedSet.Add(currentVertex);
@@ -242,24 +263,66 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                 {
                     Vertex nearVertex = edge.dest;
 
-                    if (closedSet.Contains(nearVertex)) {
+                    if (closedSet.Contains(nearVertex)) 
+                    {
                         continue;
+                    }
+
+                    // Calculate the scores for the vertices nearby
+
+                    double relativeGScore = currentVertex.gScore + edge.cost;
+
+                    if (!openSet.Contains(nearVertex)) {
+                        nearVertex.hScore = Heuristic(nearVertex.GetPos(), goalVertex.GetPos());
+                        nearVertex.gScore = relativeGScore;
+                        nearVertex.fScore = nearVertex.hScore + nearVertex.gScore;
+                        nearVertex.prev = currentVertex;
+                        openSet.Add(nearVertex);
+                    //If the relative G score is higher or equal, it is not a better part.
+                    } else if (relativeGScore >= nearVertex.gScore) {
+                        continue;
+                    }
+                    else {
+                        nearVertex.gScore = relativeGScore;
+                        nearVertex.fScore = nearVertex.gScore + nearVertex.hScore;
+                        nearVertex.prev = currentVertex;
+                        openSet.UpdatePriority(nearVertex);
                     }
                 }
             }
-
+            //If it doesn't find the goal, return nothing.
             return null;
         }
-        
+
+        public List<Vector2D> BuildPath(Vertex startVertex, Vertex goalVertex) {
+            List<Vector2D> path = new List<Vector2D>();
+            Vertex current = goalVertex;
+
+            while (current != startVertex) {
+                path.Add(current.pos);
+                current = current.GetPrevious();
+            }
+
+            path.Add(startVertex.pos);
+
+            //Reverse from goal -> start to start -> goal
+            path.Reverse();
+
+            return path;
+        }
+
         /// <summary>
-        /// Calculates heuristics based on the euclidean distance.  
+        /// Calculates a heuristic value based on the Euclidean distance between two 2D vectors.
         /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
-        private static double Heuristic(Vector2D a, Vector2D b)
+        /// <param name="start">The start vector.</param>
+        /// <param name="end">The end vector.</param>
+        /// <returns>The Euclidean distance between the two vectors.</returns>
+        private static double Heuristic(Vector2D start, Vector2D end)
         {
-            return a.Distance(b);
+            double deltaX = end.X - start.X;
+            double deltaY = end.Y - start.Y;
+            double distance = Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
+            return distance;
         }
 
         /// <summary>
@@ -270,8 +333,8 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         /// <returns>The string representation of this Graph instance</returns>
         public override string ToString() {
             string s = "";
-            foreach (Vector2D key in vertexMap.Keys.OrderBy(x => x)) {
-                s += vertexMap[key];
+            foreach (Vector2D key in VertexMap.Keys.OrderBy(x => x)) {
+                s += VertexMap[key];
             }
 
             return s;
@@ -285,17 +348,23 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             Pen p = new Pen(Color.Gray, 1);
             Pen p1 = p;
             Pen p2 = new Pen(Color.Red, 1);
-            foreach (Vertex vertex in vertexMap.Values) {
-                foreach (Edge edge in vertex.adj)
-                {
-                    p = edge.dest.GetKnown() ? p2 : p1;
+            foreach (Vertex vertex in VertexMap.Values) {
+                foreach (Edge edge in vertex.adj) {
                     g.DrawLine(p, (int)vertex.pos.X, (int)vertex.pos.Y, (int)edge.dest.pos.X, (int)edge.dest.pos.Y);
                 }
             }
             //Vertex
-            foreach (Vertex vertex in vertexMap.Values) 
+            foreach (Vertex vertex in VertexMap.Values) 
             {
                 g.DrawEllipse(vertex.p, new Rectangle((int)vertex.pos.X-3, (int)vertex.pos.Y-3, 6, 6));
+                g.DrawString($"FGH: {(int)vertex.fScore}\n{(int)vertex.gScore}\n{(int)vertex.hScore}", new Font("Arial", 5), new SolidBrush(Color.Black), new PointF((int)vertex.pos.X-3, (int)vertex.pos.Y+2));
+            }
+
+            if (MovePath != null) {
+                //toList to prevent crashing when updating MovePath too fast
+                foreach (var vector in MovePath.ToList()) {
+                    g.DrawEllipse(p2, (int)vector.X, (int)vector.Y, 10,10);
+                }
             }
         }
     }

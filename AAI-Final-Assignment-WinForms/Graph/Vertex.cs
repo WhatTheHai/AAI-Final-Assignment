@@ -61,6 +61,7 @@ namespace AAI_Final_Assignment_WinForms.Graph
             known = false;
             fScore = Double.MaxValue;
             gScore = Double.MaxValue;
+            hScore = Double.MaxValue;
         }
 
         public override string ToString()
@@ -74,10 +75,11 @@ namespace AAI_Final_Assignment_WinForms.Graph
 
             return s;
         }
-        public double EuclideanDistance(Vertex other)
+        public double Heuristic(Vertex other)
         {
             return Math.Sqrt(Math.Pow(pos.X - other.pos.X, 2) + Math.Pow(pos.Y - other.pos.Y, 2));
         }
+
 
         public int CompareTo(Vertex? other)
         {
