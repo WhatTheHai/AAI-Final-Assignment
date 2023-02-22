@@ -33,15 +33,17 @@ namespace AAI_Final_Assignment_WinForms.Entities
         public SteeringBehaviour SteeringBehaviour { get; set; }
 
         protected MovingEntity(Vector2D pos, GameWorld world, double scale, int textureWidth, int textureHeight,
-            double mass, double maxSpeed, double maxForce
-        ) : base(pos, world, scale, textureWidth, textureHeight)
+            double mass, double maxSpeed, double maxForce, double radius
+        ) : base(pos, world, scale, textureWidth, textureHeight, radius)
         {
             Mass = mass;
             MaxSpeed = maxSpeed;
             MaxForce = maxForce;
             Velocity = new Vector2D();
             Heading = new Vector2D();
+            Side = new Vector2D();
             SteeringBehaviour = new SteeringBehaviour(this);
+            currentSteeringForce = new Vector2D();
         }
 
         public override void Update(double timeElapsed)
@@ -98,10 +100,21 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 drawFormat);
             g.DrawString($"Added forces: {currentSteeringForce.ToStringRounded()}", drawFont, drawBrush, x, y + 80,
                 drawFormat);
-            g.DrawString($"current closest: {SteeringBehaviour.IdClosestObject} :", drawFont, drawBrush, x, y + 100,
-                drawFormat);
-            g.DrawString($"last seen: {SteeringBehaviour.LastSeen} :", drawFont, drawBrush, x, y + 120,
-                drawFormat);
+            if (SteeringBehaviour.IsCollision)
+            {
+                g.DrawString($"Collision: Yes", drawFont, drawBrush, x, y + 100,
+                    drawFormat);
+            }
+            else
+            {
+                g.DrawString($"Collision: No", drawFont, drawBrush, x, y + 100,
+                    drawFormat);
+            }
+
+            // g.DrawString($"current closest: {SteeringBehaviour.IdClosestObject} :", drawFont, drawBrush, x, y + 100,
+            //     drawFormat);
+            // g.DrawString($"last seen: {SteeringBehaviour.LastSeen} :", drawFont, drawBrush, x, y + 120,
+            //     drawFormat);
             RenderInfo(g);
         }
 

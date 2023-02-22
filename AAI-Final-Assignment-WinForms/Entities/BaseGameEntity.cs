@@ -25,18 +25,24 @@ namespace AAI_Final_Assignment_WinForms.Entities
         // unique identifier of entity 
         public int Id { get; set; }
 
+        // bounding radius of a object
+        public double Radius { get; set; }
+
+
         // texture setup 
         public int TextureWidth { get; set; }
         public int TextureHeight { get; set; }
-        public Bitmap Texture { get; set; }
+        public Bitmap? Texture { get; set; }
 
 
-        protected BaseGameEntity(Vector2D pos, GameWorld world, double scale, int textureWidth, int textureHeight)
+        protected BaseGameEntity(Vector2D pos, GameWorld world, double scale, int textureWidth, int textureHeight,
+            double radius)
         {
             Pos = pos;
             World = world;
             Scale = scale;
             Id = _nextId++;
+            Radius = radius;
             TextureHeight = textureHeight * (int)scale;
             TextureWidth = textureWidth * (int)scale;
         }

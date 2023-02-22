@@ -28,15 +28,14 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public Vector2D CurrentDesiredForceArrive = new();
         public int IdClosestObject = -1;
         public int LastSeen = -1;
-
-        public double Dist;
+        public bool IsCollision { get; set; }
 
         public Vector2D Calculate()
         {
             TotalForce = new Vector2D();
             if (ObstacleAvoidance)
             {
-                CurrentForce = CalculateObstacleAvoidance();
+                CurrentForce = CalculateObstacleAvoidancev2();
                 if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
             }
 
@@ -176,7 +175,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
             Vector2D toTarget = targetPos.Sub(mePos);
 
-            Dist = toTarget.Length();
+            double Dist = toTarget.Length();
 
             if (Dist > 0.0001)
             {
@@ -252,6 +251,90 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             IdClosestObject = -1;
             CurrentDesiredForceObstacle = new Vector2D();
             return new Vector2D();
+        }
+
+        public Vector2D CalculateObstacleAvoidancev2()
+        {
+            // range when to avoid
+            double avoidanceRadius = 500;
+            // maximum force applied when avoiding
+            double maxAvoidanceForce = 50;
+
+            // force to calculate
+            Vector2D avoidanceForce = new Vector2D();
+            // closest distance of object 
+            double closestDistance = double.MaxValue;
+
+            // normalized closest vector 
+            Vector2D closestNormal = new Vector2D();
+
+            foreach (StaticEntity obstacle in ME.World.StaticEntities)
+            {
+                Vector2D toObstacle = obstacle.Pos.Clone().Sub(ME.Pos);
+
+                double distance = toObstacle.Length();
+
+                if (distance < avoidanceRadius)
+                {
+                   
+
+                    // check if there is collision with the obstacle 
+                    if (CheckCollision(obstacle.Pos, obstacle.Radius, ME.Pos, ME.Radius, out var normal))
+                    {
+                        double dot = normal.Clone().Dot(ME.Velocity);
+
+                        if (dot < 0 && distance < closestDistance)
+                        {
+                            closestDistance = distance;
+                            closestNormal = normal;
+                        }
+                    }
+                }
+            }
+
+
+            if (closestDistance != double.MaxValue)
+            {
+                avoidanceForce = closestNormal.Multiply(maxAvoidanceForce);
+            }
+
+            CurrentDesiredForceObstacle = avoidanceForce.Clone();
+
+            return avoidanceForce;
+        }
+
+        public bool CheckCollision(Vector2D characterPosition, double characterRadius,
+            Vector2D obstaclePosition, double obstacleRadius, out Vector2D normal)
+        {
+            normal = new Vector2D();
+
+            // Add the obstacle radius to the obstacle position
+            Vector2D adjustedObstaclePosition =
+                obstaclePosition.Clone().Add(new Vector2D(obstacleRadius, obstacleRadius));
+            Vector2D adjustedCharacterPosition =
+                characterPosition.Clone().Add(new Vector2D(characterRadius, characterRadius));
+
+
+            // Calculate the distance between the character and the obstacle
+            Vector2D distance = adjustedObstaclePosition.Clone().Sub(adjustedCharacterPosition);
+            double distanceSquared = distance.LengthSquared();
+
+            // Check if the distance is less than the sum of the radii
+            double sumOfRadii = characterRadius + obstacleRadius;
+            double sumOfRadiiSquared = sumOfRadii * sumOfRadii;
+            if (distanceSquared < sumOfRadiiSquared)
+            {
+                // Calculate the normal vector from the obstacle to the character
+                normal = distance.Clone().Normalize();
+
+                // The circles are colliding
+                IsCollision = true;
+                return true;
+            }
+
+            IsCollision = false;
+            // The circles are not colliding
+            return false;
         }
     }
 }

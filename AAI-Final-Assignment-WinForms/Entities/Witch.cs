@@ -11,9 +11,9 @@ namespace AAI_Final_Assignment_WinForms.Entities
     public class Witch : MovingEntity
     {
         public Witch(Vector2D pos, GameWorld world, double scale, int textureWidth, int textureHeight, double mass,
-            double maxSpeed, double maxForce
+            double maxSpeed, double maxForce, double radius
         ) : base(pos,
-            world, scale, textureWidth, textureHeight, mass, maxSpeed, maxForce)
+            world, scale, textureWidth, textureHeight, mass, maxSpeed, maxForce, radius)
         {
             Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\Wizard.png"),
                 new Size(TextureWidth, TextureHeight));
@@ -30,7 +30,6 @@ namespace AAI_Final_Assignment_WinForms.Entities
             //g.DrawEllipse(new Pen(Color.Orange, 3), new Rectangle((int)Pos.X, (int)Pos.Y, TextureWidth, TextureHeight));
 
             g.DrawImage(Texture, (int)Pos.X - TextureWidth / 2, (int)Pos.Y - TextureHeight / 2);
-
         }
     }
 }

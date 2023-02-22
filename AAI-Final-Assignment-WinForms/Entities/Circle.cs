@@ -13,8 +13,9 @@ namespace AAI_Final_Assignment_WinForms.Entities
         public int Diameter { get; set; }
         public Vector2D Center { get; set; }
 
-        public Circle(Vector2D pos, GameWorld world, float scale, int diameter, int textureWidth, int textureHeight) :
-            base(pos, world, scale, textureWidth, textureHeight)
+        public Circle(Vector2D pos, GameWorld world, float scale, int diameter, int textureWidth, int textureHeight,
+            double radius) :
+            base(pos, world, scale, textureWidth, textureHeight, radius)
         {
             Diameter = diameter * (int)scale;
             Center = new Vector2D(Pos.X + (Diameter / 2), Pos.Y + (Diameter / 2));
@@ -28,6 +29,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             // g.FillEllipse(Brushes.Black, new Rectangle((int)Pos.X, (int)Pos.Y, Diameter, Diameter));
             g.DrawEllipse(new Pen(Color.Black, 3), new Rectangle((int)Pos.X, (int)Pos.Y, Diameter, Diameter));
             // g.FillRectangle(Brushes.Black, new Rectangle((int)Center.X, (int)Center.Y, 1, 1));
+
             g.DrawImage(Texture, (int)Center.X - TextureWidth / 2, (int)Center.Y - TextureHeight / 2);
         }
     }
