@@ -16,21 +16,21 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         public static readonly double INFINITY = System.Double.MaxValue;
 
         public Dictionary<Vector2D, Vertex> VertexMap;
-        public const int VectorDistance = 32;
+        public const int VectorDistance = 25;
         public List<Vector2D>? MovePath;
+        public Boolean RenderPath = false;
 
         public Graph(GameWorld gameWorld) {
             VertexMap = new Dictionary<Vector2D, Vertex>();
 
-            // Create initial vertexes on the map
+            // Create initial vertices on the map
             for(int y = 0; y < gameWorld.Height; y += VectorDistance) {
                 for (int x = 0; x < gameWorld.Width; x += VectorDistance) {
                     GetVertex(new Vector2D(x, y));
                 }
             }
 
-            //TODO: Remove vertexes depending on objects
-
+            //Removes the vertices that are on objects
             foreach (StaticEntity entity in gameWorld.StaticEntities) {
                 Vector2D vector = ClosestVertex(entity.Pos);
 
@@ -40,8 +40,10 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                 int eHeight = (int)(entity.TextureHeight);
                 int eWidth = (int)(entity.TextureWidth);
 
-                for (int i = x; i < (eWidth + x); i += VectorDistance) {
-                    for (int j = y; j < (eHeight + y); j += VectorDistance) {
+                int bufferDistance = 8;
+
+                for (int i = x; i < (eWidth + x + bufferDistance); i += VectorDistance) {
+                    for (int j = y; j < (eHeight + y + bufferDistance); j += VectorDistance) {
                         Vector2D nearVector = new Vector2D(i, j);
                         if (VertexMap.ContainsKey(nearVector))
                             VertexMap.Remove(nearVector);
@@ -54,35 +56,34 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                 List<Vector2D> edgesList = new List<Vector2D>();
 
                 Vector2D pos = vertex.pos;
-                Vector2D up = new Vector2D(pos.X, pos.Y - VectorDistance);
-                Vector2D rightUp = new Vector2D(pos.X + VectorDistance, pos.Y - VectorDistance);
-                Vector2D right = new Vector2D(pos.X + VectorDistance, pos.Y);
-                Vector2D rightDown = new Vector2D(pos.X + VectorDistance, pos.Y + VectorDistance);
-                Vector2D down = new Vector2D(pos.X, pos.Y + VectorDistance);
-                Vector2D downLeft = new Vector2D(pos.X - VectorDistance, pos.Y + VectorDistance);
-                Vector2D left = new Vector2D(pos.X - VectorDistance, pos.Y);
-                Vector2D leftUp = new Vector2D(pos.X - VectorDistance, pos.Y - VectorDistance);
+                //Order goes from up to all the other directions clockwise. E.G. Up, up right, right, etc...
+                Vector2D[] directions = new Vector2D[] {
+                    new Vector2D(0, -VectorDistance),
+                    new Vector2D(VectorDistance, -VectorDistance),
+                    new Vector2D(VectorDistance, 0),
+                    new Vector2D(VectorDistance, VectorDistance),
+                    new Vector2D(0, VectorDistance),
+                    new Vector2D(-VectorDistance, VectorDistance),
+                    new Vector2D(-VectorDistance, 0),
+                    new Vector2D(-VectorDistance, -VectorDistance)
+                };
 
-                //Diagonals have sqrt 2 cost but rounded to 1.4
-                if(VertexMap.ContainsKey(up))
-                    AddEdge(pos, up, 1);
-                if(VertexMap.ContainsKey(rightUp))
-                    AddEdge(pos, rightUp, 1.4);
-                if (VertexMap.ContainsKey(right))
-                    AddEdge(pos, right, 1);
-                if (VertexMap.ContainsKey(rightDown))
-                    AddEdge(pos, rightDown, 1.4);
-                if (VertexMap.ContainsKey(down))
-                    AddEdge(pos, down, 1);
-                if (VertexMap.ContainsKey(downLeft))
-                    AddEdge(pos, downLeft, 1.4);
-                if (VertexMap.ContainsKey(left))
-                    AddEdge(pos, left, 1);
-                if (VertexMap.ContainsKey(leftUp))
-                    AddEdge(pos, leftUp, 1);
-            } 
+                foreach (Vector2D dir in directions) {
+                    Vector2D newPos = pos.Clone().Add(dir);
+                    if (VertexMap.ContainsKey(newPos)) {
+                        //If either X or Y has a zero, it's a non-diagional so the cost is 1. Otherwise 1.4 (Sqrt (1+1) rounded down)
+                        double cost = (dir.X == 0 || dir.Y == 0) ? 1: 1.4;
+                        AddEdge(pos, newPos, cost);
+                    }
+                }
+            }
         }
 
+        /// <summary>
+        /// Looks for the nearest Vertex within a given position
+        /// </summary>
+        /// <param name="position">Position of the entity</param>
+        /// <returns></returns>
         public Vector2D ClosestVertex(Vector2D position)
         {
             double nearestX = Math.Round(position.X / VectorDistance) * VectorDistance;
@@ -110,6 +111,11 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             return CreateOrReturnVertex(pos);
         }
 
+        /// <summary>
+        /// Tries to find a given vertex for a position, if it doesn't exist return a new one.
+        /// </summary>
+        /// <param name="pos">Position of the entity</param>
+        /// <returns>A (new) vertex</returns>
         private Vertex CreateOrReturnVertex(Vector2D pos) {
             Vertex vertex;
             if (VertexMap.ContainsKey(pos))
@@ -184,6 +190,11 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             }
         }
         
+        /// <summary>
+        /// Performs Dijkstra's algorithm, mainly used for testing the edges.
+        /// </summary>
+        /// <param name="pos">Position of the entity</param>
+        /// <exception cref="SystemException"></exception>
         public void Dijkstra(Vector2D pos) {
             ClearAll();
             Vertex startV;
@@ -233,6 +244,8 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             Vertex startVertex = CreateOrReturnVertex(ClosestVertex(start));
             Vertex goalVertex = CreateOrReturnVertex(ClosestVertex(goal));
 
+            //openSet = vertices that are awaiting to be explored
+            //closedSet = already explored vertices
             PriorityQueue<Vertex> openSet = new PriorityQueue<Vertex>();
             HashSet<Vertex> closedSet = new HashSet<Vertex>();
 
@@ -240,7 +253,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             // F Score = G score + H score
             // G: distance from node to start node
             // H: distance from nod to the target node
-
+            // Set the G, H, and F scores of the start vertex
             startVertex.gScore = 0;
             startVertex.hScore = startVertex.Heuristic(goalVertex);
             startVertex.fScore = startVertex.gScore + startVertex.hScore;
@@ -257,21 +270,26 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                     return BuildPath(startVertex, goalVertex);
                 }
 
+                //Before exploring add it to the closedSet
                 closedSet.Add(currentVertex);
 
+                //Explore the adjacent vertices
                 foreach (Edge edge in currentVertex.GetAdjacents())
                 {
+                    //Edge to Vertex
                     Vertex nearVertex = edge.dest;
 
+                    //Found in closedSet means already explored
                     if (closedSet.Contains(nearVertex)) 
                     {
                         continue;
                     }
 
-                    // Calculate the scores for the vertices nearby
+                    // Calculate the relative G score
 
                     double relativeGScore = currentVertex.gScore + edge.cost;
 
+                    //Add to the openSet if not already there
                     if (!openSet.Contains(nearVertex)) {
                         nearVertex.hScore = Heuristic(nearVertex.GetPos(), goalVertex.GetPos());
                         nearVertex.gScore = relativeGScore;
@@ -280,7 +298,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                         openSet.Add(nearVertex);
                     //If the relative G score is higher or equal, it is not a better part.
                     } else if (relativeGScore >= nearVertex.gScore) {
-                        continue;
+                        //Do nothing
                     }
                     else {
                         nearVertex.gScore = relativeGScore;
@@ -339,6 +357,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
 
             return s;
         }
+
         public bool IsConnected() {
             throw new System.NotImplementedException();
         }
@@ -348,22 +367,30 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             Pen p = new Pen(Color.Gray, 1);
             Pen p1 = p;
             Pen p2 = new Pen(Color.Red, 1);
+            //Prints all edges
             foreach (Vertex vertex in VertexMap.Values) {
                 foreach (Edge edge in vertex.adj) {
                     g.DrawLine(p, (int)vertex.pos.X, (int)vertex.pos.Y, (int)edge.dest.pos.X, (int)edge.dest.pos.Y);
                 }
             }
-            //Vertex
+            //Prints all vertices
             foreach (Vertex vertex in VertexMap.Values) 
             {
                 g.DrawEllipse(vertex.p, new Rectangle((int)vertex.pos.X-3, (int)vertex.pos.Y-3, 6, 6));
-                g.DrawString($"FGH: {(int)vertex.fScore}\n{(int)vertex.gScore}\n{(int)vertex.hScore}", new Font("Arial", 5), new SolidBrush(Color.Black), new PointF((int)vertex.pos.X-3, (int)vertex.pos.Y+2));
+                if (RenderPath && vertex.fScore != Double.MaxValue) {
+                    g.DrawString($"{(int)vertex.fScore}\n{(int)vertex.gScore}\n{(int)vertex.hScore}", new Font("Arial", 5), new SolidBrush(Color.Black), new PointF((int)vertex.pos.X-1, (int)vertex.pos.Y+2));
+                }
             }
 
-            if (MovePath != null) {
+            //If there's a movepath
+            if (RenderPath && MovePath != null) {
                 //toList to prevent crashing when updating MovePath too fast
-                foreach (var vector in MovePath.ToList()) {
-                    g.DrawEllipse(p2, (int)vector.X, (int)vector.Y, 10,10);
+                var points = MovePath.ToList();
+                for (int i = 0; i < points.Count - 1; i++) {
+                    g.DrawLine(p2, (int)points[i].X, (int)points[i].Y, (int)points[i+1].X, (int)points[i+1].Y);
+                }
+                foreach (var vector in points) {
+                    g.DrawEllipse(p2, (int)vector.X-2, (int)vector.Y-2, 4,4);
                 }
             }
         }
