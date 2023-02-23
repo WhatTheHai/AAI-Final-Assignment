@@ -207,15 +207,21 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
         public Vector2D CalculateObstacleAvoidanceV99()
         {
-            double maxSeeAhead = 70;
+            double maxSeeAhead = 50;
+            // dynamic length
+            double length = ME.Velocity.Clone().Length() / ME.MaxSpeed;
 
             // max avoidance force, maybe use local
             Vector2D avoidanceForce = new Vector2D();
 
-            Vector2D aheadVector = ME.Velocity.Clone().Normalize().Multiply(maxSeeAhead).Add(ME.Pos.Clone());
-            Vector2D aheadVectorHalf =
-                ME.Velocity.Clone().Normalize().Multiply(maxSeeAhead).Multiply(0.5).Add(ME.Pos.Clone());
+            //  Vector2D aheadVector = ME.Velocity.Clone().Normalize().Multiply(maxSeeAhead).Add(ME.Pos.Clone());
+            Vector2D aheadVector = ME.Velocity.Clone().Normalize().Multiply(length).Multiply(maxSeeAhead)
+                .Add(ME.Pos.Clone());
+            // Vector2D aheadVectorHalf =
+            //     ME.Velocity.Clone().Normalize().Multiply(maxSeeAhead).Multiply(0.5).Add(ME.Pos.Clone());
 
+            Vector2D aheadVectorHalf = ME.Velocity.Clone().Normalize().Multiply(length).Multiply(maxSeeAhead)
+                .Multiply(0.5).Add(ME.Pos.Clone());
             StaticEntity? closestObstacle = FindClosestObstacle(aheadVector, aheadVectorHalf);
 
             if (closestObstacle == null) return avoidanceForce;
@@ -229,7 +235,9 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         private bool LineIntersectsCircle(Vector2D ahead, Vector2D aheadHalf, StaticEntity obstacle)
         {
             return obstacle.Pos.Clone().Distance(ahead.Clone()) <= obstacle.Radius ||
-                   obstacle.Pos.Clone().Distance(aheadHalf.Clone()) <= obstacle.Radius;
+                   obstacle.Pos.Clone().Distance(aheadHalf.Clone()) <= obstacle.Radius ||
+                   obstacle.Pos.Clone().Distance(ME.Pos.Clone()) <= obstacle.Radius
+                ;
         }
 
         private StaticEntity? FindClosestObstacle(Vector2D ahead, Vector2D aheadHalf)
