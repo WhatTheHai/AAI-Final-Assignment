@@ -10,50 +10,42 @@ using AAI_Final_Assignment_WinForms.World;
 
 namespace AAI_Final_Assignment_WinForms.Entities
 {
-    public class Witch : MovingEntity {
+    public class Witch : MovingEntity
+    {
         private Vector2D desiredVertex = new Vector2D();
 
-        public Witch(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight, float mass,
-            float maxSpeed, float maxForce
+        public Witch(Vector2D pos, GameWorld world, double scale, int textureWidth, int textureHeight, double mass,
+            double maxSpeed, double maxForce, double radius
         ) : base(pos,
-            world, scale, textureWidth, textureHeight, mass, maxSpeed, maxForce) {
+            world, scale, textureWidth, textureHeight, mass, maxSpeed, maxForce, radius)
+        {
             Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\Wizard.png"),
                 new Size(TextureWidth, TextureHeight));
         }
 
-        public void SetDestination(Vector2D destinationPos) {
+        public void SetDestination(Vector2D destinationPos)
+        {
             desiredVertex = World.GameGraph.ClosestVertex(destinationPos);
             World.GameGraph.MovePath = World.GameGraph.AStar(this.Pos, desiredVertex);
         }
 
-        public override void Render(Graphics g) {
-            // double leftCorner = Pos.X - Scale;
-            // double rightCorner = Pos.Y - Scale;
-            // double size = Scale * 2;
-            // Pen p = new Pen(Color.Orange, 2);
-            // g.DrawEllipse(p, new Rectangle((int)leftCorner, (int)rightCorner, (int)size, (int)size));
-            // g.DrawLine(p, (int)Pos.X, (int)Pos.Y, (int)Pos.X + (int)(Velocity.X * 2), (int)Pos.Y + (int)(Velocity.Y * 2));
-            //g.DrawEllipse(new Pen(Color.Orange, 3), new Rectangle((int)Pos.X, (int)Pos.Y, TextureWidth, TextureHeight));
-
-            g.DrawImage(Texture, (int)Pos.X - TextureWidth / 2, (int)Pos.Y - TextureHeight / 2);
-
-            /*// Debug for desiredVertex and Pos
-            Font drawFont = new Font("Arial", 10);
-            SolidBrush drawBrush = new SolidBrush(Color.Black);
-            float x = (float)Pos.X - 20;
-            float y = (float)Pos.Y - 80;
-            StringFormat drawFormat = new StringFormat();
-            g.DrawString($"X: {Pos.X} Y: {Pos.Y}", drawFont, drawBrush, x + 100, y + 200, drawFormat);
-            g.DrawString($"Vertex: {desiredVertex}", drawFont, drawBrush, x + 100, y + 250, drawFormat);*/
-
+        public override void Render(Graphics g)
+        {
+            // g.DrawImage(Texture, (int)Pos.X - TextureWidth / 2, (int)Pos.Y - TextureHeight / 2);
+            g.FillEllipse(Brushes.Blue, new Rectangle((int)Pos.X, (int)Pos.Y, 3, 3));
+            g.DrawEllipse(new Pen(Color.Blue, 3),
+                new Rectangle((int)Pos.X - (int)Radius / 2, (int)Pos.Y - (int)Radius / 2, (int)Radius, (int)Radius));
         }
 
-        public override void Update(double timeElapsed) {
-            if (World.GameGraph.MovePath != null && World.GameGraph.MovePath.Count > 0) {
+        public override void Update(double timeElapsed)
+        {
+            if (World.GameGraph.MovePath != null && World.GameGraph.MovePath.Count > 0)
+            {
                 // Get the first vertex of the move path
                 Vector2D firstVector = World.GameGraph.MovePath.First().Clone();
                 // If the witch is close enough to the first vertex, remove it from the move path
-                if (firstVector.Clone().Sub(Pos).Length() < 1.5) {
+                if (firstVector.Clone().Sub(Pos).Length() < 1.5)
+                {
                     World.GameGraph.MovePath.RemoveAt(0);
                     return;
                 }
@@ -63,9 +55,12 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
                 // Check if the direction vector has a length of zero
                 // Edge case check
-                if (direction.Length() == 0) {
+                if (direction.Length() == 0)
+                {
                     Velocity = new Vector2D();
-                } else {
+                }
+                else
+                {
                     // Otherwise, normalize the direction vector and calculate the velocity vector
                     direction.Normalize();
                     Velocity = direction.Multiply(3);
@@ -74,7 +69,6 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 // Update the position of the witch
                 Pos.Add(Velocity.Multiply(timeElapsed));
             }
-
         }
     }
 }
