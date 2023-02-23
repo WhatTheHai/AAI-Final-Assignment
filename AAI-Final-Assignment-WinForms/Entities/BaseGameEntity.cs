@@ -5,6 +5,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
 {
     public abstract class BaseGameEntity
     {
+        // path prefix for loading sprites etc.
         public const string PathPrefix = "..\\..\\..\\";
 
         // position in world of entity 
@@ -15,10 +16,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
         // world that contains the entity
         public GameWorld World { get; set; }
-        // radius where entity checks for obstacles
 
-
-        // todo: not sure if necessary :
         // records the next unique identifier for an entity 
         private static int _nextId;
 

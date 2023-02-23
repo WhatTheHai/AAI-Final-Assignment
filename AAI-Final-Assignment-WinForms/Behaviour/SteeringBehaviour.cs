@@ -12,30 +12,37 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 {
     public class SteeringBehaviour
     {
-        public bool Seek, Flee, Arrive, ObstacleAvoidance, Pursuit;
+        // todo: get setters? initialize total/currentforce
+        // All steering behaviour that can be enabled
+        public bool Seek, Flee, Arrive, ObstacleAvoidance;
+
+        // Total force on the object
         public Vector2D TotalForce { get; set; }
+
+        // Current force of the object
         public Vector2D CurrentForce;
-        public Vector2D AheadVector2D { get; set; }
+
+        // The entity that the steering behaviour is applied to 
         private MovingEntity ME { get; set; }
-        public double DistanceAhead { get; set; }
 
-        public Vector2D CurrentObstacleAvoidance;
-        public Vector2D CurrentDesiredForceSeek = new();
 
-        public Vector2D CurrentArrive;
+        // All vectors and booleans of the forces used for debugging and printing on screen
+        public Vector2D CurrentObstacleAvoidance = new();
+        public Vector2D CurrentSeek = new();
+        public Vector2D CurrentArrive = new();
 
-        public Vector2D CurrentDesiredForceObstacle = new();
-        public Vector2D CurrentDesiredForceArrive = new();
-        public int IdClosestObject = -1;
-        public int LastSeen = -1;
         public bool IsCollision { get; set; }
 
+        /// <summary>
+        /// Calculates all different forces together till max force of entity is reached
+        /// </summary>
+        /// <returns>The total force applied to the entity</returns>
         public Vector2D Calculate()
         {
             TotalForce = new Vector2D();
             if (ObstacleAvoidance)
             {
-                CurrentForce = CalculateObstacleAvoidanceV99();
+                CurrentForce = CalculateObstacleAvoidance();
                 if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
             }
 
@@ -48,13 +55,6 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             if (Seek)
             {
                 CurrentForce = CalculateSeek();
-
-                if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
-            }
-
-            if (Pursuit)
-            {
-                CurrentForce = CalculateArrive();
                 if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
             }
 
@@ -71,9 +71,14 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public SteeringBehaviour(MovingEntity me)
         {
             ME = me;
-            AheadVector2D = new Vector2D();
         }
 
+        /// <summary>
+        /// Calculates if the maximum force is reached of the entity. 
+        /// </summary>
+        /// <param name="runningTotal"></param>
+        /// <param name="forceToAdd"></param>
+        /// <returns>A boolean that is false if max force is reached </returns>
         public bool AccumulateForce(Vector2D runningTotal, Vector2D forceToAdd)
         {
             double magnitudeSoFar = runningTotal.Length();
@@ -97,6 +102,10 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             return true;
         }
 
+        /// <summary>
+        /// Calculates the desired force for seeking
+        /// </summary>
+        /// <returns>The seeking force</returns>
         public Vector2D CalculateSeek()
         {
             Vector2D mePos = ME.Pos.Clone();
@@ -108,21 +117,24 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             desiredVelocity.Multiply(ME.MaxSpeed);
             desiredVelocity.Sub(ME.Velocity);
 
-            CurrentDesiredForceSeek = desiredVelocity.Clone();
-
+            CurrentSeek = desiredVelocity.Clone();
 
             return desiredVelocity;
-            // return desiredVelocity;
         }
 
+        /// <summary>
+        /// Calculates the desired force for fleeing
+        /// </summary>
+        /// <returns>The fleeing force</returns>
         public Vector2D CalculateFlee()
         {
-            double PanicDistanceSq = 100.0;
+            // todo: rework... 
+            double panicDistanceSq = 100.0;
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
 
             //If not in the panic distance, do not flee
-            if (mePos.Distance(targetPos) > PanicDistanceSq)
+            if (mePos.Distance(targetPos) > panicDistanceSq)
             {
                 return new Vector2D(0, 0);
             }
@@ -132,40 +144,10 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             return desiredVelocity.Sub(ME.Velocity.Clone());
         }
 
-        // public Vector2D CalculatePursuit()
-        // {
-        //     Vector2D ToEvader = ME.World.Witch.Pos.Clone();
-        //
-        //     double relativeHeading = ME.Heading.Clone().Dot()
-        // }
-
-        // public Vector2D CalculateArriveOLD()
-        // {
-        //     const double decelerationTweaker = 2;
-        //     //1 = fast, 2 = normal, 3 = slow
-        //     const double deceleration = 46;
-        //
-        //     Vector2D mePos = ME.Pos.Clone();
-        //     Vector2D targetPos = ME.World.Witch.Pos.Clone();
-        //     Vector2D toTarget = targetPos.Sub(mePos);
-        //
-        //      Dist = toTarget.Length();
-        //
-        //     if (Dist > 0.0001)
-        //     {
-        //         double speed = Dist / (deceleration * decelerationTweaker);
-        //         speed = Math.Min(speed, ME.MaxSpeed);
-        //         Vector2D desiredVelocity = toTarget.Multiply(speed / Dist);
-        //         desiredVelocity.Sub(ME.Velocity);
-        //         CurrentDesiredForceArrive = desiredVelocity;
-        //         return desiredVelocity;
-        //     }
-        //
-        //     CurrentDesiredForceArrive = new Vector2D();
-        //
-        //     return new Vector2D();
-        // }
-
+        /// <summary>
+        /// Calculates the desired force for arriving at a target
+        /// </summary>
+        /// <returns>The arriving force</returns>
         public Vector2D CalculateArrive()
         {
             const double deceleration = 175;
@@ -175,63 +157,67 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
             Vector2D toTarget = targetPos.Sub(mePos);
 
-            double Dist = toTarget.Length();
+            double dist = toTarget.Length();
 
-            if (Dist > 0.0001)
+            if (dist > 0.0001)
             {
-                double speed = Dist / deceleration;
+                double speed = dist / deceleration;
                 speed = Math.Min(speed, ME.MaxSpeed);
 
-                Vector2D desiredVelocity = toTarget.Multiply(speed / Dist);
+                Vector2D desiredVelocity = toTarget.Multiply(speed / dist);
                 desiredVelocity.Sub(ME.Velocity);
-                CurrentDesiredForceArrive = desiredVelocity;
+                CurrentArrive = desiredVelocity;
                 return desiredVelocity;
             }
 
-            CurrentDesiredForceArrive = new Vector2D();
+            CurrentArrive = new Vector2D();
 
             return new Vector2D();
         }
 
-
-        public bool LineInCircle(Vector2D ahead, Vector2D aheadHalf, Circle circle)
+        /// <summary>
+        /// Calculates the desired force for avoiding a obstacle
+        /// </summary>
+        /// <returns>The avoidance force</returns>
+        public Vector2D CalculateObstacleAvoidance()
         {
-            // todo: change
-            DistanceAhead = circle.Pos.Distance(ahead);
-            double distanceAheadHalf = aheadHalf.Distance(circle.Pos);
-            double distanceME = ME.Pos.Distance(circle.Pos);
-
-            return DistanceAhead <= (circle.Radius / 2) || distanceAheadHalf <= (circle.Radius / 2) ||
-                   distanceME <= (circle.Radius / 2);
-        }
-
-        public Vector2D CalculateObstacleAvoidanceV99()
-        {
+            // Range for looking ahead of entity
             double maxSeeAhead = 50;
-            // dynamic length
+            // Calculate dynamic length
             double length = ME.Velocity.Clone().Length() / ME.MaxSpeed;
 
-            // max avoidance force, maybe use local
+            //todo: max avoidance force, maybe use local
             Vector2D avoidanceForce = new Vector2D();
 
-            //  Vector2D aheadVector = ME.Velocity.Clone().Normalize().Multiply(maxSeeAhead).Add(ME.Pos.Clone());
+            // Max range vector
             Vector2D aheadVector = ME.Velocity.Clone().Normalize().Multiply(length).Multiply(maxSeeAhead)
                 .Add(ME.Pos.Clone());
-            // Vector2D aheadVectorHalf =
-            //     ME.Velocity.Clone().Normalize().Multiply(maxSeeAhead).Multiply(0.5).Add(ME.Pos.Clone());
-
+            // Half of the max range vector
             Vector2D aheadVectorHalf = ME.Velocity.Clone().Normalize().Multiply(length).Multiply(maxSeeAhead)
                 .Multiply(0.5).Add(ME.Pos.Clone());
+
+            // Look for closest obstacle
             StaticEntity? closestObstacle = FindClosestObstacle(aheadVector, aheadVectorHalf);
 
             if (closestObstacle == null) return avoidanceForce;
+
+            // calculate force
             avoidanceForce = aheadVector.Clone().Sub(closestObstacle.Pos.Clone());
             avoidanceForce.Normalize();
             avoidanceForce.Multiply(ME.MaxForce);
 
+            CurrentObstacleAvoidance = avoidanceForce.Clone();
+
             return avoidanceForce;
         }
 
+        /// <summary>
+        ///  Check if the ahead/half ahead/character are in the radius of the obstacle
+        /// </summary>
+        /// <param name="ahead"></param>
+        /// <param name="aheadHalf"></param>
+        /// <param name="obstacle"></param>
+        /// <returns>boolean</returns>
         private bool LineIntersectsCircle(Vector2D ahead, Vector2D aheadHalf, StaticEntity obstacle)
         {
             return obstacle.Pos.Clone().Distance(ahead.Clone()) <= obstacle.Radius ||
@@ -240,6 +226,12 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
                 ;
         }
 
+        /// <summary>
+        /// Finds the closest obstacle to the entity
+        /// </summary>
+        /// <param name="ahead"></param>
+        /// <param name="aheadHalf"></param>
+        /// <returns>null or closest obstacle</returns>
         private StaticEntity? FindClosestObstacle(Vector2D ahead, Vector2D aheadHalf)
         {
             StaticEntity closestObstacle = null;
@@ -256,218 +248,6 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             }
 
             return closestObstacle;
-        }
-
-        public Vector2D CalculateObstacleAvoidance()
-        {
-            // max
-            double maxAhead = 100;
-            double maxAvoidForce = 50;
-
-
-            // fixed length for detection box 
-            Vector2D ahead = ME.Pos.Clone();
-            Vector2D heading = ME.Heading.Clone();
-            heading.Multiply(maxAhead);
-            ahead.Add(heading);
-            AheadVector2D = ahead.Clone();
-            Vector2D aheadHalf = ahead.Clone().Multiply(0.5);
-
-
-            // nearest obstacle 
-            Circle closestObstacle = null;
-            Vector2D avoidanceForce = new Vector2D();
-
-            // foreach circle check if there is a collision if so check if it is closer then other obstacle 
-            foreach (Circle obstacle in ME.World.StaticEntities)
-            {
-                bool collision = LineInCircle(ahead, aheadHalf, obstacle);
-
-                if (collision && (closestObstacle == null ||
-                                  ME.Pos.Distance(obstacle.Pos) < ME.Pos.Distance(closestObstacle.Pos)))
-                {
-                    closestObstacle = obstacle;
-                }
-            }
-
-            if (closestObstacle != null)
-            {
-                avoidanceForce = ahead.Sub(closestObstacle.Pos);
-                avoidanceForce.Normalize();
-                avoidanceForce.Multiply(maxAvoidForce);
-
-                CurrentDesiredForceObstacle = avoidanceForce;
-                IdClosestObject = closestObstacle.Id;
-                LastSeen = closestObstacle.Id;
-                return avoidanceForce;
-            }
-
-            IdClosestObject = -1;
-            CurrentDesiredForceObstacle = new Vector2D();
-            return new Vector2D();
-        }
-
-        public Vector2D CalculateObstacleAvoidancev2()
-        {
-            // range when to avoid
-            double avoidanceRadius = 500;
-            // maximum force applied when avoiding
-            double maxAvoidanceForce = 50;
-
-            // force to calculate
-            Vector2D avoidanceForce = new Vector2D();
-            // closest distance of closest object 
-            double closestDistance = double.MaxValue;
-
-            // normalized closest vector 
-            Vector2D closestNormal = new Vector2D();
-
-            foreach (StaticEntity obstacle in ME.World.StaticEntities)
-            {
-                Vector2D toObstacle = obstacle.Pos.Clone().Sub(ME.Pos);
-
-                double distance = toObstacle.Length();
-
-                if (distance < avoidanceRadius)
-                {
-                    // check if there is collision with the obstacle 
-                    if (CheckCollision(obstacle.Pos, obstacle.Radius, ME.Pos, ME.Radius, out var normal))
-                    {
-                        double dot = normal.Clone().Dot(ME.Velocity);
-
-                        if (dot < 0 && distance < closestDistance)
-                        {
-                            closestDistance = distance;
-                            closestNormal = normal;
-                        }
-                    }
-                }
-            }
-
-
-            if (closestDistance != double.MaxValue)
-            {
-                avoidanceForce = closestNormal.Multiply(maxAvoidanceForce);
-            }
-
-            CurrentDesiredForceObstacle = avoidanceForce.Clone();
-
-            return avoidanceForce;
-        }
-
-
-        public Vector2D ObstacleAvoidanceV3()
-        {
-            var obstacles = ME.World.StaticEntities;
-
-            // Get the detection box of the entity
-            double boxLength = 100 * 0.5;
-            Vector2D detectionBoxPos =
-                ME.World.Witch.Pos.Clone().Add(ME.World.Witch.Heading.Clone().Multiply(boxLength));
-
-            // Find the closest obstacle
-            BaseGameEntity closestObstacle = null;
-            double closestObstacleDistance = double.MaxValue;
-            foreach (var obstacle in obstacles)
-            {
-                double obstacleRadius = obstacle.Radius * ME.World.Witch.Scale;
-                Vector2D obstaclePos = obstacle.Pos;
-                double distance = detectionBoxPos.Distance(obstaclePos);
-
-                if (distance < closestObstacleDistance + obstacleRadius)
-                {
-                    if (LineIntersectsCircle(detectionBoxPos, ME.World.Witch.Side, obstaclePos, obstacleRadius))
-                    {
-                        closestObstacle = obstacle;
-                        closestObstacleDistance = distance;
-                    }
-                }
-            }
-
-            // If no obstacles, return zero vector
-            if (closestObstacle == null)
-            {
-                return new Vector2D();
-            }
-
-            // Calculate the avoidance force
-            Vector2D avoidanceForce = ME.World.Witch.Side.Clone().Multiply(boxLength);
-            double multiplier =
-                1 + (boxLength - detectionBoxPos.Distance(closestObstacle.Pos) + closestObstacle.Radius) / boxLength;
-            avoidanceForce.Multiply(multiplier);
-
-            // Return the avoidance force
-            return avoidanceForce;
-        }
-
-        public bool CheckCollision(Vector2D characterPosition, double characterRadius,
-            Vector2D obstaclePosition, double obstacleRadius, out Vector2D normal)
-        {
-            normal = new Vector2D();
-
-            // Add the obstacle radius to the obstacle position
-            Vector2D adjustedObstaclePosition =
-                obstaclePosition.Clone().Add(new Vector2D(obstacleRadius, obstacleRadius));
-            Vector2D adjustedCharacterPosition =
-                characterPosition.Clone().Add(new Vector2D(characterRadius, characterRadius));
-
-
-            // Calculate the distance between the character and the obstacle
-            Vector2D distance = adjustedObstaclePosition.Clone().Sub(adjustedCharacterPosition);
-            double distanceSquared = distance.LengthSquared();
-
-            // Check if the distance is less than the sum of the radii
-            double sumOfRadii = characterRadius + obstacleRadius;
-            double sumOfRadiiSquared = sumOfRadii * sumOfRadii;
-            if (distanceSquared < sumOfRadiiSquared)
-            {
-                // Calculate the normal vector from the obstacle to the character
-                normal = distance.Clone().Normalize();
-
-                // The circles are colliding
-                IsCollision = true;
-                return true;
-            }
-
-            IsCollision = false;
-            // The circles are not colliding
-            return false;
-        }
-
-
-        public static bool LineIntersectsCircle(Vector2D lineStart, Vector2D lineEnd, Vector2D circleCenter,
-            double circleRadius)
-        {
-            // Calculate the direction of the line segment
-            Vector2D lineDirection = lineEnd.Clone().Sub(lineStart);
-            double lineLength = lineDirection.Length();
-            lineDirection = lineDirection.Divide(lineLength);
-
-            // Calculate the vector from the circle center to the start of the line segment
-            Vector2D toStart = lineStart.Clone().Sub(circleCenter);
-
-            // Project the vector to the start of the line segment onto the line direction
-            double projection = toStart.Dot(lineDirection);
-
-            // Calculate the closest point on the line segment to the circle center
-            Vector2D closestPoint;
-            if (projection < 0)
-            {
-                closestPoint = lineStart;
-            }
-            else if (projection > lineLength)
-            {
-                closestPoint = lineEnd;
-            }
-            else
-            {
-                closestPoint = lineStart.Add(lineDirection.Multiply(projection));
-            }
-
-            // Check if the closest point is within the circle
-            double distanceSquared = closestPoint.DistanceSquared(circleCenter);
-
-            return distanceSquared <= circleRadius * circleRadius;
         }
     }
 }

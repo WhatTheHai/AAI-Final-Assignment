@@ -117,14 +117,6 @@ namespace AAI_Final_Assignment_WinForms.util
             return Math.Sqrt((xDistance * xDistance) + (yDistance * yDistance));
         }
 
-        public double DistanceSquared(Vector2D v)
-        {
-            double deltaX = v.X - this.X;
-            double deltaY = v.Y - this.Y;
-            return deltaX * deltaX + deltaY * deltaY;
-        }
-
-
         public bool Equals(Vector2D? other)
         {
             if (ReferenceEquals(null, other)) return false;

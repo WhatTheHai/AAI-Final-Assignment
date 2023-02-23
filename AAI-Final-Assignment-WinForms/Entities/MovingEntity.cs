@@ -18,15 +18,17 @@ namespace AAI_Final_Assignment_WinForms.Entities
         // Mass of entity
         public double Mass { get; set; }
 
-        //Maximum speed of entity 
+        //Maximum velocity of entity 
         public double MaxSpeed { get; set; }
 
         //Maximum force on entity
         public double MaxForce { get; set; }
+
+        // used for debugging to show current steeringforce
         private Vector2D currentSteeringForce;
 
 
-        // todo not using TURNRATE
+        // todo: not using TURNRATE
         //Maximum turn rate 
         public double MaxTurnRate { get; set; }
 
@@ -83,38 +85,26 @@ namespace AAI_Final_Assignment_WinForms.Entities
             float x = (float)Pos.X;
             float y = (float)Pos.Y;
             StringFormat drawFormat = new StringFormat();
-            //drawFormat.FormatFlags = StringFormatFlags.NoWrap;
-
 
             g.DrawString($"Velocity: {Velocity.ToStringRounded()}", drawFont, drawBrush, x, y, drawFormat);
             g.DrawString($"Heading: {Heading.ToStringRounded()}", drawFont, drawBrush, x, y + 20, drawFormat);
-            g.DrawString($"Seek forces: {SteeringBehaviour.CurrentDesiredForceSeek.ToStringRounded()}", drawFont,
+            g.DrawString($"Seek forces: {SteeringBehaviour.CurrentSeek.ToStringRounded()}", drawFont,
                 drawBrush, x, y + 40,
                 drawFormat);
-            // g.DrawString($"Arrive forces: {SteeringBehaviour.CurrentDesiredForceArrive.ToStringRounded()}", drawFont,
-            //     drawBrush, x, y + 60,
-            //     drawFormat);
-            g.DrawString($"obstacle forces: {SteeringBehaviour.CurrentDesiredForceObstacle.ToStringRounded()}",
-                drawFont,
+            g.DrawString($"Arrive forces: {SteeringBehaviour.CurrentArrive.ToStringRounded()}", drawFont,
                 drawBrush, x, y + 60,
                 drawFormat);
             g.DrawString($"Added forces: {currentSteeringForce.ToStringRounded()}", drawFont, drawBrush, x, y + 80,
                 drawFormat);
-            if (SteeringBehaviour.IsCollision)
-            {
-                g.DrawString($"Collision: Yes", drawFont, drawBrush, x, y + 100,
-                    drawFormat);
-            }
-            else
-            {
-                g.DrawString($"Collision: No", drawFont, drawBrush, x, y + 100,
-                    drawFormat);
-            }
+            g.DrawString($"Obstacle forces: {SteeringBehaviour.CurrentObstacleAvoidance.ToStringRounded()}",
+                drawFont,
+                drawBrush, x, y + 100,
+                drawFormat);
 
-            // g.DrawString($"current closest: {SteeringBehaviour.IdClosestObject} :", drawFont, drawBrush, x, y + 100,
-            //     drawFormat);
-            // g.DrawString($"last seen: {SteeringBehaviour.LastSeen} :", drawFont, drawBrush, x, y + 120,
-            //     drawFormat);
+            g.DrawString(SteeringBehaviour.IsCollision ? $"Collision: Yes" : $"Collision: No", drawFont, drawBrush, x,
+                y + 120,
+                drawFormat);
+
             RenderInfo(g);
         }
 

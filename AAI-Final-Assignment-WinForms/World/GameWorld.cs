@@ -6,12 +6,23 @@ namespace AAI_Final_Assignment_WinForms.World
 {
     public class GameWorld
     {
+        // List of all moving entities
         public List<MovingEntity> MovingEntities;
+
+        // List of all static entities
         public List<StaticEntity> StaticEntities;
+
+        // The graph where the characters can move over.
         public Graph.Graph GameGraph;
         public bool GraphEnabled = false;
+
+        // Current controllable entity
         public Witch Witch { get; set; }
+
+        // Width of main panel 
         public int Width { get; set; }
+
+        // Height of main panel
         public int Height { get; set; }
 
         // game world class
@@ -54,6 +65,9 @@ namespace AAI_Final_Assignment_WinForms.World
             Witch.Render(g);
         }
 
+        /// <summary>
+        /// Spawn all entities and to according list.
+        /// </summary>
         private void Populate()
         {
             // for (int i = 0; i < 10; i++)
