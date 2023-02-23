@@ -35,7 +35,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             TotalForce = new Vector2D();
             if (ObstacleAvoidance)
             {
-                CurrentForce = CalculateObstacleAvoidancev2();
+                CurrentForce = CalculateObstacleAvoidanceV99();
                 if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
             }
 
@@ -196,18 +196,64 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
         public bool LineInCircle(Vector2D ahead, Vector2D aheadHalf, Circle circle)
         {
-            DistanceAhead = circle.Center.Distance(ahead);
-            double distanceAheadHalf = aheadHalf.Distance(circle.Center);
-            double distanceME = ME.Pos.Distance(circle.Center);
+            // todo: change
+            DistanceAhead = circle.Pos.Distance(ahead);
+            double distanceAheadHalf = aheadHalf.Distance(circle.Pos);
+            double distanceME = ME.Pos.Distance(circle.Pos);
 
-            return DistanceAhead <= (circle.Diameter / 2) || distanceAheadHalf <= (circle.Diameter / 2) ||
-                   distanceME <= (circle.Diameter / 2);
+            return DistanceAhead <= (circle.Radius / 2) || distanceAheadHalf <= (circle.Radius / 2) ||
+                   distanceME <= (circle.Radius / 2);
+        }
+
+        public Vector2D CalculateObstacleAvoidanceV99()
+        {
+            double maxSeeAhead = 70;
+
+            // max avoidance force, maybe use local
+            Vector2D avoidanceForce = new Vector2D();
+
+            Vector2D aheadVector = ME.Velocity.Clone().Normalize().Multiply(maxSeeAhead).Add(ME.Pos.Clone());
+            Vector2D aheadVectorHalf =
+                ME.Velocity.Clone().Normalize().Multiply(maxSeeAhead).Multiply(0.5).Add(ME.Pos.Clone());
+
+            StaticEntity? closestObstacle = FindClosestObstacle(aheadVector, aheadVectorHalf);
+
+            if (closestObstacle == null) return avoidanceForce;
+            avoidanceForce = aheadVector.Clone().Sub(closestObstacle.Pos.Clone());
+            avoidanceForce.Normalize();
+            avoidanceForce.Multiply(ME.MaxForce);
+
+            return avoidanceForce;
+        }
+
+        private bool LineIntersectsCircle(Vector2D ahead, Vector2D aheadHalf, StaticEntity obstacle)
+        {
+            return obstacle.Pos.Clone().Distance(ahead.Clone()) <= obstacle.Radius ||
+                   obstacle.Pos.Clone().Distance(aheadHalf.Clone()) <= obstacle.Radius;
+        }
+
+        private StaticEntity? FindClosestObstacle(Vector2D ahead, Vector2D aheadHalf)
+        {
+            StaticEntity closestObstacle = null;
+
+            foreach (StaticEntity obstacle in ME.World.StaticEntities)
+            {
+                bool collision = LineIntersectsCircle(ahead, aheadHalf, obstacle);
+
+                if (collision && (closestObstacle == null || ME.World.Witch.Pos.Clone().Distance(obstacle.Pos) <
+                        ME.World.Witch.Pos.Clone().Distance(closestObstacle.Pos)))
+                {
+                    closestObstacle = obstacle;
+                }
+            }
+
+            return closestObstacle;
         }
 
         public Vector2D CalculateObstacleAvoidance()
         {
             // max
-            double maxAhead = 0.5;
+            double maxAhead = 100;
             double maxAvoidForce = 50;
 
 
@@ -230,7 +276,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
                 bool collision = LineInCircle(ahead, aheadHalf, obstacle);
 
                 if (collision && (closestObstacle == null ||
-                                  ME.Pos.Distance(obstacle.Center) < ME.Pos.Distance(closestObstacle.Center)))
+                                  ME.Pos.Distance(obstacle.Pos) < ME.Pos.Distance(closestObstacle.Pos)))
                 {
                     closestObstacle = obstacle;
                 }
@@ -238,7 +284,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
             if (closestObstacle != null)
             {
-                avoidanceForce = ahead.Sub(closestObstacle.Center);
+                avoidanceForce = ahead.Sub(closestObstacle.Pos);
                 avoidanceForce.Normalize();
                 avoidanceForce.Multiply(maxAvoidForce);
 
@@ -262,7 +308,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
             // force to calculate
             Vector2D avoidanceForce = new Vector2D();
-            // closest distance of object 
+            // closest distance of closest object 
             double closestDistance = double.MaxValue;
 
             // normalized closest vector 
@@ -276,8 +322,6 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
                 if (distance < avoidanceRadius)
                 {
-                   
-
                     // check if there is collision with the obstacle 
                     if (CheckCollision(obstacle.Pos, obstacle.Radius, ME.Pos, ME.Radius, out var normal))
                     {
@@ -300,6 +344,51 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
             CurrentDesiredForceObstacle = avoidanceForce.Clone();
 
+            return avoidanceForce;
+        }
+
+
+        public Vector2D ObstacleAvoidanceV3()
+        {
+            var obstacles = ME.World.StaticEntities;
+
+            // Get the detection box of the entity
+            double boxLength = 100 * 0.5;
+            Vector2D detectionBoxPos =
+                ME.World.Witch.Pos.Clone().Add(ME.World.Witch.Heading.Clone().Multiply(boxLength));
+
+            // Find the closest obstacle
+            BaseGameEntity closestObstacle = null;
+            double closestObstacleDistance = double.MaxValue;
+            foreach (var obstacle in obstacles)
+            {
+                double obstacleRadius = obstacle.Radius * ME.World.Witch.Scale;
+                Vector2D obstaclePos = obstacle.Pos;
+                double distance = detectionBoxPos.Distance(obstaclePos);
+
+                if (distance < closestObstacleDistance + obstacleRadius)
+                {
+                    if (LineIntersectsCircle(detectionBoxPos, ME.World.Witch.Side, obstaclePos, obstacleRadius))
+                    {
+                        closestObstacle = obstacle;
+                        closestObstacleDistance = distance;
+                    }
+                }
+            }
+
+            // If no obstacles, return zero vector
+            if (closestObstacle == null)
+            {
+                return new Vector2D();
+            }
+
+            // Calculate the avoidance force
+            Vector2D avoidanceForce = ME.World.Witch.Side.Clone().Multiply(boxLength);
+            double multiplier =
+                1 + (boxLength - detectionBoxPos.Distance(closestObstacle.Pos) + closestObstacle.Radius) / boxLength;
+            avoidanceForce.Multiply(multiplier);
+
+            // Return the avoidance force
             return avoidanceForce;
         }
 
@@ -335,6 +424,42 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             IsCollision = false;
             // The circles are not colliding
             return false;
+        }
+
+
+        public static bool LineIntersectsCircle(Vector2D lineStart, Vector2D lineEnd, Vector2D circleCenter,
+            double circleRadius)
+        {
+            // Calculate the direction of the line segment
+            Vector2D lineDirection = lineEnd.Clone().Sub(lineStart);
+            double lineLength = lineDirection.Length();
+            lineDirection = lineDirection.Divide(lineLength);
+
+            // Calculate the vector from the circle center to the start of the line segment
+            Vector2D toStart = lineStart.Clone().Sub(circleCenter);
+
+            // Project the vector to the start of the line segment onto the line direction
+            double projection = toStart.Dot(lineDirection);
+
+            // Calculate the closest point on the line segment to the circle center
+            Vector2D closestPoint;
+            if (projection < 0)
+            {
+                closestPoint = lineStart;
+            }
+            else if (projection > lineLength)
+            {
+                closestPoint = lineEnd;
+            }
+            else
+            {
+                closestPoint = lineStart.Add(lineDirection.Multiply(projection));
+            }
+
+            // Check if the closest point is within the circle
+            double distanceSquared = closestPoint.DistanceSquared(circleCenter);
+
+            return distanceSquared <= circleRadius * circleRadius;
         }
     }
 }

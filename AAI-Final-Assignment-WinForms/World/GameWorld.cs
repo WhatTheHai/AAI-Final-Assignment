@@ -66,7 +66,7 @@ namespace AAI_Final_Assignment_WinForms.World
             TestEnemy t = new TestEnemy(new Vector2D(1000, 1000), this, 1, 50, 50, 50, 5, 55, 50); // 50 5 100000
             MovingEntities.Add(t);
 
-            Circle o = new Circle(new Vector2D(200, 200), this, 2, 30, 25, 25, 50);
+            Circle o = new Circle(new Vector2D(200, 200), this, 2, 30, 25, 25, 60);
             StaticEntities.Add(o);
             //
             // Circle o2 = new Circle(new Vector2D(500, 250), this, 2 , 60, 50, 50);
