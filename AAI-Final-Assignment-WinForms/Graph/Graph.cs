@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Runtime.CompilerServices;
+using System.Runtime.Intrinsics;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,8 +40,8 @@ namespace AAI_Final_Assignment_WinForms.Graph {
 
                 int radius = (int)(entity.Radius/2);
 
-                for (int i = x - VectorDistance; i <= (radius + x); i += VectorDistance) {
-                    for (int j = y - VectorDistance; j <= (radius + y); j += VectorDistance) {
+                for (int i = x - VectorDistance; i < (radius + x); i += VectorDistance) {
+                    for (int j = y - VectorDistance; j < (radius + y); j += VectorDistance) {
                         Vector2D nearVector = new Vector2D(i, j);
                         if (VertexMap.ContainsKey(nearVector))
                             VertexMap.Remove(nearVector);
@@ -335,6 +336,8 @@ namespace AAI_Final_Assignment_WinForms.Graph {
 
             //Reverse from goal -> start to start -> goal
             path.Reverse();
+            //Removes the first vertex in the list to avoid some weird movements
+            path.RemoveAt(0);
 
             return path;
         }
@@ -393,6 +396,9 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             }
 
             //If there's a movepath
+            if (MovePath != null && MovePath.Any()) {
+                g.DrawEllipse(p2, (int)MovePath.Last().X-2, (int)MovePath.Last().Y-2, 4,4);
+            }
             if (RenderPath && MovePath != null) {
                 //toList to prevent crashing when updating MovePath too fast
                 var points = MovePath.ToList();
