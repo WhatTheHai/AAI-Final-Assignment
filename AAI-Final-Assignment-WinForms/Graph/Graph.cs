@@ -16,7 +16,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         public static readonly double INFINITY = System.Double.MaxValue;
 
         public Dictionary<Vector2D, Vertex> VertexMap;
-        public const int VectorDistance = 25;
+        public const int VectorDistance = 28;
         public List<Vector2D>? MovePath;
         public Boolean RenderPath = false;
 
@@ -37,13 +37,10 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                 int x = (int)vector.X;
                 int y = (int)vector.Y;
 
-                int eHeight = (int)(entity.TextureHeight);
-                int eWidth = (int)(entity.TextureWidth);
+                int radius = (int)(entity.Radius/2);
 
-                int bufferDistance = 8;
-
-                for (int i = x; i < (eWidth + x + bufferDistance); i += VectorDistance) {
-                    for (int j = y; j < (eHeight + y + bufferDistance); j += VectorDistance) {
+                for (int i = x - VectorDistance; i <= (radius + x); i += VectorDistance) {
+                    for (int j = y - VectorDistance; j <= (radius + y); j += VectorDistance) {
                         Vector2D nearVector = new Vector2D(i, j);
                         if (VertexMap.ContainsKey(nearVector))
                             VertexMap.Remove(nearVector);
@@ -124,6 +121,15 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             vertex = new Vertex(pos);
             VertexMap.Add(pos, vertex);
             return vertex;
+        }
+
+        /// <summary>
+        /// Tries to find a given vertex for a position.
+        /// </summary>
+        /// <param name="pos">Position of the entity</param>
+        /// <returns>A (new) vertex</returns>
+        private Vertex? FindVertex(Vector2D pos) {
+            return VertexMap.ContainsKey(pos) ? VertexMap[pos] : null;
         }
 
         /// <summary>
@@ -241,8 +247,12 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         {
             ClearAll();
 
-            Vertex startVertex = CreateOrReturnVertex(ClosestVertex(start));
-            Vertex goalVertex = CreateOrReturnVertex(ClosestVertex(goal));
+            Vertex? startVertex = FindVertex(ClosestVertex(start));
+            Vertex? goalVertex = FindVertex(ClosestVertex(goal));
+
+            if (startVertex == null || goalVertex == null) {
+                return null;
+            }
 
             //openSet = vertices that are awaiting to be explored
             //closedSet = already explored vertices
