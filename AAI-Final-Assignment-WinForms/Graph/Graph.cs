@@ -177,7 +177,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
 
             while (q.Any()) {
                 Vertex prev = q.Dequeue();
-                //Check every adjadj
+                //Check every adj
                 foreach (var edge in prev.adj) {
                     Vertex next = edge.dest;
                     //If it's not infinity it's checked
