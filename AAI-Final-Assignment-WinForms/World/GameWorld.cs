@@ -51,6 +51,7 @@ namespace AAI_Final_Assignment_WinForms.World
             {
                 me.Update(timeElapsed);
             }
+            Witch.Update(timeElapsed);
         }
 
         public void Render(Graphics g)

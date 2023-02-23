@@ -35,8 +35,7 @@ namespace AAI_Final_Assignment_WinForms
 
         private void _mainPanel_MouseClick(object sender, MouseEventArgs e)
         {
-            // every time new factor?
-            _world.Witch.Pos = new Vector2D(e.X, e.Y);
+            _world.Witch.SetDestination(new Vector2D(e.X, e.Y));
         }
 
         private void label1_Paint(object sender, PaintEventArgs e)
@@ -44,11 +43,14 @@ namespace AAI_Final_Assignment_WinForms
           //label1.Text = _world.MovingEntities[0].SteeringBehaviour.DistanceAhead.ToString();
         }
 
-        private void Form1_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData == Keys.G)
-            {
-                _world.GraphEnabled = !_world.GraphEnabled;
+        private void Form1_KeyDown(object sender, KeyEventArgs e) {
+            switch (e.KeyData) {
+                case Keys.G:
+                    _world.GraphEnabled = !_world.GraphEnabled;
+                    break;
+                case Keys.H:
+                    _world.GameGraph.RenderPath = !_world.GameGraph.RenderPath;
+                    break;
             }
         }
     }
