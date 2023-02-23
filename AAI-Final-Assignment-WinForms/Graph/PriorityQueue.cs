@@ -131,13 +131,73 @@ namespace AAI_Final_Assignment_WinForms.Graph
         }
         public void AddFreely(T x)
         {
-            throw new System.NotImplementedException();
+            // Add element to the end of the heap
+            if (size + 1 == array.Length)
+            {
+                DoubleArray();
+            }
+
+            array[++size] = x;
         }
 
         public void BuildHeap()
         {
-            throw new System.NotImplementedException();
+            // Build the heap in linear time using Floyd's algorithm
+            for (int i = size / 2; i >= 1; i--)
+            {
+                PercolateDown(i);
+            }
+        } 
+
+        public bool Contains(T x)
+        {
+            for (int i = 1; i <= size; i++)
+            {
+                if (array[i].Equals(x))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
+        public void UpdatePriority(T x)
+        {
+            // Find the element in the queue
+            int index = -1;
+            for (int i = 1; i <= size; i++)
+            {
+                if (array[i].Equals(x))
+                {
+                    index = i;
+                    break;
+                }
+            }
+
+            // If the element is not found, throw an exception
+            if (index == -1)
+            {
+                throw new ArgumentException("Element not found in queue");
+            }
+
+            // Update the priority of the element by replacing it with the new element
+            array[index] = x;
+
+            // Percolate the element up or down as necessary to restore the heap property
+            int parent = index / 2;
+            int child = index;
+            while (child > 1 && Compare(array[child], array[parent]) < 0)
+            {
+                // Swap the child and parent elements
+                (array[child], array[parent]) = (array[parent], array[child]);
+
+                // Move up to the parent node
+                child = parent;
+                parent = child / 2;
+            }
+
+            PercolateDown(index);
+        }
     }
 }

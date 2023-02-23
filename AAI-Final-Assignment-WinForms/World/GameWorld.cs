@@ -29,7 +29,7 @@ namespace AAI_Final_Assignment_WinForms.World
             Width = w;
             Height = h;
 
-            Witch = new Witch(new Vector2D(10, 10), this, 1, 50, 50, 10, 50, 100);
+            Witch = new Witch(new Vector2D(32, 32), this, 1, 50, 50, 10, 50, 100);
             Populate();
             GameGraph = new Graph.Graph(this);
         }
@@ -40,6 +40,7 @@ namespace AAI_Final_Assignment_WinForms.World
             {
                 me.Update(timeElapsed);
             }
+            Witch.Update(timeElapsed);
         }
 
         public void Render(Graphics g)
@@ -66,6 +67,10 @@ namespace AAI_Final_Assignment_WinForms.World
             _movingEntities.Add(t);
             Circle o = new Circle(new Vector2D(200, 200), this, 2, 30, 25, 25);
             StaticEntities.Add(o);
+
+
+            Circle o2 = new Circle(new Vector2D(200, 250), this, 2, 30, 25, 25);
+            StaticEntities.Add(o2);
 
             // Circle o2 = new Circle(new Vector2D(300, 250), this);
             // StaticEntities.Add(o2);
