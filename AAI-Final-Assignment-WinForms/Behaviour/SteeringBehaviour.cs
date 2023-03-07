@@ -223,8 +223,9 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public Vector2D CalculateWander()
         {
             //Wander parameters
-            const double wanderRadius = 10.0;
-            const double wanderDistance = 20.0;
+            //TODO: Scale with maxspeed
+            const double wanderRadius = 15.0;
+            const double wanderDistance = 30.0;
             const double wanderJitter = 0.5;
             Random rand = new Random();
 
