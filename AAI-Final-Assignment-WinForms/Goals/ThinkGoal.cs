@@ -24,7 +24,7 @@ namespace AAI_Final_Assignment_WinForms.Goals
 
         public override void Process()
         {
-            // check if completed in list ... 
+            // check if completed in list ... also remove failed  
             if (!SubGoalsList.Any()) Activate();
 
             // protected werkt niet? 
@@ -34,6 +34,7 @@ namespace AAI_Final_Assignment_WinForms.Goals
                 RemoveFirst();
             }
 
+            // process first goal in list. 
             currentGoal.Process();
         }
 
