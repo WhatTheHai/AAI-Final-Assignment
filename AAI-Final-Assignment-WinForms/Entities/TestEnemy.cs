@@ -19,7 +19,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
         {
             Color = Color.DarkOrchid;
             SteeringBehaviour.Arrive = false;
-            SteeringBehaviour.Wander = true;
+            SteeringBehaviour.Seek = true;
+            SteeringBehaviour.Wander = false;
             SteeringBehaviour.ObstacleAvoidance = true;
 
             Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\sharkboy.png"),

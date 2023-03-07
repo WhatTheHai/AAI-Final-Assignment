@@ -40,7 +40,7 @@ namespace AAI_Final_Assignment_WinForms.World
             Width = w;
             Height = h;
 
-            Witch = new Witch(new Vector2D(10, 10), this, 1, 50, 50, 0, 1000, 2, 50);
+            Witch = new Witch(new Vector2D(10, 10), this, 1, 50, 50, 30, 100, 50, 50);
             Populate();
             GameGraph = new Graph.Graph(this);
         }
