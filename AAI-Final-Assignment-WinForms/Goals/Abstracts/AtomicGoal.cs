@@ -26,5 +26,10 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
         {
             throw new Exception("Cannot remove from a atomic goal");
         }
+
+        public override string Display()
+        {
+            return "    " + Name;
+        }
     }
 }

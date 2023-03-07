@@ -46,9 +46,5 @@ namespace AAI_Final_Assignment_WinForms.Goals
             Owner.SteeringBehaviour.Wander = false;
         }
 
-        public override void Display()
-        {
-            throw new NotImplementedException();
-        }
     }
 }

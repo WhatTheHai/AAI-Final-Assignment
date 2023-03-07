@@ -1,4 +1,5 @@
-﻿using AAI_Final_Assignment_WinForms.Entities;
+﻿using System.Text;
+using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.Goals.Abstracts;
 using AAI_Final_Assignment_WinForms.Goals.Enums;
 
@@ -15,9 +16,9 @@ namespace AAI_Final_Assignment_WinForms.Goals
         {
             GoalStatus = GoalStatusType.Active;
             Add(new WanderGoal("Wander", Owner));
-            Add(new SeekTargetGoal("seek", Owner));
+            Add(new SeekTargetGoal("Seek", Owner));
             Add(new WanderGoal("Wander", Owner));
-            Add(new SeekTargetGoal("seek", Owner));
+            Add(new SeekTargetGoal("Seek", Owner));
         }
 
 
@@ -40,10 +41,16 @@ namespace AAI_Final_Assignment_WinForms.Goals
         {
         }
 
-
-        public override void Display()
+        public override string Display()
         {
-            throw new NotImplementedException();
+            StringBuilder sb = new StringBuilder();
+            sb.Append(Name + "\n");
+            if (SubGoalsList.Any())
+            {
+                sb.Append(SubGoalsList.First().Display());
+            }
+
+            return sb.ToString();
         }
     }
 }

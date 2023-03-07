@@ -40,10 +40,5 @@ namespace AAI_Final_Assignment_WinForms.Goals
         {
             Owner.SteeringBehaviour.Seek = false;
         }
-
-        public override void Display()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
