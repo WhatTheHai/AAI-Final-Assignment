@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AAI_Final_Assignment_WinForms.Goals.Abstracts;
 using AAI_Final_Assignment_WinForms.util;
 using AAI_Final_Assignment_WinForms.World;
 
@@ -11,16 +12,20 @@ namespace AAI_Final_Assignment_WinForms.Entities
     public class TestEnemy : MovingEntity
     {
         public Color Color { get; set; }
+        public Goal MainGoal { get; set; }
 
         public TestEnemy(Vector2D pos, GameWorld world, double scale, int textureWidth, int textureHeight, double mass,
-            double maxSpeed, double maxForce, double radius) : base(pos, world, scale, textureWidth, textureHeight,
+            double maxSpeed, double maxForce, double radius, Goal mainGoal) : base(pos, world, scale, textureWidth,
+            textureHeight,
             mass, maxSpeed,
             maxForce, radius)
         {
             Color = Color.DarkOrchid;
             SteeringBehaviour.Arrive = false;
-            SteeringBehaviour.Seek = true;
-            SteeringBehaviour.ObstacleAvoidance = true;
+            SteeringBehaviour.Seek = false;
+            SteeringBehaviour.ObstacleAvoidance = false;
+
+            MainGoal = mainGoal;
 
             Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\sharkboy.png"),
                 new Size(TextureWidth, TextureHeight));
@@ -36,6 +41,12 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 new Rectangle((int)Pos.X - (int)Radius / 2, (int)Pos.Y - (int)Radius / 2, (int)Radius, (int)Radius));
 
             base.Render(g);
+        }
+
+        public override void Update(double timeElapsed)
+        {
+            MainGoal.Process();
+            base.Update(timeElapsed);
         }
     }
 }
