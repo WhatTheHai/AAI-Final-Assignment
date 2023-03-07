@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms.VisualStyles;
 using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.util;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace AAI_Final_Assignment_WinForms.Behaviour
 {
@@ -14,7 +15,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
     {
         // todo: get setters? initialize total/currentforce
         // All steering behaviour that can be enabled
-        public bool Seek, Flee, Arrive, ObstacleAvoidance;
+        public bool Seek, Flee, Arrive, ObstacleAvoidance, Wander;
 
         // Total force on the object
         public Vector2D TotalForce { get; set; }
@@ -63,7 +64,11 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
                 CurrentForce = CalculateArrive();
                 if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
             }
-
+            if (Wander)
+            {
+                CurrentForce = CalculateWander();
+                if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
+            }
 
             return TotalForce;
         }
@@ -209,6 +214,43 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             CurrentObstacleAvoidance = avoidanceForce.Clone();
 
             return avoidanceForce;
+        }
+
+        /// <summary>
+        /// Calculates the desired forces for wandering around randomly
+        /// </summary>
+        /// <returns>The wander force</returns>
+        public Vector2D CalculateWander()
+        {
+            //Wander parameters
+            //TODO: Scale with max speed
+            const double wanderRadius = 15.0;
+            const double wanderDistance = 30.0;
+            const double wanderJitter = 0.5;
+            Random rand = new Random();
+
+            Vector2D wanderTarget = ME.Heading.Clone();
+            //Create a random displacement vector and add it to the wander target
+            //Ensure the double number is between -1 and 1
+            Vector2D displacement = new Vector2D(rand.NextDouble() * 2 - 1, rand.NextDouble() * 2 - 1);
+            displacement.Multiply(wanderJitter);
+            displacement.Normalize();
+            displacement.Multiply(wanderDistance);
+            wanderTarget.Add(displacement);
+
+            // Calculate the target vector in local space, and set its length to the wander radius
+            Vector2D targetLocal = wanderTarget.Sub(ME.Pos);
+            targetLocal.Normalize().Multiply(wanderRadius);
+
+            // Rotate the target vector by a random angle
+            double angle = rand.NextDouble() * Math.PI * 2;
+
+            // Perform a rotation using a rotation matrix
+            Vector2D targetWorld = new Vector2D(
+                wanderTarget.X * Math.Cos(angle) - wanderTarget.Y * Math.Sin(angle),
+                wanderTarget.X * Math.Sin(angle) + wanderTarget.Y * Math.Cos(angle)
+            );
+            return targetWorld.Sub(ME.Velocity);
         }
 
         /// <summary>

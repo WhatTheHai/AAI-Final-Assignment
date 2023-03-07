@@ -35,7 +35,7 @@
             // 
             this._mainPanel.Location = new System.Drawing.Point(0, 0);
             this._mainPanel.Name = "_mainPanel";
-            this._mainPanel.Size = new System.Drawing.Size(1920, 1080);
+            this._mainPanel.Size = new System.Drawing.Size(1600, 900);
             this._mainPanel.TabIndex = 0;
             this._mainPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.MainPanel_Paint);
             this._mainPanel.MouseClick += new System.Windows.Forms.MouseEventHandler(this._mainPanel_MouseClick);
