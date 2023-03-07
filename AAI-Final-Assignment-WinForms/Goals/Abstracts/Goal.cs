@@ -7,7 +7,7 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
     {
         protected string Name { get; set; }
         protected MovingEntity Owner { get; set; }
-        protected GoalStatusType GoalStatus { get; set; }
+        public GoalStatusType GoalStatus { get; set; }
 
         protected Goal(string name, MovingEntity entity)
         {
@@ -20,6 +20,7 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
         public abstract void Process();
         public abstract void Deactivate();
         public abstract void Add(Goal goal);
+        public abstract void RemoveFirst();
         public abstract void Display();
     }
 }

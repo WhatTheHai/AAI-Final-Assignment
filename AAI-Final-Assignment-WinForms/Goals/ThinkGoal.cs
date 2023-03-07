@@ -14,23 +14,30 @@ namespace AAI_Final_Assignment_WinForms.Goals
         public override void Activate()
         {
             GoalStatus = GoalStatusType.Active;
-            SubGoalsList.Add(new SeekTargetGoal("seek", Owner));
-            SubGoalsList.Add(new SeekTargetGoal("seek", Owner));
-            SubGoalsList.Add(new SeekTargetGoal("seek", Owner));
-            SubGoalsList.Add(new SeekTargetGoal("seek", Owner));
+            Add(new WanderGoal("Wander", Owner));
+            Add(new SeekTargetGoal("seek", Owner));
+            Add(new WanderGoal("Wander", Owner));
+            Add(new SeekTargetGoal("seek", Owner));
         }
 
 
         public override void Process()
         {
             // check if completed in list ... 
+            if (!SubGoalsList.Any()) Activate();
 
+            // protected werkt niet? 
             var currentGoal = SubGoalsList.First();
+            if (currentGoal.GoalStatus == GoalStatusType.Completed)
+            {
+                RemoveFirst();
+            }
+
+            currentGoal.Process();
         }
 
         public override void Deactivate()
         {
-            throw new NotImplementedException();
         }
 
 

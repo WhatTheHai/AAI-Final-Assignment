@@ -1,5 +1,6 @@
 ﻿using AAI_Final_Assignment_WinForms.Behaviour;
 using AAI_Final_Assignment_WinForms.Entities;
+using AAI_Final_Assignment_WinForms.Goals;
 using AAI_Final_Assignment_WinForms.util;
 
 namespace AAI_Final_Assignment_WinForms.World
@@ -52,6 +53,7 @@ namespace AAI_Final_Assignment_WinForms.World
                 me.Update(timeElapsed);
                 Boundary(me);
             }
+
             Witch.Update(timeElapsed);
         }
 
@@ -67,12 +69,15 @@ namespace AAI_Final_Assignment_WinForms.World
             Witch.Render(g);
         }
 
-        private void Boundary(MovingEntity entity) {
+        private void Boundary(MovingEntity entity)
+        {
             if (entity.Pos.X < 0 || entity.Pos.X > Width)
             {
                 entity.Velocity.X = -entity.Velocity.X; // Inverts the x velocity to bounce off the left or right edge
-                entity.Pos.X = Math.Max(0, Math.Min(entity.Pos.X, Width)); // Clamps the position within the screen bounds
+                entity.Pos.X =
+                    Math.Max(0, Math.Min(entity.Pos.X, Width)); // Clamps the position within the screen bounds
             }
+
             if (entity.Pos.Y < 0 || entity.Pos.Y > Height)
             {
                 entity.Velocity.Y = -entity.Velocity.Y; // Same as x velocity, but with the y-axis instead

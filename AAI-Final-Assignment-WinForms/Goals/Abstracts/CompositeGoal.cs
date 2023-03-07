@@ -18,5 +18,10 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
             //  SubGoalsList.Add(goal);
             SubGoalsList.Insert(0, goal);
         }
+
+        public override void RemoveFirst()
+        {
+            SubGoalsList.RemoveAt(0);
+        }
     }
 }
