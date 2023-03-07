@@ -73,8 +73,6 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 Heading = Velocity.Clone().Normalize();
                 Side = Heading.Clone().Perpendicular();
             }
-
-            //check screen boundaries?
         }
 
 

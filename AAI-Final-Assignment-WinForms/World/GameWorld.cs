@@ -50,6 +50,7 @@ namespace AAI_Final_Assignment_WinForms.World
             foreach (MovingEntity me in MovingEntities)
             {
                 me.Update(timeElapsed);
+                Boundary(me);
             }
             Witch.Update(timeElapsed);
         }
@@ -64,6 +65,19 @@ namespace AAI_Final_Assignment_WinForms.World
             MovingEntities.ForEach(e => e.Render(g));
             StaticEntities.ForEach(o => o.Render(g));
             Witch.Render(g);
+        }
+
+        public void Boundary(MovingEntity entity) {
+            if (entity.Pos.X < 0 || entity.Pos.X > Width)
+            {
+                entity.Velocity.X = -entity.Velocity.X; // invert the x velocity to bounce off the left or right edge
+                entity.Pos.X = Math.Max(0, Math.Min(entity.Pos.X, Width)); // clamp the position within the screen bounds
+            }
+            if (entity.Pos.Y < 0 || entity.Pos.Y > Width)
+            {
+                entity.Velocity.Y = -entity.Velocity.Y; // invert the y velocity to bounce off the top or bottom edge
+                entity.Pos.Y = Math.Max(0, Math.Min(entity.Pos.Y, Width)); // clamp the position within the screen bounds
+            }
         }
 
         /// <summary>

@@ -149,10 +149,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             {
                 return nearestVertex;
             }
-            else
-            {
-                return new Vertex(pos);
-            }
+            return new Vertex(pos);
         }
 
         /// <summary>
