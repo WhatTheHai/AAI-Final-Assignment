@@ -73,10 +73,10 @@ namespace AAI_Final_Assignment_WinForms.World
                 entity.Velocity.X = -entity.Velocity.X; // Inverts the x velocity to bounce off the left or right edge
                 entity.Pos.X = Math.Max(0, Math.Min(entity.Pos.X, Width)); // Clamps the position within the screen bounds
             }
-            if (entity.Pos.Y < 0 || entity.Pos.Y > Width)
+            if (entity.Pos.Y < 0 || entity.Pos.Y > Height)
             {
                 entity.Velocity.Y = -entity.Velocity.Y; // Same as x velocity, but with the y-axis instead
-                entity.Pos.Y = Math.Max(0, Math.Min(entity.Pos.Y, Width));
+                entity.Pos.Y = Math.Max(0, Math.Min(entity.Pos.Y, Height));
             }
         }
 

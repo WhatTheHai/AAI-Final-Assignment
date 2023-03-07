@@ -73,6 +73,7 @@ namespace AAI_Final_Assignment_WinForms.util
         public Vector2D Normalize()
         {
             double currentLength = Length();
+            if (currentLength == 0) return new Vector2D(0, 0);
             this.X /= currentLength;
             this.Y /= currentLength;
             return this;
