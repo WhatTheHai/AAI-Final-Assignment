@@ -129,8 +129,27 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         /// </summary>
         /// <param name="pos">Position of the entity</param>
         /// <returns>A (new) vertex</returns>
-        private Vertex? FindVertex(Vector2D pos) {
-            return VertexMap.ContainsKey(pos) ? VertexMap[pos] : null;
+        private Vertex FindVertex(Vector2D pos)
+        {
+            Vertex nearestVertex = null;
+            double nearestDistance = double.MaxValue;
+
+            foreach (var vertex in VertexMap.Values)
+            {
+                double distance = vertex.pos.Distance(pos);
+
+                if (distance < nearestDistance)
+                {
+                    nearestVertex = vertex;
+                    nearestDistance = distance;
+                }
+            }
+
+            if (nearestVertex != null && nearestDistance < Double.MaxValue)
+            {
+                return nearestVertex;
+            }
+            return new Vertex(pos);
         }
 
         /// <summary>

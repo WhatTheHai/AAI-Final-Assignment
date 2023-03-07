@@ -40,7 +40,7 @@ namespace AAI_Final_Assignment_WinForms.World
             Width = w;
             Height = h;
 
-            Witch = new Witch(new Vector2D(10, 10), this, 1, 50, 50, 0, 1000, 2, 50);
+            Witch = new Witch(new Vector2D(10, 10), this, 1, 50, 50, 30, 100, 50, 50);
             Populate();
             GameGraph = new Graph.Graph(this);
         }
@@ -50,6 +50,7 @@ namespace AAI_Final_Assignment_WinForms.World
             foreach (MovingEntity me in MovingEntities)
             {
                 me.Update(timeElapsed);
+                Boundary(me);
             }
             Witch.Update(timeElapsed);
         }
@@ -64,6 +65,19 @@ namespace AAI_Final_Assignment_WinForms.World
             MovingEntities.ForEach(e => e.Render(g));
             StaticEntities.ForEach(o => o.Render(g));
             Witch.Render(g);
+        }
+
+        private void Boundary(MovingEntity entity) {
+            if (entity.Pos.X < 0 || entity.Pos.X > Width)
+            {
+                entity.Velocity.X = -entity.Velocity.X; // Inverts the x velocity to bounce off the left or right edge
+                entity.Pos.X = Math.Max(0, Math.Min(entity.Pos.X, Width)); // Clamps the position within the screen bounds
+            }
+            if (entity.Pos.Y < 0 || entity.Pos.Y > Height)
+            {
+                entity.Velocity.Y = -entity.Velocity.Y; // Same as x velocity, but with the y-axis instead
+                entity.Pos.Y = Math.Max(0, Math.Min(entity.Pos.Y, Height));
+            }
         }
 
         /// <summary>
