@@ -13,6 +13,12 @@ namespace AAI_Final_Assignment_WinForms.World
         // List of all static entities
         public List<StaticEntity> StaticEntities;
 
+        // Preloaded background images
+        public List<Bitmap> BackgroundImages = new List<Bitmap>();
+        
+        // Place to store the generated background
+        private Bitmap background;
+
         // The graph where the characters can move over.
         public Graph.Graph GameGraph;
         public bool GraphEnabled = false;
@@ -26,6 +32,9 @@ namespace AAI_Final_Assignment_WinForms.World
         // Height of main panel
         public int Height { get; set; }
 
+        public const string PathPrefix = "..\\..\\..\\";
+
+
         // game world class
         // the game world class contains all the data and objects pertinent to the environment like: walls, obstacles, agents etc...
 
@@ -36,6 +45,12 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public GameWorld(int w, int h)
         {
+            for (int i = 1; i < 9; i++) {
+                Image img = Image.FromFile(PathPrefix + $"Sprites\\Floors\\floor_{i}.png");
+                Bitmap bmp = new Bitmap(img, img.Width, img.Height);
+                BackgroundImages.Add(bmp);
+            }
+
             MovingEntities = new List<MovingEntity>();
             StaticEntities = new List<StaticEntity>();
             Width = w;
@@ -59,6 +74,9 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public void Render(Graphics g)
         {
+            // Render priority 
+            // Background -> Graph -> Entities -> Main Character
+            RenderBackground(g);
             if (GraphEnabled)
             {
                 GameGraph.Render(g);
@@ -69,8 +87,27 @@ namespace AAI_Final_Assignment_WinForms.World
             Witch.Render(g);
         }
 
-        private void Boundary(MovingEntity entity)
+        public void RenderBackground(Graphics g)
         {
+            if (background == null)  // generate the background only once
+            {
+                Random Rand = new Random();
+                background = new Bitmap(Width, Height);
+                Graphics bg = Graphics.FromImage(background);
+                for (int x = 0; x < Width; x += BackgroundImages[0].Width)
+                {
+                    for (int y = 0; y < Height; y += BackgroundImages[0].Height) {
+                        Bitmap floor;
+                        floor = Rand.Next(0, 3) == 0 ? BackgroundImages[Rand.Next(BackgroundImages.Count)] : BackgroundImages[0];
+                        bg.DrawImage(floor, x, y);
+                    }
+                }
+            }
+
+            g.DrawImage(background, 0, 0);  // render the stored background
+        }
+
+        private void Boundary(MovingEntity entity) {
             if (entity.Pos.X < 0 || entity.Pos.X > Width)
             {
                 entity.Velocity.X = -entity.Velocity.X; // Inverts the x velocity to bounce off the left or right edge

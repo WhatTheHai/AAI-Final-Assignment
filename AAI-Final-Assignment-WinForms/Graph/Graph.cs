@@ -408,9 +408,12 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             //Prints all vertices
             foreach (Vertex vertex in VertexMap.Values) 
             {
-                g.DrawEllipse(vertex.p, new Rectangle((int)vertex.pos.X-3, (int)vertex.pos.Y-3, 6, 6));
+                g.DrawEllipse(p, new Rectangle((int)vertex.pos.X-3, (int)vertex.pos.Y-3, 6, 6));
+
                 if (RenderPath && vertex.fScore != Double.MaxValue) {
-                    g.DrawString($"{(int)vertex.fScore}\n{(int)vertex.gScore}\n{(int)vertex.hScore}", new Font("Arial", 5), new SolidBrush(Color.Black), new PointF((int)vertex.pos.X-1, (int)vertex.pos.Y+2));
+                    //Debug purposes, prints all the scores
+                    //g.DrawString($"{(int)vertex.fScore}\n{(int)vertex.gScore}\n{(int)vertex.hScore}", new Font("Arial", 5), new SolidBrush(Color.Black), new PointF((int)vertex.pos.X-1, (int)vertex.pos.Y+2));
+                    g.DrawEllipse(p2, new Rectangle((int)vertex.pos.X-3, (int)vertex.pos.Y-3, 6, 6));
                 }
             }
 
