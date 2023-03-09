@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace AAI_Final_Assignment_WinForms.Goals.Enums
 {
     /// <summary>
-    /// The different stages a goal can have
+    /// The different stages a goal can have.
     /// </summary>
     public enum GoalStatusType
     {
