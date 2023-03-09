@@ -25,7 +25,7 @@ namespace AAI_Final_Assignment_WinForms.Goals
 
         public override void Process()
         {
-            if (SubGoalsStack.Count == 0) Activate();
+            if (SubGoalsStack.Count == 0) Activate(); // todo: remove
 
             var currentGoal = SubGoalsStack.Peek();
 
@@ -34,6 +34,9 @@ namespace AAI_Final_Assignment_WinForms.Goals
                 SubGoalsStack.Pop();
             }
 
+            if (SubGoalsStack.Count == 0) Activate(); //todo: remove 
+
+            currentGoal = SubGoalsStack.Peek();
             currentGoal.Process();
         }
 
