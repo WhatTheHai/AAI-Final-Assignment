@@ -6,6 +6,9 @@ using Timer = System.Timers.Timer;
 
 namespace AAI_Final_Assignment_WinForms.Goals
 {
+    /// <summary>
+    ///  This goal activates the seeking behaviour of a moving entity.
+    /// </summary>
     public class SeekTargetGoal : AtomicGoal
     {
         public SeekTargetGoal(string name, MovingEntity entity) : base(name, entity)

@@ -11,6 +11,9 @@ using Timer = System.Timers.Timer;
 
 namespace AAI_Final_Assignment_WinForms.Goals
 {
+    /// <summary>
+    ///  This goal activates the wander behaviour of a moving entity.
+    /// </summary>
     public class WanderGoal : AtomicGoal
     {
         public WanderGoal(string name, MovingEntity entity) : base(name, entity)
@@ -45,6 +48,5 @@ namespace AAI_Final_Assignment_WinForms.Goals
         {
             Owner.SteeringBehaviour.Wander = false;
         }
-
     }
 }

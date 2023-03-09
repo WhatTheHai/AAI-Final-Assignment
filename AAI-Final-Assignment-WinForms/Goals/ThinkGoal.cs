@@ -6,6 +6,9 @@ using AAI_Final_Assignment_WinForms.Goals.Enums;
 
 namespace AAI_Final_Assignment_WinForms.Goals
 {
+    /// <summary>
+    /// This is the brain of the moving entity and can never be deactivated. 
+    /// </summary>
     public class ThinkGoal : CompositeGoal
     {
         public ThinkGoal(string name, MovingEntity entity) : base(name, entity)
@@ -31,7 +34,7 @@ namespace AAI_Final_Assignment_WinForms.Goals
 
             if (currentGoal.GoalStatus == GoalStatusType.Completed || currentGoal.GoalStatus == GoalStatusType.Failed)
             {
-                SubGoalsStack.Pop();
+                SubGoalsStack.Pop().Deactivate();
             }
 
             if (SubGoalsStack.Count == 0) Activate(); //todo: remove 

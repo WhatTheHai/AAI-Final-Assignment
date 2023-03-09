@@ -3,6 +3,9 @@ using AAI_Final_Assignment_WinForms.Goals.Enums;
 
 namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
 {
+    /// <summary>
+    /// Abstract goal class used for the composite pattern.
+    /// </summary>
     public abstract class Goal
     {
         public string Name { get; set; }

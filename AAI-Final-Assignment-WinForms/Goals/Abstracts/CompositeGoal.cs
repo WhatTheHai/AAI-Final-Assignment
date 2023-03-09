@@ -4,6 +4,9 @@ using AAI_Final_Assignment_WinForms.Entities;
 
 namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
 {
+    /// <summary>
+    /// Abstract class for a composite goal, can contain multiple sub goals.
+    /// </summary>
     public abstract class CompositeGoal : Goal
     {
         protected Stack<Goal> SubGoalsStack { get; set; }
