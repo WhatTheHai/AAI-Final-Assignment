@@ -25,13 +25,15 @@ namespace AAI_Final_Assignment_WinForms.Goals
         public override void Process()
         {
             // check if completed in list ... also remove failed  
-            if (!SubGoalsList.Any()) Activate();
+            //if (!SubGoalsList.Any()) Activate();
+            if (SubGoalsStack.Count == 0) Activate();
 
-            // protected werkt niet? 
-            var currentGoal = SubGoalsList.First();
-            if (currentGoal.GoalStatus == GoalStatusType.Completed)
+            // var currentGoal = SubGoalsList.First();
+            var currentGoal = SubGoalsStack.Peek();
+
+            if (currentGoal.GoalStatus == GoalStatusType.Completed || currentGoal.GoalStatus == GoalStatusType.Failed)
             {
-                RemoveFirst();
+                Remove();
             }
 
             // process first goal in list. 
@@ -40,18 +42,6 @@ namespace AAI_Final_Assignment_WinForms.Goals
 
         public override void Deactivate()
         {
-        }
-
-        public override string Display()
-        {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(Name + "\n");
-            if (SubGoalsList.Any())
-            {
-                sb.Append(SubGoalsList.First().Display());
-            }
-
-            return sb.ToString();
         }
     }
 }
