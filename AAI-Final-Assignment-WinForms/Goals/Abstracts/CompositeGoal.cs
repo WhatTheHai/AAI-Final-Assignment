@@ -11,7 +11,7 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
     {
         protected Stack<Goal> SubGoalsStack { get; set; }
 
-        protected CompositeGoal(string name, MovingEntity entity) : base(name, entity)
+        protected CompositeGoal(MovingEntity entity) : base(entity)
         {
             SubGoalsStack = new Stack<Goal>();
         }

@@ -16,8 +16,9 @@ namespace AAI_Final_Assignment_WinForms.Goals
     /// </summary>
     public class WanderGoal : AtomicGoal
     {
-        public WanderGoal(string name, MovingEntity entity) : base(name, entity)
+        public WanderGoal(MovingEntity entity) : base(entity)
         {
+            Name = "Wander";
         }
 
         public override void Activate()

@@ -11,8 +11,9 @@ namespace AAI_Final_Assignment_WinForms.Goals
     /// </summary>
     public class SeekTargetGoal : AtomicGoal
     {
-        public SeekTargetGoal(string name, MovingEntity entity) : base(name, entity)
+        public SeekTargetGoal(MovingEntity entity) : base(entity)
         {
+            Name = "Seek";
         }
 
         public override void Activate()

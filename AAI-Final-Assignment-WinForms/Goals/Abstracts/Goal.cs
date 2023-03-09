@@ -12,9 +12,9 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
         protected MovingEntity Owner { get; set; }
         public GoalStatusType GoalStatus { get; set; }
 
-        protected Goal(string name, MovingEntity entity)
+        protected Goal(MovingEntity entity)
         {
-            Name = name;
+            Name = "";
             Owner = entity;
             GoalStatus = GoalStatusType.Inactive;
         }

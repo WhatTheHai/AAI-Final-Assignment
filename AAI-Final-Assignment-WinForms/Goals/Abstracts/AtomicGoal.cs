@@ -16,7 +16,7 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
         protected Timer Timer;
         protected bool TimerComplete = false;
 
-        protected AtomicGoal(string name, MovingEntity entity) : base(name, entity)
+        protected AtomicGoal(MovingEntity entity) : base(entity)
         {
         }
 

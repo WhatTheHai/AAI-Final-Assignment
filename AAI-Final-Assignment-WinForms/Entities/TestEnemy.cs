@@ -26,7 +26,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             SteeringBehaviour.Seek = false;
             SteeringBehaviour.ObstacleAvoidance = true;
 
-            MainGoal = new ThinkGoal("Thinking", this);
+            MainGoal = new ThinkGoal(this);
 
             Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\sharkboy.png"),
                 new Size(TextureWidth, TextureHeight));

@@ -11,18 +11,19 @@ namespace AAI_Final_Assignment_WinForms.Goals
     /// </summary>
     public class ThinkGoal : CompositeGoal
     {
-        public ThinkGoal(string name, MovingEntity entity) : base(name, entity)
+        public ThinkGoal(MovingEntity entity) : base(entity)
         {
+            Name = "Thinking";
         }
 
         public override void Activate()
         {
             GoalStatus = GoalStatusType.Active;
             SubGoalsStack.Clear();
-            SubGoalsStack.Push(new WanderGoal("Wander", Owner));
-            SubGoalsStack.Push(new SeekTargetGoal("Seek", Owner));
-            SubGoalsStack.Push(new WanderGoal("Wander", Owner));
-            SubGoalsStack.Push(new SeekTargetGoal("Seek", Owner));
+            SubGoalsStack.Push(new WanderGoal(Owner));
+            SubGoalsStack.Push(new SeekTargetGoal(Owner));
+            SubGoalsStack.Push(new WanderGoal(Owner));
+            SubGoalsStack.Push(new SeekTargetGoal(Owner));
         }
 
 
@@ -45,6 +46,7 @@ namespace AAI_Final_Assignment_WinForms.Goals
 
         public override void Deactivate()
         {
+            // thinking may not be deactivated als the entity has no brain.
         }
     }
 }
