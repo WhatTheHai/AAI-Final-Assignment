@@ -23,7 +23,6 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
             sb.Append(Name + "\n");
             if (SubGoalsStack.Count > 0)
             {
-                // sb.Append(SubGoalsList.First().Display());
                 sb.Append(SubGoalsStack.Peek().Display());
             }
 
