@@ -13,15 +13,6 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
             SubGoalsStack = new Stack<Goal>();
         }
 
-        public override void Add(Goal goal)
-        {
-            SubGoalsStack.Push(goal);
-        }
-
-        public override void Remove()
-        {
-            SubGoalsStack.Pop();
-        }
 
         public override string Display()
         {

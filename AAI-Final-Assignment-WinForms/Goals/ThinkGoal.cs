@@ -15,28 +15,25 @@ namespace AAI_Final_Assignment_WinForms.Goals
         public override void Activate()
         {
             GoalStatus = GoalStatusType.Active;
-            Add(new WanderGoal("Wander", Owner));
-            Add(new SeekTargetGoal("Seek", Owner));
-            Add(new WanderGoal("Wander", Owner));
-            Add(new SeekTargetGoal("Seek", Owner));
+            SubGoalsStack.Clear();
+            SubGoalsStack.Push(new WanderGoal("Wander", Owner));
+            SubGoalsStack.Push(new SeekTargetGoal("Seek", Owner));
+            SubGoalsStack.Push(new WanderGoal("Wander", Owner));
+            SubGoalsStack.Push(new SeekTargetGoal("Seek", Owner));
         }
 
 
         public override void Process()
         {
-            // check if completed in list ... also remove failed  
-            //if (!SubGoalsList.Any()) Activate();
             if (SubGoalsStack.Count == 0) Activate();
 
-            // var currentGoal = SubGoalsList.First();
             var currentGoal = SubGoalsStack.Peek();
 
             if (currentGoal.GoalStatus == GoalStatusType.Completed || currentGoal.GoalStatus == GoalStatusType.Failed)
             {
-                Remove();
+                SubGoalsStack.Pop();
             }
 
-            // process first goal in list. 
             currentGoal.Process();
         }
 

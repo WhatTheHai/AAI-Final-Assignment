@@ -17,15 +17,6 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
         {
         }
 
-        public override void Add(Goal goal)
-        {
-            throw new Exception("Cannot add to a atomic goal");
-        }
-
-        public override void Remove()
-        {
-            throw new Exception("Cannot remove from a atomic goal");
-        }
 
         public override string Display()
         {

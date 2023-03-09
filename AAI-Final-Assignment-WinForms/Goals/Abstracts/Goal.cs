@@ -19,8 +19,6 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
         public abstract void Activate();
         public abstract void Process();
         public abstract void Deactivate();
-        public abstract void Add(Goal goal);
-        public abstract void Remove();
         public abstract string Display();
     }
 }
