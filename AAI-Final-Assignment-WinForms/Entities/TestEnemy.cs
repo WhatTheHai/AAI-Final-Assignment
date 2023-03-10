@@ -34,7 +34,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
             g.FillEllipse(Brushes.Blue, new Rectangle((int)Pos.X, (int)Pos.Y, 3, 3));
             g.DrawEllipse(new Pen(Color.Red, 3),
-                new Rectangle((int)Pos.X - (int)Radius / 2, (int)Pos.Y - (int)Radius / 2, (int)Radius, (int)Radius));
+                new Rectangle((int)Pos.X - (int)Radius, (int)Pos.Y - (int)Radius, (int)Radius*2, (int)Radius*2));
 
             base.Render(g);
         }

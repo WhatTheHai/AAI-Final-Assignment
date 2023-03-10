@@ -24,6 +24,12 @@ namespace AAI_Final_Assignment_WinForms.Entities
         //Maximum force on entity
         public double MaxForce { get; set; }
 
+        //Hitpoints
+        public double MaxHealth { get; set; }
+
+        //Current Health
+        public double Health { get; set; }
+
         // used for debugging to show current steeringforce
         private Vector2D currentSteeringForce;
 
@@ -46,6 +52,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             Side = new Vector2D();
             SteeringBehaviour = new SteeringBehaviour(this);
             currentSteeringForce = new Vector2D();
+            MaxHealth = Health = 100;
         }
 
         public override void Update(double timeElapsed)

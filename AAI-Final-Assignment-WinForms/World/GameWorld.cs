@@ -7,10 +7,13 @@ namespace AAI_Final_Assignment_WinForms.World
     public class GameWorld
     {
         // List of all moving entities
-        public List<MovingEntity> MovingEntities;
+        public List<BaseGameEntity> MovingEntities;
 
         // List of all static entities
-        public List<StaticEntity> StaticEntities;
+        public List<BaseGameEntity> StaticEntities;
+        
+        // List of all items
+        public List<BaseGameEntity> Items;
 
         // Preloaded background images
         public List<Bitmap> BackgroundImages = new List<Bitmap>();
@@ -50,12 +53,13 @@ namespace AAI_Final_Assignment_WinForms.World
                 BackgroundImages.Add(bmp);
             }
 
-            MovingEntities = new List<MovingEntity>();
-            StaticEntities = new List<StaticEntity>();
+            MovingEntities = new List<BaseGameEntity>();
+            StaticEntities = new List<BaseGameEntity>();
+            Items = new List<BaseGameEntity>();
             Width = w;
             Height = h;
 
-            Witch = new Witch(new Vector2D(10, 10), this, 1, 50, 50, 30, 100, 50, 50);
+            Witch = new Witch(new Vector2D(10, 10), this, 1, 50, 50, 30, 100, 50, 25);
             Populate();
             GameGraph = new Graph.Graph(this);
         }
@@ -68,6 +72,7 @@ namespace AAI_Final_Assignment_WinForms.World
                 Boundary(me);
             }
             Witch.Update(timeElapsed);
+            Witch.CheckCollisions(GetAllCheckedEntities());
         }
 
         public void Render(Graphics g)
@@ -83,6 +88,13 @@ namespace AAI_Final_Assignment_WinForms.World
             MovingEntities.ForEach(e => e.Render(g));
             StaticEntities.ForEach(o => o.Render(g));
             Witch.Render(g);
+        }
+
+        public List<BaseGameEntity> GetAllCheckedEntities() {
+            List<BaseGameEntity> allEntities = new List<BaseGameEntity>();
+            allEntities.AddRange(MovingEntities);
+            allEntities.AddRange(Items);
+            return allEntities;
         }
 
         public void RenderBackground(Graphics g)
@@ -130,7 +142,7 @@ namespace AAI_Final_Assignment_WinForms.World
             // }
 
 
-            TestEnemy t = new TestEnemy(new Vector2D(1000, 1000), this, 1, 50, 50, 50, 5, 55, 25); // 50 5 100000
+            TestEnemy t = new TestEnemy(new Vector2D(1000, 1000), this, 1, 50, 50, 50, 5, 55, 12.5); // 50 5 100000
             MovingEntities.Add(t);
 
             Circle o = new Circle(new Vector2D(200, 250), this, 2, 30, 25, 25, 60);
