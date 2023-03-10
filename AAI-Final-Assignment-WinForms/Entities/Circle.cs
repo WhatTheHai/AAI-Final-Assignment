@@ -23,7 +23,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
         {
             g.FillEllipse(Brushes.Blue, new Rectangle((int)Pos.X, (int)Pos.Y, 3, 3));
             g.DrawEllipse(new Pen(Color.Purple, 3),
-                new Rectangle((int)Pos.X - (int)Radius / 2, (int)Pos.Y - (int)Radius / 2, (int)Radius, (int)Radius));
+                new Rectangle((int)Pos.X - (int)Radius, (int)Pos.Y - (int)Radius, (int)Radius * 2, (int)Radius * 2));
 
             //g.DrawImage(Texture, (int)Center.X - TextureWidth / 2, (int)Center.Y - TextureHeight / 2);
             //  g.DrawImage(Texture, (int)Pos.X - TextureWidth / 2, (int)Pos.Y - TextureHeight / 2);
