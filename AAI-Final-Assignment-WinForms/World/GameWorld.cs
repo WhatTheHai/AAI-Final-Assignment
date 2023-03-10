@@ -61,7 +61,7 @@ namespace AAI_Final_Assignment_WinForms.World
             GameGraph = new Graph.Graph(this);
         }
 
-        public void Update(double timeElapsed)
+        public void Update(float timeElapsed)
         {
             foreach (MovingEntity me in MovingEntities)
             {

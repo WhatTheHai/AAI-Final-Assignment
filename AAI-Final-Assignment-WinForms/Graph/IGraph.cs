@@ -12,7 +12,7 @@ namespace AAI_Final_Assignment_WinForms.Graph
         void AddVertex(Vector2D pos);
         Vertex GetVertex(Vector2D pos);
 
-        void AddEdge(Vector2D source, Vector2D dest, double cost);
+        void AddEdge(Vector2D source, Vector2D dest, float cost);
 
         void ClearAll();
 

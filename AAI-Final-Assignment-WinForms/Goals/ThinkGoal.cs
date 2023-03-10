@@ -41,6 +41,7 @@ namespace AAI_Final_Assignment_WinForms.Goals
             if (SubGoalsStack.Count == 0) Activate(); //todo: remove 
 
             currentGoal = SubGoalsStack.Peek();
+
             currentGoal.Process();
         }
 

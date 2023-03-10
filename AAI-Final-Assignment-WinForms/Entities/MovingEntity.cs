@@ -16,13 +16,13 @@ namespace AAI_Final_Assignment_WinForms.Entities
         public Vector2D Side { get; set; }
 
         // Mass of entity
-        public double Mass { get; set; }
+        public float Mass { get; set; }
 
         //Maximum velocity of entity 
-        public double MaxSpeed { get; set; }
+        public float MaxSpeed { get; set; }
 
         //Maximum force on entity
-        public double MaxForce { get; set; }
+        public float MaxForce { get; set; }
 
         // used for debugging to show current steeringforce
         private Vector2D currentSteeringForce;
@@ -30,12 +30,12 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
         // todo: not using TURNRATE
         //Maximum turn rate 
-        public double MaxTurnRate { get; set; }
+        public float MaxTurnRate { get; set; }
 
         public SteeringBehaviour SteeringBehaviour { get; set; }
 
-        protected MovingEntity(Vector2D pos, GameWorld world, double scale, int textureWidth, int textureHeight,
-            double mass, double maxSpeed, double maxForce, double radius
+        protected MovingEntity(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight,
+            float mass, float maxSpeed, float maxForce, float radius
         ) : base(pos, world, scale, textureWidth, textureHeight, radius)
         {
             Mass = mass;
@@ -48,7 +48,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             currentSteeringForce = new Vector2D();
         }
 
-        public override void Update(double timeElapsed)
+        public override void Update(float timeElapsed)
         {
             // calculate steering force
             Vector2D steeringForce = SteeringBehaviour.Calculate();
@@ -109,7 +109,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
         protected void RenderInfo(Graphics g)
         {
             int width = 3;
-            double multiplier = 5;
+            float multiplier = 5;
 
             // current velocity
             // DrawLineFromEntity(g, Pos, Velocity.Clone().Multiply(multiplier), Color.Green, width);

@@ -5,25 +5,25 @@ namespace AAI_Final_Assignment_WinForms.util
 {
     public class Vector2D : IEquatable<Vector2D>
     {
-        public double X { get; set; }
-        public double Y { get; set; }
+        public float X { get; set; }
+        public float Y { get; set; }
 
         public Vector2D() : this(0, 0)
         {
         }
 
-        public Vector2D(double x, double y)
+        public Vector2D(float x, float y)
         {
             X = x;
             Y = y;
         }
 
-        public double Length()
+        public float Length()
         {
-            return Math.Sqrt((X * X) + (Y * Y));
+            return MathF.Sqrt((X * X) + (Y * Y));
         }
 
-        public double LengthSquared()
+        public float LengthSquared()
         {
             return (X * X) + (Y * Y);
         }
@@ -43,14 +43,14 @@ namespace AAI_Final_Assignment_WinForms.util
             return this;
         }
 
-        public Vector2D Multiply(double value)
+        public Vector2D Multiply(float value)
         {
             this.X *= value;
             this.Y *= value;
             return this;
         }
 
-        public Vector2D Divide(double value)
+        public Vector2D Divide(float value)
         {
             if (value <= 0)
             {
@@ -63,7 +63,7 @@ namespace AAI_Final_Assignment_WinForms.util
         }
 
         // todo: remove? 
-        public Double Dot(Vector2D v2)
+        public float Dot(Vector2D v2)
         {
             this.X *= v2.X;
             this.Y *= v2.Y;
@@ -72,14 +72,14 @@ namespace AAI_Final_Assignment_WinForms.util
 
         public Vector2D Normalize()
         {
-            double currentLength = Length();
+            float currentLength = Length();
             if (currentLength == 0) return new Vector2D(0, 0);
             this.X /= currentLength;
             this.Y /= currentLength;
             return this;
         }
 
-        public Vector2D Truncate(double max)
+        public Vector2D Truncate(float max)
         {
             if (Length() > max)
             {
@@ -110,12 +110,12 @@ namespace AAI_Final_Assignment_WinForms.util
             return $"({X:0.00},{Y:0.00})";
         }
 
-        public double Distance(Vector2D v1)
+        public float Distance(Vector2D v1)
         {
-            double xDistance = v1.X - this.X;
-            double yDistance = v1.Y - this.Y;
+            float xDistance = v1.X - this.X;
+            float yDistance = v1.Y - this.Y;
 
-            return Math.Sqrt((xDistance * xDistance) + (yDistance * yDistance));
+            return MathF.Sqrt((xDistance * xDistance) + (yDistance * yDistance));
         }
 
         public bool Equals(Vector2D? other)

@@ -14,7 +14,7 @@ using AAI_Final_Assignment_WinForms.World;
 
 namespace AAI_Final_Assignment_WinForms.Graph {
     public partial class Graph : IGraph {
-        public static readonly double INFINITY = System.Double.MaxValue;
+        public static readonly float INFINITY = float.MaxValue;
 
         public Dictionary<Vector2D, Vertex> VertexMap;
         public const int VectorDistance = 28;
@@ -70,7 +70,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                     Vector2D newPos = pos.Clone().Add(dir);
                     if (VertexMap.ContainsKey(newPos)) {
                         //If either X or Y has a zero, it's a non-diagional so the cost is 1. Otherwise 1.4 (Sqrt (1+1) rounded down)
-                        double cost = (dir.X == 0 || dir.Y == 0) ? 1: 1.4;
+                        float cost = (dir.X == 0 || dir.Y == 0) ? 1f: 1.4f;
                         AddEdge(pos, newPos, cost);
                     }
                 }
@@ -84,8 +84,8 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         /// <returns></returns>
         public Vector2D ClosestVertex(Vector2D position)
         {
-            double nearestX = Math.Round(position.X / VectorDistance) * VectorDistance;
-            double nearestY = Math.Round(position.Y / VectorDistance) * VectorDistance;
+            float nearestX = MathF.Round(position.X / VectorDistance) * VectorDistance;
+            float nearestY = MathF.Round(position.Y / VectorDistance) * VectorDistance;
             return new Vector2D(nearestX, nearestY);
         }
 
@@ -132,11 +132,11 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         private Vertex FindVertex(Vector2D pos)
         {
             Vertex nearestVertex = null;
-            double nearestDistance = double.MaxValue;
+            float nearestDistance = float.MaxValue;
 
             foreach (var vertex in VertexMap.Values)
             {
-                double distance = vertex.pos.Distance(pos);
+                float distance = vertex.pos.Distance(pos);
 
                 if (distance < nearestDistance)
                 {
@@ -145,7 +145,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                 }
             }
 
-            if (nearestVertex != null && nearestDistance < Double.MaxValue)
+            if (nearestVertex != null && nearestDistance < float.MaxValue)
             {
                 return nearestVertex;
             }
@@ -160,7 +160,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         /// <param name="source">The vector of the source vertex</param>
         /// <param name="dest">The vector of the destination vertex</param>
         /// <param name="cost">cost of the edge</param>
-        public void AddEdge(Vector2D source, Vector2D dest, double cost = 1) {
+        public void AddEdge(Vector2D source, Vector2D dest, float cost = 1) {
             Vertex vSource = this.CreateOrReturnVertex(source);
             Vertex vDest = this.CreateOrReturnVertex(dest);
 
@@ -243,7 +243,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                     prev.known = true;
                     foreach (var edge in prev.adj) {
                         Vertex next = edge.dest;
-                        double newDistance = prev.distance + edge.cost;
+                        float newDistance = prev.distance + edge.cost;
                         //Overwrite if the newer found distance is smaller
                         if (next.distance > newDistance) {
                             next.distance = newDistance;
@@ -317,7 +317,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
 
                     // Calculate the relative G score
 
-                    double relativeGScore = currentVertex.gScore + edge.cost;
+                    float relativeGScore = currentVertex.gScore + edge.cost;
 
                     //Add to the openSet if not already there
                     if (!openSet.Contains(nearVertex)) {
@@ -367,11 +367,11 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         /// <param name="start">The start vector.</param>
         /// <param name="end">The end vector.</param>
         /// <returns>The Euclidean distance between the two vectors.</returns>
-        private static double Heuristic(Vector2D start, Vector2D end)
+        private static float Heuristic(Vector2D start, Vector2D end)
         {
-            double deltaX = end.X - start.X;
-            double deltaY = end.Y - start.Y;
-            double distance = Math.Sqrt(deltaX * deltaX + deltaY * deltaY);
+            float deltaX = end.X - start.X;
+            float deltaY = end.Y - start.Y;
+            float distance = MathF.Sqrt(deltaX * deltaX + deltaY * deltaY);
             return distance;
         }
 
@@ -410,7 +410,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             {
                 g.DrawEllipse(p, new Rectangle((int)vertex.pos.X-3, (int)vertex.pos.Y-3, 6, 6));
 
-                if (RenderPath && vertex.fScore != Double.MaxValue) {
+                if (RenderPath && vertex.fScore != float.MaxValue) {
                     //Debug purposes, prints all the scores
                     //g.DrawString($"{(int)vertex.fScore}\n{(int)vertex.gScore}\n{(int)vertex.hScore}", new Font("Arial", 5), new SolidBrush(Color.Black), new PointF((int)vertex.pos.X-1, (int)vertex.pos.Y+2));
                     g.DrawEllipse(p2, new Rectangle((int)vertex.pos.X-3, (int)vertex.pos.Y-3, 6, 6));

@@ -12,7 +12,7 @@ namespace AAI_Final_Assignment_WinForms.Graph
 
         LinkedList<Edge> GetAdjacents();
 
-        double GetDistance();
+        float GetDistance();
 
         Vertex GetPrevious();
 

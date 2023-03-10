@@ -15,8 +15,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
         public Color Color { get; set; }
         public Goal MainGoal { get; set; }
 
-        public TestEnemy(Vector2D pos, GameWorld world, double scale, int textureWidth, int textureHeight, double mass,
-            double maxSpeed, double maxForce, double radius) : base(pos, world, scale, textureWidth,
+        public TestEnemy(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight, float mass,
+            float maxSpeed, float maxForce, float radius) : base(pos, world, scale, textureWidth,
             textureHeight,
             mass, maxSpeed,
             maxForce, radius)
@@ -50,7 +50,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             g.DrawString(MainGoal.Display(), drawFont, drawBrush, x, y, drawFormat);
         }
 
-        public override void Update(double timeElapsed)
+        public override void Update(float timeElapsed)
         {
             MainGoal.Process();
             base.Update(timeElapsed);
