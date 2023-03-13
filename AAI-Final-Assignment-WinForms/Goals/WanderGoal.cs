@@ -39,7 +39,7 @@ namespace AAI_Final_Assignment_WinForms.Goals
 
         public override void Process()
         {
-            if (GoalStatus == GoalStatusType.Inactive) Activate();
+            if (!IsActive()) Activate();
             if (TimerComplete)
             {
                 GoalStatus = GoalStatusType.Completed;

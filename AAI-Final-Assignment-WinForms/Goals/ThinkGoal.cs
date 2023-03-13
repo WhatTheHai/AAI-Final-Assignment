@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.Goals.Abstracts;
 using AAI_Final_Assignment_WinForms.Goals.Enums;
@@ -20,34 +21,63 @@ namespace AAI_Final_Assignment_WinForms.Goals
         {
             GoalStatus = GoalStatusType.Active;
             SubGoalsStack.Clear();
-            SubGoalsStack.Push(new WanderGoal(Owner));
-            SubGoalsStack.Push(new SeekTargetGoal(Owner));
-            SubGoalsStack.Push(new WanderGoal(Owner));
-            SubGoalsStack.Push(new SeekTargetGoal(Owner));
+            // SubGoalsStack.Push(new WanderGoal(Owner));
+            // SubGoalsStack.Push(new SeekTargetGoal(Owner));
+            // SubGoalsStack.Push(new MoveToItemGoal(Owner));
+            // SubGoalsStack.Push(new WanderGoal(Owner));
+            SelectNewGoal();
         }
 
 
         public override void Process()
         {
-            if (SubGoalsStack.Count == 0) Activate(); // todo: remove
+            if (!IsActive()) Activate();
 
-            var currentGoal = SubGoalsStack.Peek();
-
-            if (currentGoal.GoalStatus == GoalStatusType.Completed || currentGoal.GoalStatus == GoalStatusType.Failed)
+            // check if their is a subgoal to be processed. 
+            if (SubGoalsStack.Count > 0)
             {
-                SubGoalsStack.Pop().Deactivate();
+                var currentGoal = SubGoalsStack.Peek();
+
+                while ((currentGoal.GoalStatus == GoalStatusType.Completed ||
+                        currentGoal.GoalStatus == GoalStatusType.Failed) && SubGoalsStack.Count > 0)
+                {
+                    SubGoalsStack.Pop().Deactivate();
+                    if (SubGoalsStack.Count > 0)
+                    {
+                        currentGoal = SubGoalsStack.Peek();
+                    }
+                }
+
+                if (SubGoalsStack.Count <= 0) return;
+                currentGoal = SubGoalsStack.Peek();
+                currentGoal.Process();
             }
-
-            if (SubGoalsStack.Count == 0) Activate(); //todo: remove 
-
-            currentGoal = SubGoalsStack.Peek();
-
-            currentGoal.Process();
+            else
+            {
+                SelectNewGoal();
+            }
         }
 
         public override void Deactivate()
         {
             // thinking may not be deactivated als the entity has no brain.
+        }
+
+        private void SelectNewGoal()
+        {
+            Random random = new Random();
+            int numberOfGoals = 2;
+            var number = random.Next(1, (numberOfGoals + 1));
+
+            switch (number)
+            {
+                case 1:
+                    SubGoalsStack.Push(new MoveToItemGoal(Owner));
+                    break;
+                case 2:
+                    SubGoalsStack.Push(new WanderGoal(Owner));
+                    break;
+            }
         }
     }
 }

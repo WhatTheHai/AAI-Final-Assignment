@@ -30,6 +30,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
         //Current Health
         public double Health { get; set; }
 
+        public BaseGameEntity? CurrentTarget { get; set; }
+
         // used for debugging to show current steeringforce
         private Vector2D currentSteeringForce;
 
@@ -53,6 +55,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             SteeringBehaviour = new SteeringBehaviour(this);
             currentSteeringForce = new Vector2D();
             MaxHealth = Health = 100;
+            CurrentTarget = null;
         }
 
         public override void Update(float timeElapsed)

@@ -23,5 +23,12 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
         public abstract void Process();
         public abstract void Deactivate();
         public abstract string Display();
+
+        public bool IsActive()
+        {
+            return GoalStatus == GoalStatusType.Active;
+        }
+
+        // activate if not active maken? 
     }
 }

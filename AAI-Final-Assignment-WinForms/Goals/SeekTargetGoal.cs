@@ -18,26 +18,29 @@ namespace AAI_Final_Assignment_WinForms.Goals
 
         public override void Activate()
         {
+            // what if target disapers or is null? other unit picked up? 
             Owner.SteeringBehaviour.Seek = true;
             GoalStatus = GoalStatusType.Active;
-            Timer = new Timer(5000);
-            Timer.Elapsed += TimerOnElapsed;
-            Timer.Enabled = true;
+            // Timer = new Timer(5000);
+            // Timer.Elapsed += TimerOnElapsed;
+            // Timer.Enabled = true;
         }
 
         private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
         {
+            //  todo: remove 
             TimerComplete = true;
         }
 
         public override void Process()
         {
-            if (GoalStatus == GoalStatusType.Inactive) Activate();
-            if (TimerComplete)
-            {
-                GoalStatus = GoalStatusType.Completed;
-                Deactivate();
-            }
+            if (!IsActive()) Activate();
+            if (!Owner.World.Items.Contains(Owner.CurrentTarget)) GoalStatus = GoalStatusType.Failed;
+            // if (TimerComplete)
+            // {
+            //     GoalStatus = GoalStatusType.Completed;
+            //     Deactivate();
+            // }
         }
 
         public override void Deactivate()

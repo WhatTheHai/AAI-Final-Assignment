@@ -34,7 +34,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
         {
             foreach (BaseGameEntity entity in entities)
             {
-                if (entity is MovingEntity movingEntity && movingEntity != this && movingEntity.Pos.Distance(Pos) < entity.Radius + Radius)
+                if (entity is MovingEntity movingEntity && movingEntity != this &&
+                    movingEntity.Pos.Distance(Pos) < entity.Radius + Radius)
                 {
                     var test = movingEntity.Pos.Distance(Pos);
                     // Witch takes damage
@@ -44,10 +45,12 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 {
                     // Witch heals
                     world.Items.Remove(item);
-                    if (Health + 10 >= MaxHealth) {
+                    if (Health + 10 >= MaxHealth)
+                    {
                         Health = MaxHealth;
                     }
-                    else {
+                    else
+                    {
                         Health += 10;
                     }
                 }
@@ -62,7 +65,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 new Rectangle((int)Pos.X - (int)Radius, (int)Pos.Y - (int)Radius, (int)Radius * 2, (int)Radius * 2));
 
             // Draw the health bar
-            int healthBarWidth = (int)Radius*2;
+            int healthBarWidth = (int)Radius * 2;
             int healthBarHeight = 4;
             int healthBarX = (int)Pos.X - healthBarWidth / 2;
             int healthBarY = (int)Pos.Y - (int)Radius - healthBarHeight;

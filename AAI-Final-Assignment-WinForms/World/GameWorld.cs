@@ -12,13 +12,13 @@ namespace AAI_Final_Assignment_WinForms.World
 
         // List of all static entities
         public List<BaseGameEntity> StaticEntities;
-        
+
         // List of all items
         public List<BaseGameEntity> Items;
 
         // Preloaded background images
         public List<Bitmap> BackgroundImages = new List<Bitmap>();
-        
+
         // Place to store the generated background
         private Bitmap background;
 
@@ -48,7 +48,8 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public GameWorld(int w, int h)
         {
-            for (int i = 1; i < 9; i++) {
+            for (int i = 1; i < 9; i++)
+            {
                 Image img = Image.FromFile(PathPrefix + $"Sprites\\Floors\\floor_{i}.png");
                 Bitmap bmp = new Bitmap(img, img.Width, img.Height);
                 BackgroundImages.Add(bmp);
@@ -93,7 +94,8 @@ namespace AAI_Final_Assignment_WinForms.World
             Witch.Render(g);
         }
 
-        public List<BaseGameEntity> GetAllCheckedEntities() {
+        public List<BaseGameEntity> GetAllCheckedEntities()
+        {
             List<BaseGameEntity> allEntities = new List<BaseGameEntity>();
             allEntities.AddRange(MovingEntities);
             allEntities.AddRange(Items);
@@ -102,26 +104,30 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public void RenderBackground(Graphics g)
         {
-            if (background == null)  // generate the background only once
+            if (background == null) // generate the background only once
             {
                 Random Rand = new Random();
                 background = new Bitmap(Width, Height);
                 Graphics bg = Graphics.FromImage(background);
                 for (int x = 0; x < Width; x += BackgroundImages[0].Width)
                 {
-                    for (int y = 0; y < Height; y += BackgroundImages[0].Height) {
+                    for (int y = 0; y < Height; y += BackgroundImages[0].Height)
+                    {
                         Bitmap floor;
                         //Make floor0 more common
-                        floor = Rand.Next(0, 3) == 0 ? BackgroundImages[Rand.Next(BackgroundImages.Count)] : BackgroundImages[0];
+                        floor = Rand.Next(0, 3) == 0
+                            ? BackgroundImages[Rand.Next(BackgroundImages.Count)]
+                            : BackgroundImages[0];
                         bg.DrawImage(floor, x, y);
                     }
                 }
             }
 
-            g.DrawImage(background, 0, 0);  // render the stored background
+            g.DrawImage(background, 0, 0); // render the stored background
         }
 
-        private void Boundary(MovingEntity entity) {
+        private void Boundary(MovingEntity entity)
+        {
             if (entity.Pos.X < 0 || entity.Pos.X > Width)
             {
                 entity.Velocity.X = -entity.Velocity.X; // Inverts the x velocity to bounce off the left or right edge
@@ -147,7 +153,7 @@ namespace AAI_Final_Assignment_WinForms.World
             //     MovingEntities.Add(t);
             // }
 
-            TestEnemy t = new TestEnemy(new Vector2D(1000, 1000), this, 1, 50, 50, 50, 5, 55, 12.5); // 50 5 100000
+            TestEnemy t = new TestEnemy(new Vector2D(800, 800), this, 1, 50, 50, 50, 5, 55, 12.5f); // 50 5 100000
             MovingEntities.Add(t);
 
             Circle o = new Circle(new Vector2D(200, 250), this, 2, 30, 25, 25, 60);
@@ -170,7 +176,7 @@ namespace AAI_Final_Assignment_WinForms.World
             // StaticEntities.Add(o6);
         }
 
-        private void SpawnItems() 
+        private void SpawnItems()
         {
             Random Rand = new Random();
             int maxAmount = 10;
@@ -180,9 +186,11 @@ namespace AAI_Final_Assignment_WinForms.World
             allEntities.AddRange(StaticEntities);
             allEntities.AddRange(Items);
 
-            while (currentAmount != maxAmount) {
+            while (currentAmount != maxAmount)
+            {
                 ItemSpawn i = new ItemSpawn(new Vector2D(Rand.Next(0, Width), Rand.Next(0, Height)), this, 2, 5, 5, 10);
-                if (i.CheckAnyCollisions(allEntities)) {
+                if (i.CheckAnyCollisions(allEntities))
+                {
                     Items.Add(i);
                     currentAmount++;
                 }
