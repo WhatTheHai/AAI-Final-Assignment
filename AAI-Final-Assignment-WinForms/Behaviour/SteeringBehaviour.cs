@@ -31,6 +31,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public Vector2D CurrentObstacleAvoidance = new();
         public Vector2D CurrentSeek = new();
         public Vector2D CurrentArrive = new();
+        public BaseGameEntity CurrentTarget { get; set; }   // position to move to? 
 
         public bool IsCollision { get; set; }
 
@@ -65,6 +66,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
                 CurrentForce = CalculateArrive();
                 if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
             }
+
             if (Wander)
             {
                 CurrentForce = CalculateWander();
@@ -115,7 +117,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public Vector2D CalculateSeek()
         {
             Vector2D mePos = ME.Pos.Clone();
-            Vector2D targetPos = ME.World.Witch.Pos.Clone();
+            Vector2D targetPos = CurrentTarget.Pos.Clone();
 
             //Vector2D desiredVelocity = targetPos.Sub(mePos).Normalize().Multiply(ME.MaxSpeed);
             Vector2D desiredVelocity = targetPos.Sub(mePos);
@@ -127,6 +129,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
             return desiredVelocity;
         }
+
 
         /// <summary>
         /// Calculates the desired force for fleeing

@@ -25,6 +25,8 @@ namespace AAI_Final_Assignment_WinForms.Goals
         {
             Owner.SteeringBehaviour.Wander = true;
             GoalStatus = GoalStatusType.Active;
+
+            // temp 
             Timer = new Timer(5000);
             Timer.Elapsed += TimerOnElapsed;
             Timer.Enabled = true;
