@@ -66,16 +66,17 @@ namespace AAI_Final_Assignment_WinForms.World
             GameGraph = new Graph.Graph(this);
         }
 
-        public void Update(float timeElapsed)
-        {
+        public void Update(float timeElapsed) {
+            List<BaseGameEntity> MEandItems = GetMEandItems();
             foreach (MovingEntity me in MovingEntities)
             {
                 me.Update(timeElapsed);
+                me.CheckCollisions(MEandItems, this);
                 Boundary(me);
             }
 
             Witch.Update(timeElapsed);
-            Witch.CheckCollisions(GetAllCheckedEntities(), this);
+            Witch.CheckWithinRange(MEandItems, this);
         }
 
         public void Render(Graphics g)
@@ -94,8 +95,7 @@ namespace AAI_Final_Assignment_WinForms.World
             Witch.Render(g);
         }
 
-        public List<BaseGameEntity> GetAllCheckedEntities()
-        {
+        public List<BaseGameEntity> GetMEandItems() {
             List<BaseGameEntity> allEntities = new List<BaseGameEntity>();
             allEntities.AddRange(MovingEntities);
             allEntities.AddRange(Items);

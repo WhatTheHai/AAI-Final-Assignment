@@ -30,16 +30,18 @@ namespace AAI_Final_Assignment_WinForms.Entities
             World.GameGraph.MovePath = World.GameGraph.AStar(this.Pos, desiredVertex);
         }
 
-        public void CheckCollisions(List<BaseGameEntity> entities, GameWorld world)
+        public void CheckWithinRange(List<BaseGameEntity> entities, GameWorld world)
         {
             foreach (BaseGameEntity entity in entities)
             {
                 if (entity is MovingEntity movingEntity && movingEntity != this &&
                     movingEntity.Pos.Distance(Pos) < entity.Radius + Radius)
                 {
-                    var test = movingEntity.Pos.Distance(Pos);
-                    // Witch takes damage
-                    Health -= 1;
+                    if (movingEntity.Pos.Distance(Pos) < entity.Radius + Radius) {
+                        var test = movingEntity.Pos.Distance(Pos);
+                        // Witch takes damage
+                        Health -= 1;
+                    }
                 }
                 else if (entity is ItemSpawn item && item.Pos.Clone().Sub(Pos).Length() < item.Radius + Radius)
                 {
@@ -57,6 +59,27 @@ namespace AAI_Final_Assignment_WinForms.Entities
             }
         }
 
+        public MovingEntity? GetNearestEnemy(List<BaseGameEntity> entities)
+        {
+            MovingEntity nearestEnemy = null;
+            double nearestDistance = double.MaxValue;
+    
+            foreach (BaseGameEntity entity in entities)
+            {
+                if (entity is MovingEntity movingEntity && movingEntity != this)
+                {
+                    double distance = movingEntity.Pos.Distance(Pos);
+                    if (distance < nearestDistance)
+                    {
+                        nearestEnemy = movingEntity;
+                        nearestDistance = distance;
+                    }
+                }
+            }
+
+            return nearestEnemy;
+        }
+
         public override void Render(Graphics g)
         {
             // g.DrawImage(Texture, (int)Pos.X - TextureWidth / 2, (int)Pos.Y - TextureHeight / 2);
@@ -64,23 +87,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             g.DrawEllipse(new Pen(Color.Blue, 3),
                 new Rectangle((int)Pos.X - (int)Radius, (int)Pos.Y - (int)Radius, (int)Radius * 2, (int)Radius * 2));
 
-            // Draw the health bar
-            int healthBarWidth = (int)Radius * 2;
-            int healthBarHeight = 4;
-            int healthBarX = (int)Pos.X - healthBarWidth / 2;
-            int healthBarY = (int)Pos.Y - (int)Radius - healthBarHeight;
-            int healthBarMaxWidth = healthBarWidth;
-
-            // Calculate the width of the health bar based on the object's health
-            double healthPercent = Health / MaxHealth;
-            int healthBarCurrentWidth = (int)(healthPercent * healthBarMaxWidth);
-
-            // Background of the health bar
-            g.FillRectangle(Brushes.Gray, healthBarX, healthBarY, healthBarMaxWidth, healthBarHeight);
-            // Current health
-            g.FillRectangle(Brushes.Green, healthBarX, healthBarY, healthBarCurrentWidth, healthBarHeight);
-            // Border of the health bar
-            g.DrawRectangle(Pens.Black, healthBarX, healthBarY, healthBarMaxWidth, healthBarHeight);
+            RenderHp(g);
         }
 
         public override void Update(float timeElapsed)
