@@ -13,7 +13,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 {
     public class SteeringBehaviour
     {
-        // todo: get setters? initialize total/currentforce
+        // todo: get setters? initialize total/currentforce 
         // All steering behaviour that can be enabled
         public bool Seek, Flee, Arrive, ObstacleAvoidance, Wander;
 
