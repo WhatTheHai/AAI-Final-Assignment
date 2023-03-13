@@ -30,7 +30,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             World.GameGraph.MovePath = World.GameGraph.AStar(this.Pos, desiredVertex);
         }
 
-        public void CheckCollisions(List<BaseGameEntity> entities)
+        public void CheckCollisions(List<BaseGameEntity> entities, GameWorld world)
         {
             foreach (BaseGameEntity entity in entities)
             {
@@ -40,10 +40,16 @@ namespace AAI_Final_Assignment_WinForms.Entities
                     // Witch takes damage
                     Health -= 1;
                 }
-                else if (entity is Item item && item.Pos.Clone().Sub(Pos).Length() < item.Radius + Radius)
+                else if (entity is ItemSpawn item && item.Pos.Clone().Sub(Pos).Length() < item.Radius + Radius)
                 {
                     // Witch heals
-                    Health = 10;
+                    world.Items.Remove(item);
+                    if (Health + 10 >= MaxHealth) {
+                        Health = MaxHealth;
+                    }
+                    else {
+                        Health += 10;
+                    }
                 }
             }
         }
@@ -56,10 +62,10 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 new Rectangle((int)Pos.X - (int)Radius, (int)Pos.Y - (int)Radius, (int)Radius * 2, (int)Radius * 2));
 
             // Draw the health bar
-            int healthBarWidth = (int)Radius;
+            int healthBarWidth = (int)Radius*2;
             int healthBarHeight = 4;
             int healthBarX = (int)Pos.X - healthBarWidth / 2;
-            int healthBarY = (int)Pos.Y - (int)Radius / 2 - healthBarHeight;
+            int healthBarY = (int)Pos.Y - (int)Radius - healthBarHeight;
             int healthBarMaxWidth = healthBarWidth;
 
             // Calculate the width of the health bar based on the object's health

@@ -72,7 +72,7 @@ namespace AAI_Final_Assignment_WinForms.World
                 Boundary(me);
             }
             Witch.Update(timeElapsed);
-            Witch.CheckCollisions(GetAllCheckedEntities());
+            Witch.CheckCollisions(GetAllCheckedEntities(), this);
         }
 
         public void Render(Graphics g)
@@ -87,6 +87,7 @@ namespace AAI_Final_Assignment_WinForms.World
 
             MovingEntities.ForEach(e => e.Render(g));
             StaticEntities.ForEach(o => o.Render(g));
+            Items.ForEach(o => o.Render(g));
             Witch.Render(g);
         }
 
@@ -108,6 +109,7 @@ namespace AAI_Final_Assignment_WinForms.World
                 {
                     for (int y = 0; y < Height; y += BackgroundImages[0].Height) {
                         Bitmap floor;
+                        //Make floor0 more common
                         floor = Rand.Next(0, 3) == 0 ? BackgroundImages[Rand.Next(BackgroundImages.Count)] : BackgroundImages[0];
                         bg.DrawImage(floor, x, y);
                     }
@@ -141,7 +143,6 @@ namespace AAI_Final_Assignment_WinForms.World
             //     MovingEntities.Add(t);
             // }
 
-
             TestEnemy t = new TestEnemy(new Vector2D(1000, 1000), this, 1, 50, 50, 50, 5, 55, 12.5); // 50 5 100000
             MovingEntities.Add(t);
 
@@ -156,12 +157,32 @@ namespace AAI_Final_Assignment_WinForms.World
             // //
             Circle o4 = new Circle(new Vector2D(300, 250), this, 2, 30, 25, 25, 60);
             StaticEntities.Add(o4);
+            SpawnItems();
             // //
             // Circle o5 = new Circle(new Vector2D(600, 350), this, 2, 60, 50, 50);
             // StaticEntities.Add(o5);
             //
             // Circle o6 = new Circle(new Vector2D(400, 200), this, 2, 12, 50, 50);
             // StaticEntities.Add(o6);
+        }
+
+        private void SpawnItems() 
+        {
+            Random Rand = new Random();
+            int maxAmount = 10;
+            int currentAmount = 0;
+
+            List<BaseGameEntity> allEntities = new List<BaseGameEntity>();
+            allEntities.AddRange(StaticEntities);
+            allEntities.AddRange(Items);
+
+            while (currentAmount != maxAmount) {
+                ItemSpawn i = new ItemSpawn(new Vector2D(Rand.Next(0, Width), Rand.Next(0, Height)), this, 2, 5, 5, 10);
+                if (i.CheckAnyCollisions(allEntities)) {
+                    Items.Add(i);
+                    currentAmount++;
+                }
+            }
         }
     }
 }
