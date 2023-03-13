@@ -30,15 +30,17 @@ namespace AAI_Final_Assignment_WinForms.Entities
             World.GameGraph.MovePath = World.GameGraph.AStar(this.Pos, desiredVertex);
         }
 
-        public void CheckCollisions(List<BaseGameEntity> entities, GameWorld world)
+        public void CheckWithinRange(List<BaseGameEntity> entities, GameWorld world)
         {
             foreach (BaseGameEntity entity in entities)
             {
-                if (entity is MovingEntity movingEntity && movingEntity != this && movingEntity.Pos.Distance(Pos) < entity.Radius + Radius)
+                if (entity is MovingEntity movingEntity && movingEntity != this)
                 {
-                    var test = movingEntity.Pos.Distance(Pos);
-                    // Witch takes damage
-                    Health -= 1;
+                    if (movingEntity.Pos.Distance(Pos) < entity.Radius + Radius) {
+                        var test = movingEntity.Pos.Distance(Pos);
+                        // Witch takes damage
+                        Health -= 1;
+                    }
                 }
                 else if (entity is ItemSpawn item && item.Pos.Clone().Sub(Pos).Length() < item.Radius + Radius)
                 {
@@ -52,6 +54,27 @@ namespace AAI_Final_Assignment_WinForms.Entities
                     }
                 }
             }
+        }
+
+        public MovingEntity? GetNearestEnemy(List<BaseGameEntity> entities)
+        {
+            MovingEntity nearestEnemy = null;
+            double nearestDistance = double.MaxValue;
+    
+            foreach (BaseGameEntity entity in entities)
+            {
+                if (entity is MovingEntity movingEntity && movingEntity != this)
+                {
+                    double distance = movingEntity.Pos.Distance(Pos);
+                    if (distance < nearestDistance)
+                    {
+                        nearestEnemy = movingEntity;
+                        nearestDistance = distance;
+                    }
+                }
+            }
+
+            return nearestEnemy;
         }
 
         public override void Render(Graphics g)

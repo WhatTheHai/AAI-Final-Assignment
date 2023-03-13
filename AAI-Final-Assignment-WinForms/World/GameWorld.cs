@@ -73,7 +73,7 @@ namespace AAI_Final_Assignment_WinForms.World
                 Boundary(me);
             }
             Witch.Update(timeElapsed);
-            Witch.CheckCollisions(MEandItems, this);
+            Witch.CheckWithinRange(MEandItems, this);
         }
 
         public void Render(Graphics g)
