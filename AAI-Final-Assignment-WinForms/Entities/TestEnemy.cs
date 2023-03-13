@@ -27,7 +27,6 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 new Size(TextureWidth, TextureHeight));
         }
 
-
         public override void Render(Graphics g)
         {
             //   g.DrawImage(Texture, (int)Pos.X - TextureWidth / 2, (int)Pos.Y - TextureHeight / 2);

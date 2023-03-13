@@ -82,6 +82,23 @@ namespace AAI_Final_Assignment_WinForms.Entities
             }
         }
 
+        public void CheckCollisions(List<BaseGameEntity> entities, GameWorld world)
+        {
+            foreach (BaseGameEntity entity in entities)
+            {
+                if (entity is ItemSpawn item && item.Pos.Clone().Sub(Pos).Length() < item.Radius + Radius)
+                {
+                    // heals
+                    world.Items.Remove(item);
+                    if (Health + 10 >= MaxHealth) {
+                        Health = MaxHealth;
+                    }
+                    else {
+                        Health += 10;
+                    }
+                }
+            }
+        }
 
         public override void Render(Graphics g)
         {
@@ -110,7 +127,28 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 y + 120,
                 drawFormat);
 
+            RenderHp(g);
             RenderInfo(g);
+        }
+
+        protected void RenderHp(Graphics g) {
+            // Draw the health bar
+            int healthBarWidth = (int)Radius*2;
+            int healthBarHeight = 4;
+            int healthBarX = (int)Pos.X - healthBarWidth / 2;
+            int healthBarY = (int)Pos.Y - (int)Radius - healthBarHeight;
+            int healthBarMaxWidth = healthBarWidth;
+
+            // Calculate the width of the health bar based on the object's health
+            double healthPercent = Health / MaxHealth;
+            int healthBarCurrentWidth = (int)(healthPercent * healthBarMaxWidth);
+
+            // Background of the health bar
+            g.FillRectangle(Brushes.Gray, healthBarX, healthBarY, healthBarMaxWidth, healthBarHeight);
+            // Current health
+            g.FillRectangle(Brushes.Green, healthBarX, healthBarY, healthBarCurrentWidth, healthBarHeight);
+            // Border of the health bar
+            g.DrawRectangle(Pens.Black, healthBarX, healthBarY, healthBarMaxWidth, healthBarHeight);
         }
 
         protected void RenderInfo(Graphics g)

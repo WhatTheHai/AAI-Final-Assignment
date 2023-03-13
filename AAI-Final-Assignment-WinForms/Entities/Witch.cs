@@ -61,23 +61,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             g.DrawEllipse(new Pen(Color.Blue, 3),
                 new Rectangle((int)Pos.X - (int)Radius, (int)Pos.Y - (int)Radius, (int)Radius * 2, (int)Radius * 2));
 
-            // Draw the health bar
-            int healthBarWidth = (int)Radius*2;
-            int healthBarHeight = 4;
-            int healthBarX = (int)Pos.X - healthBarWidth / 2;
-            int healthBarY = (int)Pos.Y - (int)Radius - healthBarHeight;
-            int healthBarMaxWidth = healthBarWidth;
-
-            // Calculate the width of the health bar based on the object's health
-            double healthPercent = Health / MaxHealth;
-            int healthBarCurrentWidth = (int)(healthPercent * healthBarMaxWidth);
-
-            // Background of the health bar
-            g.FillRectangle(Brushes.Gray, healthBarX, healthBarY, healthBarMaxWidth, healthBarHeight);
-            // Current health
-            g.FillRectangle(Brushes.Green, healthBarX, healthBarY, healthBarCurrentWidth, healthBarHeight);
-            // Border of the health bar
-            g.DrawRectangle(Pens.Black, healthBarX, healthBarY, healthBarMaxWidth, healthBarHeight);
+            RenderHp(g);
         }
 
         public override void Update(double timeElapsed)
