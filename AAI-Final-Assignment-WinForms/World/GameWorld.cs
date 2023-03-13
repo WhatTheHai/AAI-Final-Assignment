@@ -8,10 +8,13 @@ namespace AAI_Final_Assignment_WinForms.World
     public class GameWorld
     {
         // List of all moving entities
-        public List<MovingEntity> MovingEntities;
+        public List<BaseGameEntity> MovingEntities;
 
         // List of all static entities
-        public List<StaticEntity> StaticEntities;
+        public List<BaseGameEntity> StaticEntities;
+        
+        // List of all items
+        public List<BaseGameEntity> Items;
 
         // Preloaded background images
         public List<Bitmap> BackgroundImages = new List<Bitmap>();
@@ -51,12 +54,13 @@ namespace AAI_Final_Assignment_WinForms.World
                 BackgroundImages.Add(bmp);
             }
 
-            MovingEntities = new List<MovingEntity>();
-            StaticEntities = new List<StaticEntity>();
+            MovingEntities = new List<BaseGameEntity>();
+            StaticEntities = new List<BaseGameEntity>();
+            Items = new List<BaseGameEntity>();
             Width = w;
             Height = h;
 
-            Witch = new Witch(new Vector2D(10, 10), this, 1, 50, 50, 30, 100, 50, 50);
+            Witch = new Witch(new Vector2D(10, 10), this, 1, 50, 50, 30, 100, 50, 25);
             Populate();
             GameGraph = new Graph.Graph(this);
         }
@@ -70,6 +74,7 @@ namespace AAI_Final_Assignment_WinForms.World
             }
 
             Witch.Update(timeElapsed);
+            Witch.CheckCollisions(GetAllCheckedEntities(), this);
         }
 
         public void Render(Graphics g)
@@ -84,7 +89,15 @@ namespace AAI_Final_Assignment_WinForms.World
 
             MovingEntities.ForEach(e => e.Render(g));
             StaticEntities.ForEach(o => o.Render(g));
+            Items.ForEach(o => o.Render(g));
             Witch.Render(g);
+        }
+
+        public List<BaseGameEntity> GetAllCheckedEntities() {
+            List<BaseGameEntity> allEntities = new List<BaseGameEntity>();
+            allEntities.AddRange(MovingEntities);
+            allEntities.AddRange(Items);
+            return allEntities;
         }
 
         public void RenderBackground(Graphics g)
@@ -98,6 +111,7 @@ namespace AAI_Final_Assignment_WinForms.World
                 {
                     for (int y = 0; y < Height; y += BackgroundImages[0].Height) {
                         Bitmap floor;
+                        //Make floor0 more common
                         floor = Rand.Next(0, 3) == 0 ? BackgroundImages[Rand.Next(BackgroundImages.Count)] : BackgroundImages[0];
                         bg.DrawImage(floor, x, y);
                     }
@@ -133,8 +147,7 @@ namespace AAI_Final_Assignment_WinForms.World
             //     MovingEntities.Add(t);
             // }
 
-
-            TestEnemy t = new TestEnemy(new Vector2D(1000, 1000), this, 1, 50, 50, 50, 5, 55, 25); // 50 5 100000
+            TestEnemy t = new TestEnemy(new Vector2D(1000, 1000), this, 1, 50, 50, 50, 5, 55, 12.5); // 50 5 100000
             MovingEntities.Add(t);
 
             Circle o = new Circle(new Vector2D(200, 250), this, 2, 30, 25, 25, 60);
@@ -148,12 +161,32 @@ namespace AAI_Final_Assignment_WinForms.World
             // //
             Circle o4 = new Circle(new Vector2D(300, 250), this, 2, 30, 25, 25, 60);
             StaticEntities.Add(o4);
+            SpawnItems();
             // //
             // Circle o5 = new Circle(new Vector2D(600, 350), this, 2, 60, 50, 50);
             // StaticEntities.Add(o5);
             //
             // Circle o6 = new Circle(new Vector2D(400, 200), this, 2, 12, 50, 50);
             // StaticEntities.Add(o6);
+        }
+
+        private void SpawnItems() 
+        {
+            Random Rand = new Random();
+            int maxAmount = 10;
+            int currentAmount = 0;
+
+            List<BaseGameEntity> allEntities = new List<BaseGameEntity>();
+            allEntities.AddRange(StaticEntities);
+            allEntities.AddRange(Items);
+
+            while (currentAmount != maxAmount) {
+                ItemSpawn i = new ItemSpawn(new Vector2D(Rand.Next(0, Width), Rand.Next(0, Height)), this, 2, 5, 5, 10);
+                if (i.CheckAnyCollisions(allEntities)) {
+                    Items.Add(i);
+                    currentAmount++;
+                }
+            }
         }
     }
 }

@@ -45,6 +45,17 @@ namespace AAI_Final_Assignment_WinForms.Entities
             TextureWidth = textureWidth * (int)scale;
         }
 
+        public bool CheckAnyCollisions(List<BaseGameEntity> entities)
+        {
+            foreach (BaseGameEntity entity in entities) {
+                if (entity != this && entity.Pos.Distance(this.Pos) < entity.Radius + Radius) {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         // every entity needs a update function
         public virtual void Update(float timeElapsed)
         {
@@ -52,7 +63,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
         public virtual void Render(Graphics g)
         {
-            g.FillEllipse(Brushes.Blue, new Rectangle((int)Pos.X, (int)Pos.Y, 10, 10));
+            g.FillEllipse(Brushes.Blue, new Rectangle((int)(Pos.X - 5d), (int)(Pos.Y - 5d), 10, 10));
         }
     }
 }
