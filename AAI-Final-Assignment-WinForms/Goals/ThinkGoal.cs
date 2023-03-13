@@ -60,7 +60,7 @@ namespace AAI_Final_Assignment_WinForms.Goals
 
         public override void Deactivate()
         {
-            // thinking may not be deactivated als the entity has no brain.
+            // thinking may not be deactivated else the entity has no brain.
         }
 
         private void SelectNewGoal()
