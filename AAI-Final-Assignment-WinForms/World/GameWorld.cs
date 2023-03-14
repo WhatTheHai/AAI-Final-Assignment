@@ -1,4 +1,5 @@
-﻿using AAI_Final_Assignment_WinForms.Behaviour;
+﻿using System.Numerics;
+using AAI_Final_Assignment_WinForms.Behaviour;
 using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.util;
 
@@ -14,6 +15,9 @@ namespace AAI_Final_Assignment_WinForms.World
         
         // List of all items
         public List<BaseGameEntity> Items;
+
+        // List of all projectiles
+        public List<BaseGameEntity> Projectiles;
 
         // Preloaded background images
         public List<Bitmap> BackgroundImages = new List<Bitmap>();
@@ -56,6 +60,7 @@ namespace AAI_Final_Assignment_WinForms.World
             MovingEntities = new List<BaseGameEntity>();
             StaticEntities = new List<BaseGameEntity>();
             Items = new List<BaseGameEntity>();
+            Projectiles = new List<BaseGameEntity>();
             Width = w;
             Height = h;
 
@@ -66,14 +71,15 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public void Update(double timeElapsed) {
             List<BaseGameEntity> MEandItems = GetMEandItems();
-            foreach (MovingEntity me in MovingEntities)
+
+            foreach (MovingEntity me in MovingEntities.ToList())
             {
                 me.Update(timeElapsed);
-                me.CheckCollisions(MEandItems, this);
+                me.CheckCollisions(MEandItems);
                 Boundary(me);
             }
             Witch.Update(timeElapsed);
-            Witch.CheckWithinRange(MEandItems, this);
+            Witch.CheckWithinRange(MEandItems);
         }
 
         public void Render(Graphics g)
@@ -86,7 +92,8 @@ namespace AAI_Final_Assignment_WinForms.World
                 GameGraph.Render(g);
             }
 
-            MovingEntities.ForEach(e => e.Render(g));
+            MovingEntities.ToList().ForEach(e => e.Render(g));
+
             StaticEntities.ForEach(o => o.Render(g));
             Items.ForEach(o => o.Render(g));
             Witch.Render(g);
@@ -94,9 +101,16 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public List<BaseGameEntity> GetMEandItems() {
             List<BaseGameEntity> allEntities = new List<BaseGameEntity>();
-            allEntities.AddRange(MovingEntities);
-            allEntities.AddRange(Items);
+            //TODO: Fix destination array was not long enough error
+            allEntities.AddRange(MovingEntities.ToList());
+            allEntities.AddRange(Items.ToList());
             return allEntities;
+        }
+
+        public void SpawnProjectile(Vector2D pos, Vector2D heading) {
+            Projectile projectile = new Projectile(pos.Clone(), this, 1, 10, 10, 0,5,5,3);
+            projectile.Heading = heading;
+            MovingEntities.Add(projectile);
         }
 
         public void RenderBackground(Graphics g)

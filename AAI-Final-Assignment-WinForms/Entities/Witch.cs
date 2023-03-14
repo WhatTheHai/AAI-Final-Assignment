@@ -4,14 +4,17 @@ using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 using AAI_Final_Assignment_WinForms.Graph;
 using AAI_Final_Assignment_WinForms.util;
 using AAI_Final_Assignment_WinForms.World;
+using Timer = System.Timers.Timer;
 
 namespace AAI_Final_Assignment_WinForms.Entities
 {
     public class Witch : MovingEntity
     {
+        private readonly Timer shootTimer = new Timer(1000);
         private Vector2D desiredVertex = new Vector2D();
 
         public Witch(Vector2D pos, GameWorld world, double scale, int textureWidth, int textureHeight, double mass,
@@ -22,6 +25,10 @@ namespace AAI_Final_Assignment_WinForms.Entities
             Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\Wizard.png"),
                 new Size(TextureWidth, TextureHeight));
             MaxHealth = Health = 500;
+
+            shootTimer.Elapsed += OnShootTimerElapsed;
+            shootTimer.AutoReset = true;
+            shootTimer.Enabled = true;
         }
 
         public void SetDestination(Vector2D destinationPos)
@@ -30,14 +37,14 @@ namespace AAI_Final_Assignment_WinForms.Entities
             World.GameGraph.MovePath = World.GameGraph.AStar(this.Pos, desiredVertex);
         }
 
-        public void CheckWithinRange(List<BaseGameEntity> entities, GameWorld world)
+        public void CheckWithinRange(List<BaseGameEntity> entities)
         {
             foreach (BaseGameEntity entity in entities)
             {
-                if (entity is MovingEntity movingEntity && movingEntity != this)
+                if (entity is TestEnemy enemyEntity)
                 {
-                    if (movingEntity.Pos.Distance(Pos) < entity.Radius + Radius) {
-                        var test = movingEntity.Pos.Distance(Pos);
+                    if (enemyEntity.Pos.Distance(Pos) < entity.Radius + Radius) {
+                        var test = enemyEntity.Pos.Distance(Pos);
                         // Witch takes damage
                         Health -= 1;
                     }
@@ -45,7 +52,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 else if (entity is ItemSpawn item && item.Pos.Clone().Sub(Pos).Length() < item.Radius + Radius)
                 {
                     // Witch heals
-                    world.Items.Remove(item);
+                    World.Items.Remove(item);
                     if (Health + 10 >= MaxHealth) {
                         Health = MaxHealth;
                     }
@@ -56,14 +63,22 @@ namespace AAI_Final_Assignment_WinForms.Entities
             }
         }
 
-        public MovingEntity? GetNearestEnemy(List<BaseGameEntity> entities)
+        public void ShootNearbyEnemy() {
+            TestEnemy? nearestEnemy = GetNearestEnemy(World.MovingEntities);
+            if (nearestEnemy != null && nearestEnemy.Pos.Clone().Distance(Pos) < 300) {
+                var heading = nearestEnemy.Pos.Clone().Sub(Pos).Normalize();
+                World.SpawnProjectile(Pos.Clone(), heading);
+            }
+        }
+
+        public TestEnemy? GetNearestEnemy(List<BaseGameEntity> entities)
         {
-            MovingEntity nearestEnemy = null;
+            TestEnemy nearestEnemy = null;
             double nearestDistance = double.MaxValue;
     
-            foreach (BaseGameEntity entity in entities)
+            foreach (BaseGameEntity entity in entities.ToList())
             {
-                if (entity is MovingEntity movingEntity && movingEntity != this)
+                if (entity is TestEnemy movingEntity)
                 {
                     double distance = movingEntity.Pos.Distance(Pos);
                     if (distance < nearestDistance)
@@ -87,14 +102,13 @@ namespace AAI_Final_Assignment_WinForms.Entities
             RenderHp(g);
         }
 
-        public override void Update(double timeElapsed)
-        {
+        public override void Update(double timeElapsed) {
             if (World.GameGraph.MovePath != null && World.GameGraph.MovePath.Count > 0)
             {
                 // Get the first vertex of the move path
                 Vector2D firstVector = World.GameGraph.MovePath.First().Clone();
                 // If the witch is close enough to the first vertex, remove it from the move path
-                if (firstVector.Clone().Sub(Pos).Length() < 1.5)
+                if (firstVector.Clone().Sub(Pos).Length() < 2)
                 {
                     World.GameGraph.MovePath.RemoveAt(0);
                     return;
@@ -113,12 +127,17 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 {
                     // Otherwise, normalize the direction vector and calculate the velocity vector
                     direction.Normalize();
-                    Velocity = direction.Multiply(3);
+                    Velocity = direction.Multiply(4);
                 }
 
                 // Update the position of the witch
                 Pos.Add(Velocity.Multiply(timeElapsed));
             }
+        }
+
+        private void OnShootTimerElapsed(object sender, ElapsedEventArgs e)
+        {
+            ShootNearbyEnemy();
         }
     }
 }

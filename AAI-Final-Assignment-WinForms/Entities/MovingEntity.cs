@@ -82,19 +82,33 @@ namespace AAI_Final_Assignment_WinForms.Entities
             }
         }
 
-        public void CheckCollisions(List<BaseGameEntity> entities, GameWorld world)
+        public void CheckCollisions(List<BaseGameEntity> entities)
         {
             foreach (BaseGameEntity entity in entities)
             {
                 if (entity is ItemSpawn item && item.Pos.Clone().Sub(Pos).Length() < item.Radius + Radius)
                 {
-                    // heals
-                    world.Items.Remove(item);
-                    if (Health + 10 >= MaxHealth) {
-                        Health = MaxHealth;
+                    if (this is not Projectile) {
+                        // heals
+                        World.Items.Remove(item);
+                        if (Health + 10 >= MaxHealth) {
+                            Health = MaxHealth;
+                        }
+                        else {
+                            Health += 10;
+                        }
+                    }
+                        
+                }
+
+                if (entity is Projectile projectile && this is TestEnemy &&
+                    projectile.Pos.Clone().Sub(Pos.Clone()).Length() < projectile.Radius + Radius) {
+                    World.MovingEntities.Remove(projectile);
+                    if (Health - 10 <= 0) {
+                        Health = 0;
                     }
                     else {
-                        Health += 10;
+                        Health -= 10;
                     }
                 }
             }
