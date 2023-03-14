@@ -116,7 +116,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 {
                     // Otherwise, normalize the direction vector and calculate the velocity vector
                     direction.Normalize();
-                    Velocity = direction.Multiply(3);
+                    Velocity = direction.Multiply(3.5f);
                 }
 
                 // Update the position of the witch

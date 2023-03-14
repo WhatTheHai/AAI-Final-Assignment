@@ -61,12 +61,13 @@ namespace AAI_Final_Assignment_WinForms.World
             Width = w;
             Height = h;
 
-            Witch = new Witch(new Vector2D(10, 10), this, 1, 50, 50, 30, 100, 50, 25);
+            Witch = new Witch(new Vector2D(10, 10), this, 2, 50, 50, 50, 5, 55, 25); // todo: fix 
             Populate();
             GameGraph = new Graph.Graph(this);
         }
 
-        public void Update(float timeElapsed) {
+        public void Update(float timeElapsed)
+        {
             List<BaseGameEntity> MEandItems = GetMEandItems();
             foreach (MovingEntity me in MovingEntities)
             {
@@ -77,6 +78,11 @@ namespace AAI_Final_Assignment_WinForms.World
 
             Witch.Update(timeElapsed);
             Witch.CheckWithinRange(MEandItems, this);
+
+            if (!Items.Any())
+            {
+                SpawnItems();
+            }
         }
 
         public void Render(Graphics g)
@@ -95,7 +101,8 @@ namespace AAI_Final_Assignment_WinForms.World
             Witch.Render(g);
         }
 
-        public List<BaseGameEntity> GetMEandItems() {
+        public List<BaseGameEntity> GetMEandItems()
+        {
             List<BaseGameEntity> allEntities = new List<BaseGameEntity>();
             allEntities.AddRange(MovingEntities);
             allEntities.AddRange(Items);
@@ -179,7 +186,7 @@ namespace AAI_Final_Assignment_WinForms.World
         private void SpawnItems()
         {
             Random Rand = new Random();
-            int maxAmount = 10;
+            int maxAmount = 2;
             int currentAmount = 0;
 
             List<BaseGameEntity> allEntities = new List<BaseGameEntity>();

@@ -27,7 +27,7 @@ namespace AAI_Final_Assignment_WinForms.Goals
             GoalStatus = GoalStatusType.Active;
 
             // temp 
-            Timer = new Timer(5000);
+            Timer = new Timer(3000);
             Timer.Elapsed += TimerOnElapsed;
             Timer.Enabled = true;
         }

@@ -9,11 +9,11 @@ namespace AAI_Final_Assignment_WinForms.Goals
     /// <summary>
     ///  This goal activates the seeking behaviour of a moving entity.
     /// </summary>
-    public class SeekTargetGoal : AtomicGoal
+    public class SeekItemGoal : AtomicGoal
     {
-        public SeekTargetGoal(MovingEntity entity) : base(entity)
+        public SeekItemGoal(MovingEntity entity) : base(entity)
         {
-            Name = "Seeking witch";
+            Name = "Seeking item";
         }
 
         public override void Activate()
@@ -21,9 +21,9 @@ namespace AAI_Final_Assignment_WinForms.Goals
             // what if target disapers or is null? other unit picked up? 
             Owner.SteeringBehaviour.Seek = true;
             GoalStatus = GoalStatusType.Active;
-            Timer = new Timer(7000);
-            Timer.Elapsed += TimerOnElapsed;
-            Timer.Enabled = true;
+            // Timer = new Timer(5000);
+            // Timer.Elapsed += TimerOnElapsed;
+            // Timer.Enabled = true;
         }
 
         private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
@@ -35,13 +35,14 @@ namespace AAI_Final_Assignment_WinForms.Goals
         public override void Process()
         {
             if (!IsActive()) Activate();
-
-
-            if (TimerComplete)
-            {
-                GoalStatus = GoalStatusType.Completed;
-                Deactivate();
-            }
+            if (!Owner.World.Items.Contains(Owner.CurrentTarget)) GoalStatus = GoalStatusType.Failed; // only works with items...
+           
+            
+            // if (TimerComplete)
+            // {
+            //     GoalStatus = GoalStatusType.Completed;
+            //     Deactivate();
+            // }
         }
 
         public override void Deactivate()

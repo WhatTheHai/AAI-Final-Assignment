@@ -66,7 +66,7 @@ namespace AAI_Final_Assignment_WinForms.Goals
         private void SelectNewGoal()
         {
             Random random = new Random();
-            int numberOfGoals = 2;
+            const int numberOfGoals = 3;
             var number = random.Next(1, (numberOfGoals + 1));
 
             switch (number)
@@ -76,6 +76,9 @@ namespace AAI_Final_Assignment_WinForms.Goals
                     break;
                 case 2:
                     SubGoalsStack.Push(new WanderGoal(Owner));
+                    break;
+                case 3:
+                    SubGoalsStack.Push(new AttackGoal(Owner));
                     break;
             }
         }

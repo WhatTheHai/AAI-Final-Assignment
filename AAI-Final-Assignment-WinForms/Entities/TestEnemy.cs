@@ -42,12 +42,13 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 new Rectangle((int)Pos.X - (int)Radius, (int)Pos.Y - (int)Radius, (int)Radius * 2, (int)Radius * 2));
 
             Font drawFont = new Font("Arial", 10);
-            SolidBrush drawBrush = new SolidBrush(Color.Black);
+            SolidBrush drawBrush = new SolidBrush(Color.Yellow);
             float x = (float)Pos.X + 10;
             float y = (float)Pos.Y + 10;
             StringFormat drawFormat = new StringFormat();
 
             g.DrawString(MainGoal.Display(), drawFont, drawBrush, x, y, drawFormat);
+            RenderHp(g);
         }
 
         public override void Update(float timeElapsed)

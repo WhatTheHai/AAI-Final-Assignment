@@ -9,26 +9,24 @@ using AAI_Final_Assignment_WinForms.Goals.Enums;
 
 namespace AAI_Final_Assignment_WinForms.Goals
 {
-    public class MoveToItemGoal : CompositeGoal
+    public class AttackGoal : CompositeGoal
     {
-        public MoveToItemGoal(MovingEntity entity) : base(entity)
+        public AttackGoal(MovingEntity entity) : base(entity)
         {
-            Name = "MovingToItem";
+            Name = "Attacking";
         }
 
         public override void Activate()
         {
             GoalStatus = GoalStatusType.Active;
             SubGoalsStack.Clear();
-            // pick up item? 
-            SubGoalsStack.Push(new SeekItemGoal(Owner));
-            SubGoalsStack.Push(new SelectItemGoal(Owner)); // first 
+            SubGoalsStack.Push(new SeekTargetGoal(Owner));
+            SubGoalsStack.Push(new SelectWitchAsTargetGoal(Owner));
         }
-
 
         public override void Deactivate()
         {
-            // uitzetten 
+            //
         }
     }
 }
