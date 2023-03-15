@@ -73,7 +73,7 @@ namespace AAI_Final_Assignment_WinForms.Goals
             var number = random.Next(1, (numberOfGoals + 1));
 
             switch (number)
-            {
+            { 
                 case 1:
                     SubGoalsStack.Push(new MoveToItemGoal(Owner));
                     break;
