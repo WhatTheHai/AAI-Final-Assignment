@@ -83,6 +83,11 @@ namespace AAI_Final_Assignment_WinForms.World
                 Boundary(me);
             }
 
+            if (!Items.Any())
+            {
+                SpawnItems();
+            }
+
             Witch.Update(timeElapsed);
             Witch.CheckWithinRange(MEandItems);
         }
@@ -100,7 +105,7 @@ namespace AAI_Final_Assignment_WinForms.World
             MovingEntities.ToList().ForEach(e => e.Render(g));
 
             StaticEntities.ForEach(o => o.Render(g));
-            Items.ForEach(o => o.Render(g));
+            Items.ToList().ForEach(o => o.Render(g));
             Witch.Render(g);
         }
 
@@ -167,9 +172,12 @@ namespace AAI_Final_Assignment_WinForms.World
             //     TestEnemy t = new TestEnemy(new Vector2D(100, 100 + (i * 100)), this, 1, 50, 50, 50, 5, 10000); // 50 5 100000
             //     MovingEntities.Add(t);
             // }
-
-            TestEnemy t = new TestEnemy(new Vector2D(800, 800), this, 1, 50, 50, 50, 5, 55, 12.5f); // 50 5 100000
-            MovingEntities.Add(t);
+            for (int i = 0; i < 5; i++)
+            {
+                TestEnemy t = new TestEnemy(new Vector2D(800, 800), this, 1, 50, 50, 50, 5, 55, 12.5f); // 50 5 100000
+                MovingEntities.Add(t);
+            }
+           
 
             Circle o = new Circle(new Vector2D(200, 250), this, 2, 30, 25, 25, 60);
             StaticEntities.Add(o);
@@ -194,7 +202,7 @@ namespace AAI_Final_Assignment_WinForms.World
         private void SpawnItems()
         {
             Random Rand = new Random();
-            int maxAmount = 2;
+            int maxAmount = 10;
             int currentAmount = 0;
 
             List<BaseGameEntity> allEntities = new List<BaseGameEntity>();

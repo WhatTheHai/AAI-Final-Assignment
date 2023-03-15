@@ -102,7 +102,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             RenderHp(g);
         }
 
-        public override void Update(double timeElapsed) {
+        public override void Update(float timeElapsed) {
             if (World.GameGraph.MovePath != null && World.GameGraph.MovePath.Count > 0)
             {
                 // Get the first vertex of the move path

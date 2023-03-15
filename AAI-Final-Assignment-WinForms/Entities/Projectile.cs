@@ -13,7 +13,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
     public class Projectile : MovingEntity {
         private readonly Timer projectileTimer = new Timer(2500);
-        public override void Update(double timeElapsed) { 
+        public override void Update(float timeElapsed) { 
            Velocity = Heading.Clone().Multiply(5);
            Pos.Add(Velocity);
         }
@@ -25,8 +25,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 new Rectangle((int)Pos.X - (int)Radius, (int)Pos.Y - (int)Radius, (int)Radius * 2, (int)Radius * 2));
         }
 
-        public Projectile(Vector2D pos, GameWorld world, double scale, int textureWidth, int textureHeight, double mass,
-            double maxSpeed, double maxForce, double radius) : base(pos, world, scale, textureWidth, textureHeight,
+        public Projectile(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight, float mass,
+            float maxSpeed, float maxForce, float radius) : base(pos, world, scale, textureWidth, textureHeight,
             mass, maxSpeed, maxForce, radius) {
             projectileTimer.Elapsed += OnProjectileTimerElapsed;
             projectileTimer.Enabled = true;

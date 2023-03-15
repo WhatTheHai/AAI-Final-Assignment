@@ -33,10 +33,14 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 new Size(TextureWidth, TextureHeight));
         }
 
-        public override void Update(double timeElapsed) {
-            if (Health <= 0) {
+        public override void Update(float timeElapsed)
+        {
+            if (Health <= 0)
+            {
                 World.MovingEntities.Remove(this);
             }
+
+            MainGoal.Process();
             base.Update(timeElapsed);
         }
 
@@ -56,12 +60,6 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
             g.DrawString(MainGoal.Display(), drawFont, drawBrush, x, y, drawFormat);
             RenderHp(g);
-        }
-
-        public override void Update(float timeElapsed)
-        {
-            MainGoal.Process();
-            base.Update(timeElapsed);
         }
     }
 }
