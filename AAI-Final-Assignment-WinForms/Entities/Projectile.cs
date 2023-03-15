@@ -12,9 +12,9 @@ namespace AAI_Final_Assignment_WinForms.Entities
 {
 
     public class Projectile : MovingEntity {
-        private readonly Timer projectileTimer = new Timer(5000);
+        private readonly Timer projectileTimer = new Timer(2500);
         public override void Update(double timeElapsed) { 
-           Velocity = Heading.Clone().Multiply(4);
+           Velocity = Heading.Clone().Multiply(5);
            Pos.Add(Velocity);
         }
 

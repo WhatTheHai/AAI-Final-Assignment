@@ -68,7 +68,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             Velocity.Add(acceleration.Multiply(timeElapsed));
             //Velocity.Add(steeringForce);
 
-            // dont exeed max velocity 
+            // dont exceed max velocity 
             Velocity.Truncate(MaxSpeed);
 
             // update position 

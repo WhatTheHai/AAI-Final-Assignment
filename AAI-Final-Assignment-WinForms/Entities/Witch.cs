@@ -14,7 +14,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
 {
     public class Witch : MovingEntity
     {
-        private readonly Timer shootTimer = new Timer(1000);
+        private readonly Timer shootTimer = new Timer(500);
         private Vector2D desiredVertex = new Vector2D();
 
         public Witch(Vector2D pos, GameWorld world, double scale, int textureWidth, int textureHeight, double mass,
@@ -53,11 +53,11 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 {
                     // Witch heals
                     World.Items.Remove(item);
-                    if (Health + 10 >= MaxHealth) {
+                    if (Health + (MaxHealth/10) >= MaxHealth) {
                         Health = MaxHealth;
                     }
                     else {
-                        Health += 10;
+                        Health += (MaxHealth/10);
                     }
                 }
             }

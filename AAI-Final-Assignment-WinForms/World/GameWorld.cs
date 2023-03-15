@@ -51,16 +51,19 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public GameWorld(int w, int h)
         {
+            MovingEntities = new List<BaseGameEntity>();
+            StaticEntities = new List<BaseGameEntity>();
+            Items = new List<BaseGameEntity>();
+            Projectiles = new List<BaseGameEntity>();
+            BackgroundImages = new List<Bitmap>();
+
+            
             for (int i = 1; i < 9; i++) {
                 Image img = Image.FromFile(PathPrefix + $"Sprites\\Floors\\floor_{i}.png");
                 Bitmap bmp = new Bitmap(img, img.Width, img.Height);
                 BackgroundImages.Add(bmp);
             }
 
-            MovingEntities = new List<BaseGameEntity>();
-            StaticEntities = new List<BaseGameEntity>();
-            Items = new List<BaseGameEntity>();
-            Projectiles = new List<BaseGameEntity>();
             Width = w;
             Height = h;
 
@@ -71,9 +74,8 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public void Update(double timeElapsed) {
             List<BaseGameEntity> MEandItems = GetMEandItems();
-
-            foreach (MovingEntity me in MovingEntities.ToList())
-            {
+            foreach (MovingEntity me in MovingEntities.ToArray()) {
+                if (me == null) continue;
                 me.Update(timeElapsed);
                 me.CheckCollisions(MEandItems);
                 Boundary(me);
@@ -100,10 +102,9 @@ namespace AAI_Final_Assignment_WinForms.World
         }
 
         public List<BaseGameEntity> GetMEandItems() {
-            List<BaseGameEntity> allEntities = new List<BaseGameEntity>();
-            //TODO: Fix destination array was not long enough error
-            allEntities.AddRange(MovingEntities.ToList());
-            allEntities.AddRange(Items.ToList());
+            List<BaseGameEntity> allEntities = new List<BaseGameEntity>(MovingEntities.Count + Items.Count);
+            allEntities.AddRange(MovingEntities);
+            allEntities.AddRange(Items);
             return allEntities;
         }
 
