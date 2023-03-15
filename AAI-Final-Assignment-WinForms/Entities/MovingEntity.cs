@@ -24,6 +24,12 @@ namespace AAI_Final_Assignment_WinForms.Entities
         //Maximum force on entity
         public double MaxForce { get; set; }
 
+        //Hitpoints
+        public double MaxHealth { get; set; }
+
+        //Current Health
+        public double Health { get; set; }
+
         // used for debugging to show current steeringforce
         private Vector2D currentSteeringForce;
 
@@ -46,6 +52,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             Side = new Vector2D();
             SteeringBehaviour = new SteeringBehaviour(this);
             currentSteeringForce = new Vector2D();
+            MaxHealth = Health = 100;
         }
 
         public override void Update(double timeElapsed)
@@ -61,7 +68,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             Velocity.Add(acceleration.Multiply(timeElapsed));
             //Velocity.Add(steeringForce);
 
-            // dont exeed max velocity 
+            // dont exceed max velocity 
             Velocity.Truncate(MaxSpeed);
 
             // update position 
@@ -75,6 +82,37 @@ namespace AAI_Final_Assignment_WinForms.Entities
             }
         }
 
+        public void CheckCollisions(List<BaseGameEntity> entities)
+        {
+            foreach (BaseGameEntity entity in entities)
+            {
+                if (entity is ItemSpawn item && item.Pos.Clone().Sub(Pos).Length() < item.Radius + Radius)
+                {
+                    if (this is not Projectile) {
+                        // heals
+                        World.Items.Remove(item);
+                        if (Health + 10 >= MaxHealth) {
+                            Health = MaxHealth;
+                        }
+                        else {
+                            Health += 10;
+                        }
+                    }
+                        
+                }
+
+                if (entity is Projectile projectile && this is TestEnemy &&
+                    projectile.Pos.Clone().Sub(Pos.Clone()).Length() < projectile.Radius + Radius) {
+                    World.MovingEntities.Remove(projectile);
+                    if (Health - 10 <= 0) {
+                        Health = 0;
+                    }
+                    else {
+                        Health -= 10;
+                    }
+                }
+            }
+        }
 
         public override void Render(Graphics g)
         {
@@ -103,7 +141,28 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 y + 120,
                 drawFormat);
 
+            RenderHp(g);
             RenderInfo(g);
+        }
+
+        protected void RenderHp(Graphics g) {
+            // Draw the health bar
+            int healthBarWidth = (int)Radius*2;
+            int healthBarHeight = 4;
+            int healthBarX = (int)Pos.X - healthBarWidth / 2;
+            int healthBarY = (int)Pos.Y - (int)Radius - healthBarHeight;
+            int healthBarMaxWidth = healthBarWidth;
+
+            // Calculate the width of the health bar based on the object's health
+            double healthPercent = Health / MaxHealth;
+            int healthBarCurrentWidth = (int)(healthPercent * healthBarMaxWidth);
+
+            // Background of the health bar
+            g.FillRectangle(Brushes.Gray, healthBarX, healthBarY, healthBarMaxWidth, healthBarHeight);
+            // Current health
+            g.FillRectangle(Brushes.Green, healthBarX, healthBarY, healthBarCurrentWidth, healthBarHeight);
+            // Border of the health bar
+            g.DrawRectangle(Pens.Black, healthBarX, healthBarY, healthBarMaxWidth, healthBarHeight);
         }
 
         protected void RenderInfo(Graphics g)

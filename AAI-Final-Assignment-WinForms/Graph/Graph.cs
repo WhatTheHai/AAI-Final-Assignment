@@ -38,7 +38,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                 int x = (int)vector.X;
                 int y = (int)vector.Y;
 
-                int radius = (int)(entity.Radius/2);
+                int radius = (int)(entity.Radius);
 
                 for (int i = x - VectorDistance; i < (radius + x); i += VectorDistance) {
                     for (int j = y - VectorDistance; j < (radius + y); j += VectorDistance) {

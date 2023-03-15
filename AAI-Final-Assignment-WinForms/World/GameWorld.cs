@@ -1,4 +1,5 @@
-﻿using AAI_Final_Assignment_WinForms.Behaviour;
+﻿using System.Numerics;
+using AAI_Final_Assignment_WinForms.Behaviour;
 using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.util;
 
@@ -7,10 +8,16 @@ namespace AAI_Final_Assignment_WinForms.World
     public class GameWorld
     {
         // List of all moving entities
-        public List<MovingEntity> MovingEntities;
+        public List<BaseGameEntity> MovingEntities;
 
         // List of all static entities
-        public List<StaticEntity> StaticEntities;
+        public List<BaseGameEntity> StaticEntities;
+        
+        // List of all items
+        public List<BaseGameEntity> Items;
+
+        // List of all projectiles
+        public List<BaseGameEntity> Projectiles;
 
         // Preloaded background images
         public List<Bitmap> BackgroundImages = new List<Bitmap>();
@@ -44,30 +51,37 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public GameWorld(int w, int h)
         {
+            MovingEntities = new List<BaseGameEntity>();
+            StaticEntities = new List<BaseGameEntity>();
+            Items = new List<BaseGameEntity>();
+            Projectiles = new List<BaseGameEntity>();
+            BackgroundImages = new List<Bitmap>();
+
+            
             for (int i = 1; i < 9; i++) {
                 Image img = Image.FromFile(PathPrefix + $"Sprites\\Floors\\floor_{i}.png");
                 Bitmap bmp = new Bitmap(img, img.Width, img.Height);
                 BackgroundImages.Add(bmp);
             }
 
-            MovingEntities = new List<MovingEntity>();
-            StaticEntities = new List<StaticEntity>();
             Width = w;
             Height = h;
 
-            Witch = new Witch(new Vector2D(10, 10), this, 1, 50, 50, 30, 100, 50, 50);
+            Witch = new Witch(new Vector2D(10, 10), this, 1, 50, 50, 30, 100, 50, 25);
             Populate();
             GameGraph = new Graph.Graph(this);
         }
 
-        public void Update(double timeElapsed)
-        {
-            foreach (MovingEntity me in MovingEntities)
-            {
+        public void Update(double timeElapsed) {
+            List<BaseGameEntity> MEandItems = GetMEandItems();
+            foreach (MovingEntity me in MovingEntities.ToArray()) {
+                if (me == null) continue;
                 me.Update(timeElapsed);
+                me.CheckCollisions(MEandItems);
                 Boundary(me);
             }
             Witch.Update(timeElapsed);
+            Witch.CheckWithinRange(MEandItems);
         }
 
         public void Render(Graphics g)
@@ -80,9 +94,24 @@ namespace AAI_Final_Assignment_WinForms.World
                 GameGraph.Render(g);
             }
 
-            MovingEntities.ForEach(e => e.Render(g));
+            MovingEntities.ToList().ForEach(e => e.Render(g));
+
             StaticEntities.ForEach(o => o.Render(g));
+            Items.ForEach(o => o.Render(g));
             Witch.Render(g);
+        }
+
+        public List<BaseGameEntity> GetMEandItems() {
+            List<BaseGameEntity> allEntities = new List<BaseGameEntity>(MovingEntities.Count + Items.Count);
+            allEntities.AddRange(MovingEntities);
+            allEntities.AddRange(Items);
+            return allEntities;
+        }
+
+        public void SpawnProjectile(Vector2D pos, Vector2D heading) {
+            Projectile projectile = new Projectile(pos.Clone(), this, 1, 10, 10, 0,5,5,3);
+            projectile.Heading = heading;
+            MovingEntities.Add(projectile);
         }
 
         public void RenderBackground(Graphics g)
@@ -96,6 +125,7 @@ namespace AAI_Final_Assignment_WinForms.World
                 {
                     for (int y = 0; y < Height; y += BackgroundImages[0].Height) {
                         Bitmap floor;
+                        //Make floor0 more common
                         floor = Rand.Next(0, 3) == 0 ? BackgroundImages[Rand.Next(BackgroundImages.Count)] : BackgroundImages[0];
                         bg.DrawImage(floor, x, y);
                     }
@@ -129,8 +159,7 @@ namespace AAI_Final_Assignment_WinForms.World
             //     MovingEntities.Add(t);
             // }
 
-
-            TestEnemy t = new TestEnemy(new Vector2D(1000, 1000), this, 1, 50, 50, 50, 5, 55, 25); // 50 5 100000
+            TestEnemy t = new TestEnemy(new Vector2D(1000, 1000), this, 1, 50, 50, 50, 5, 55, 12.5); // 50 5 100000
             MovingEntities.Add(t);
 
             Circle o = new Circle(new Vector2D(200, 250), this, 2, 30, 25, 25, 60);
@@ -144,12 +173,32 @@ namespace AAI_Final_Assignment_WinForms.World
             // //
             Circle o4 = new Circle(new Vector2D(300, 250), this, 2, 30, 25, 25, 60);
             StaticEntities.Add(o4);
+            SpawnItems();
             // //
             // Circle o5 = new Circle(new Vector2D(600, 350), this, 2, 60, 50, 50);
             // StaticEntities.Add(o5);
             //
             // Circle o6 = new Circle(new Vector2D(400, 200), this, 2, 12, 50, 50);
             // StaticEntities.Add(o6);
+        }
+
+        private void SpawnItems() 
+        {
+            Random Rand = new Random();
+            int maxAmount = 10;
+            int currentAmount = 0;
+
+            List<BaseGameEntity> allEntities = new List<BaseGameEntity>();
+            allEntities.AddRange(StaticEntities);
+            allEntities.AddRange(Items);
+
+            while (currentAmount != maxAmount) {
+                ItemSpawn i = new ItemSpawn(new Vector2D(Rand.Next(0, Width), Rand.Next(0, Height)), this, 2, 5, 5, 10);
+                if (i.CheckAnyCollisions(allEntities)) {
+                    Items.Add(i);
+                    currentAmount++;
+                }
+            }
         }
     }
 }
