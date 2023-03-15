@@ -1,4 +1,5 @@
-﻿using AAI_Final_Assignment_WinForms.Behaviour;
+﻿using System.Numerics;
+using AAI_Final_Assignment_WinForms.Behaviour;
 using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.Goals;
 using AAI_Final_Assignment_WinForms.util;
@@ -15,6 +16,9 @@ namespace AAI_Final_Assignment_WinForms.World
 
         // List of all items
         public List<BaseGameEntity> Items;
+
+        // List of all projectiles
+        public List<BaseGameEntity> Projectiles;
 
         // Preloaded background images
         public List<Bitmap> BackgroundImages = new List<Bitmap>();
@@ -48,16 +52,19 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public GameWorld(int w, int h)
         {
-            for (int i = 1; i < 9; i++)
-            {
+            MovingEntities = new List<BaseGameEntity>();
+            StaticEntities = new List<BaseGameEntity>();
+            Items = new List<BaseGameEntity>();
+            Projectiles = new List<BaseGameEntity>();
+            BackgroundImages = new List<Bitmap>();
+
+            
+            for (int i = 1; i < 9; i++) {
                 Image img = Image.FromFile(PathPrefix + $"Sprites\\Floors\\floor_{i}.png");
                 Bitmap bmp = new Bitmap(img, img.Width, img.Height);
                 BackgroundImages.Add(bmp);
             }
 
-            MovingEntities = new List<BaseGameEntity>();
-            StaticEntities = new List<BaseGameEntity>();
-            Items = new List<BaseGameEntity>();
             Width = w;
             Height = h;
 
@@ -69,20 +76,15 @@ namespace AAI_Final_Assignment_WinForms.World
         public void Update(float timeElapsed)
         {
             List<BaseGameEntity> MEandItems = GetMEandItems();
-            foreach (MovingEntity me in MovingEntities)
-            {
+            foreach (MovingEntity me in MovingEntities.ToArray()) {
+                if (me == null) continue;
                 me.Update(timeElapsed);
-                me.CheckCollisions(MEandItems, this);
+                me.CheckCollisions(MEandItems);
                 Boundary(me);
             }
 
             Witch.Update(timeElapsed);
-            Witch.CheckWithinRange(MEandItems, this);
-
-            if (!Items.Any())
-            {
-                SpawnItems();
-            }
+            Witch.CheckWithinRange(MEandItems);
         }
 
         public void Render(Graphics g)
@@ -95,18 +97,24 @@ namespace AAI_Final_Assignment_WinForms.World
                 GameGraph.Render(g);
             }
 
-            MovingEntities.ForEach(e => e.Render(g));
+            MovingEntities.ToList().ForEach(e => e.Render(g));
+
             StaticEntities.ForEach(o => o.Render(g));
             Items.ForEach(o => o.Render(g));
             Witch.Render(g);
         }
 
-        public List<BaseGameEntity> GetMEandItems()
-        {
-            List<BaseGameEntity> allEntities = new List<BaseGameEntity>();
+        public List<BaseGameEntity> GetMEandItems() {
+            List<BaseGameEntity> allEntities = new List<BaseGameEntity>(MovingEntities.Count + Items.Count);
             allEntities.AddRange(MovingEntities);
             allEntities.AddRange(Items);
             return allEntities;
+        }
+
+        public void SpawnProjectile(Vector2D pos, Vector2D heading) {
+            Projectile projectile = new Projectile(pos.Clone(), this, 1, 10, 10, 0,5,5,3);
+            projectile.Heading = heading;
+            MovingEntities.Add(projectile);
         }
 
         public void RenderBackground(Graphics g)

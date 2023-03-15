@@ -33,6 +33,13 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 new Size(TextureWidth, TextureHeight));
         }
 
+        public override void Update(double timeElapsed) {
+            if (Health <= 0) {
+                World.MovingEntities.Remove(this);
+            }
+            base.Update(timeElapsed);
+        }
+
         public override void Render(Graphics g)
         {
             // g.DrawImage(Texture, (int)Pos.X - TextureWidth / 2, (int)Pos.Y - TextureHeight / 2);
