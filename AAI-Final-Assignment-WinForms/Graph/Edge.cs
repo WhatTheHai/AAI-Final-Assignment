@@ -9,9 +9,9 @@ namespace AAI_Final_Assignment_WinForms.Graph
     public class Edge : IComparable<Edge>
     {
         public Vertex dest;
-        public double cost;
+        public float cost;
 
-        public Edge(Vertex d, double c)
+        public Edge(Vertex d, float c)
         {
             dest = d;
             cost = c;

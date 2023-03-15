@@ -17,8 +17,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
         private readonly Timer shootTimer = new Timer(500);
         private Vector2D desiredVertex = new Vector2D();
 
-        public Witch(Vector2D pos, GameWorld world, double scale, int textureWidth, int textureHeight, double mass,
-            double maxSpeed, double maxForce, double radius
+        public Witch(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight, float mass,
+            float maxSpeed, float maxForce, float radius
         ) : base(pos,
             world, scale, textureWidth, textureHeight, mass, maxSpeed, maxForce, radius)
         {
@@ -102,7 +102,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             RenderHp(g);
         }
 
-        public override void Update(double timeElapsed) {
+        public override void Update(float timeElapsed) {
             if (World.GameGraph.MovePath != null && World.GameGraph.MovePath.Count > 0)
             {
                 // Get the first vertex of the move path

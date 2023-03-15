@@ -11,7 +11,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
     public class Circle : StaticEntity
     {
         public Circle(Vector2D pos, GameWorld world, float scale, int diameter, int textureWidth, int textureHeight,
-            double radius) :
+            float radius) :
             base(pos, world, scale, textureWidth, textureHeight, radius)
         {
             Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\CAULDRON FILL.png"),

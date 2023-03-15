@@ -13,7 +13,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 {
     public class SteeringBehaviour
     {
-        // todo: get setters? initialize total/currentforce
+        // todo: get setters? initialize total/currentforce 
         // All steering behaviour that can be enabled
         public bool Seek, Flee, Arrive, ObstacleAvoidance, Wander;
 
@@ -41,6 +41,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public Vector2D Calculate()
         {
             TotalForce = new Vector2D();
+            // todo check.
             if (ObstacleAvoidance)
             {
                 CurrentForce = CalculateObstacleAvoidance();
@@ -64,6 +65,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
                 CurrentForce = CalculateArrive();
                 if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
             }
+
             if (Wander)
             {
                 CurrentForce = CalculateWander();
@@ -86,14 +88,14 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         /// <returns>A boolean that is false if max force is reached </returns>
         public bool AccumulateForce(Vector2D runningTotal, Vector2D forceToAdd)
         {
-            double magnitudeSoFar = runningTotal.Length();
-            double magnitudeRemaining = ME.MaxForce - magnitudeSoFar;
+            float magnitudeSoFar = runningTotal.Length();
+            float magnitudeRemaining = ME.MaxForce - magnitudeSoFar;
             if (magnitudeRemaining <= 0.0)
             {
                 return false;
             }
 
-            double magnitudeToAdd = forceToAdd.Length();
+            float magnitudeToAdd = forceToAdd.Length();
 
             if (magnitudeToAdd < magnitudeRemaining)
             {
@@ -114,8 +116,8 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public Vector2D CalculateSeek()
         {
             Vector2D mePos = ME.Pos.Clone();
-            Vector2D targetPos = ME.World.Witch.Pos.Clone();
-
+            Vector2D targetPos = ME.CurrentTarget.Pos.Clone(); // todo: possible null?
+            //Vector2D targetPos = ME.World.Witch.Pos.Clone();
             //Vector2D desiredVelocity = targetPos.Sub(mePos).Normalize().Multiply(ME.MaxSpeed);
             Vector2D desiredVelocity = targetPos.Sub(mePos);
             desiredVelocity.Normalize();
@@ -127,6 +129,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             return desiredVelocity;
         }
 
+
         /// <summary>
         /// Calculates the desired force for fleeing
         /// </summary>
@@ -134,7 +137,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public Vector2D CalculateFlee()
         {
             // todo: rework... 
-            double panicDistanceSq = 100.0;
+            float panicDistanceSq = 100.0F;
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
 
@@ -155,18 +158,18 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         /// <returns>The arriving force</returns>
         public Vector2D CalculateArrive()
         {
-            const double deceleration = 175;
+            const float deceleration = 175;
 
 
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.World.Witch.Pos.Clone();
             Vector2D toTarget = targetPos.Sub(mePos);
 
-            double dist = toTarget.Length();
+            float dist = toTarget.Length();
 
             if (dist > 0.0001)
             {
-                double speed = dist / deceleration;
+                float speed = dist / deceleration;
                 speed = Math.Min(speed, ME.MaxSpeed);
 
                 Vector2D desiredVelocity = toTarget.Multiply(speed / dist);
@@ -187,9 +190,9 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public Vector2D CalculateObstacleAvoidance()
         {
             // Range for looking ahead of entity
-            double maxSeeAhead = 50;
+            float maxSeeAhead = 50;
             // Calculate dynamic length
-            double length = ME.Velocity.Clone().Length() / ME.MaxSpeed;
+            float length = ME.Velocity.Clone().Length() / ME.MaxSpeed;
 
             //todo: max avoidance force, maybe use local
             Vector2D avoidanceForce = new Vector2D();
@@ -199,7 +202,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
                 .Add(ME.Pos.Clone());
             // Half of the max range vector
             Vector2D aheadVectorHalf = ME.Velocity.Clone().Normalize().Multiply(length).Multiply(maxSeeAhead)
-                .Multiply(0.5).Add(ME.Pos.Clone());
+                .Multiply(0.5f).Add(ME.Pos.Clone());
 
             // Look for closest obstacle
             StaticEntity? closestObstacle = FindClosestObstacle(aheadVector, aheadVectorHalf);
@@ -224,15 +227,15 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         {
             //Wander parameters
             //TODO: Scale with max speed
-            const double wanderRadius = 15.0;
-            const double wanderDistance = 30.0;
-            const double wanderJitter = 0.5;
+            const float wanderRadius = 15.0f;
+            const float wanderDistance = 30.0f;
+            const float wanderJitter = 0.5f;
             Random rand = new Random();
 
             Vector2D wanderTarget = ME.Heading.Clone();
             //Create a random displacement vector and add it to the wander target
             //Ensure the double number is between -1 and 1
-            Vector2D displacement = new Vector2D(rand.NextDouble() * 2 - 1, rand.NextDouble() * 2 - 1);
+            Vector2D displacement = new Vector2D((float)rand.NextDouble() * 2 - 1, (float)rand.NextDouble() * 2 - 1);
             displacement.Multiply(wanderJitter);
             displacement.Normalize();
             displacement.Multiply(wanderDistance);
@@ -243,12 +246,12 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             targetLocal.Normalize().Multiply(wanderRadius);
 
             // Rotate the target vector by a random angle
-            double angle = rand.NextDouble() * Math.PI * 2;
+            float angle = (float)rand.NextDouble() * (float)Math.PI * 2;
 
             // Perform a rotation using a rotation matrix
             Vector2D targetWorld = new Vector2D(
-                wanderTarget.X * Math.Cos(angle) - wanderTarget.Y * Math.Sin(angle),
-                wanderTarget.X * Math.Sin(angle) + wanderTarget.Y * Math.Cos(angle)
+                wanderTarget.X * MathF.Cos(angle) - wanderTarget.Y * MathF.Sin(angle),
+                wanderTarget.X * MathF.Sin(angle) + wanderTarget.Y * MathF.Cos(angle)
             );
             return targetWorld.Sub(ME.Velocity);
         }

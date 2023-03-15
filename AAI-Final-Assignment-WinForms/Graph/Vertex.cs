@@ -12,10 +12,10 @@ namespace AAI_Final_Assignment_WinForms.Graph
     {
         public string name;
         public LinkedList<Edge> adj;
-        public double distance;
-        public double fScore;
-        public double gScore { get; set; }
-        public double hScore { get; set; }
+        public float distance;
+        public float fScore;
+        public float gScore { get; set; }
+        public float hScore { get; set; }
         public Vertex prev;
         public bool known;
         public Vector2D pos;
@@ -39,7 +39,7 @@ namespace AAI_Final_Assignment_WinForms.Graph
             return adj;
         }
 
-        public double GetDistance()
+        public float GetDistance()
         {
             return distance;
         }
@@ -57,16 +57,16 @@ namespace AAI_Final_Assignment_WinForms.Graph
         public void Reset()
         {
             prev = null;
-            distance = Double.MaxValue;
+            distance = float.MaxValue;
             known = false;
-            fScore = Double.MaxValue;
-            gScore = Double.MaxValue;
-            hScore = Double.MaxValue;
+            fScore = float.MaxValue;
+            gScore = float.MaxValue;
+            hScore = float.MaxValue;
         }
 
         public override string ToString()
         {
-            string s = pos + (distance != Double.MaxValue ? $"({this.distance})" : "") + "[";
+            string s = pos + (distance != float.MaxValue ? $"({this.distance})" : "") + "[";
             foreach (Edge e in adj.OrderBy(x => x.dest.name))
             {
                 s += $"{e.dest.name}({e.cost})";
@@ -75,9 +75,9 @@ namespace AAI_Final_Assignment_WinForms.Graph
 
             return s;
         }
-        public double Heuristic(Vertex other)
+        public float Heuristic(Vertex other)
         {
-            return Math.Sqrt(Math.Pow(pos.X - other.pos.X, 2) + Math.Pow(pos.Y - other.pos.Y, 2));
+            return MathF.Sqrt(MathF.Pow(pos.X - other.pos.X, 2) + MathF.Pow(pos.Y - other.pos.Y, 2));
         }
 
 
