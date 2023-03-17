@@ -31,6 +31,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public Vector2D CurrentObstacleAvoidance = new();
         public Vector2D CurrentSeek = new();
         public Vector2D CurrentArrive = new();
+        public Vector2D CurrentWander = new();
 
         public bool IsCollision { get; set; }
 
@@ -190,7 +191,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public Vector2D CalculateObstacleAvoidance()
         {
             // Range for looking ahead of entity
-            float maxSeeAhead = 50;
+            float maxSeeAhead = 100;
             // Calculate dynamic length
             float length = ME.Velocity.Clone().Length() / ME.MaxSpeed;
 
@@ -207,7 +208,11 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             // Look for closest obstacle
             StaticEntity? closestObstacle = FindClosestObstacle(aheadVector, aheadVectorHalf);
 
-            if (closestObstacle == null) return avoidanceForce;
+            if (closestObstacle == null)
+            {
+                CurrentObstacleAvoidance = avoidanceForce.Clone();
+                return avoidanceForce;
+            }
 
             // calculate force
             avoidanceForce = aheadVector.Clone().Sub(closestObstacle.Pos.Clone());
@@ -253,7 +258,10 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
                 wanderTarget.X * MathF.Cos(angle) - wanderTarget.Y * MathF.Sin(angle),
                 wanderTarget.X * MathF.Sin(angle) + wanderTarget.Y * MathF.Cos(angle)
             );
-            return targetWorld.Sub(ME.Velocity);
+
+            Vector2D desiredForce = targetWorld.Sub(ME.Velocity);
+            CurrentWander = desiredForce;
+            return desiredForce;
         }
 
         /// <summary>

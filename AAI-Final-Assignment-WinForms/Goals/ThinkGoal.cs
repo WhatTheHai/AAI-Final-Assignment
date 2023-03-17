@@ -41,7 +41,8 @@ namespace AAI_Final_Assignment_WinForms.Goals
                 if (currentGoal != null)
                 {
                     while ((currentGoal.GoalStatus == GoalStatusType.Completed ||
-                            currentGoal.GoalStatus == GoalStatusType.Failed) && SubGoalsStack.Count > 0)
+                            currentGoal.GoalStatus == GoalStatusType.Failed) && SubGoalsStack.Count > 0 &&
+                           currentGoal != null)
                     {
                         SubGoalsStack.Pop().Deactivate();
                         if (SubGoalsStack.Count > 0)
@@ -73,7 +74,7 @@ namespace AAI_Final_Assignment_WinForms.Goals
             var number = random.Next(1, (numberOfGoals + 1));
 
             switch (number)
-            { 
+            {
                 case 1:
                     SubGoalsStack.Push(new MoveToItemGoal(Owner));
                     break;

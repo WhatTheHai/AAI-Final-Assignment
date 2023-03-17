@@ -63,7 +63,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
         public virtual void Render(Graphics g)
         {
-            g.FillEllipse(Brushes.Blue, new Rectangle((int)(Pos.X - 5d), (int)(Pos.Y - 5d), 10, 10));
+           g.FillEllipse(Brushes.Blue, new Rectangle((int)(Pos.X - 5d), (int)(Pos.Y - 5d), 10, 10));
         }
     }
 }

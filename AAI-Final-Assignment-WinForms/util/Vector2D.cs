@@ -5,6 +5,7 @@ namespace AAI_Final_Assignment_WinForms.util
 {
     public class Vector2D : IEquatable<Vector2D>
     {
+        // todo: maybe alles clonen standaard? 
         public float X { get; set; }
         public float Y { get; set; }
 
