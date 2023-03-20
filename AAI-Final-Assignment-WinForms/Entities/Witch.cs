@@ -15,7 +15,9 @@ namespace AAI_Final_Assignment_WinForms.Entities
     public class Witch : MovingEntity
     {
         private readonly Timer shootTimer = new Timer(500);
+        private readonly Timer hitTimer = new Timer(500);
         private Vector2D desiredVertex = new Vector2D();
+        private bool gotHit = false;
 
         public Witch(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight, float mass,
             float maxSpeed, float maxForce, float radius
@@ -29,6 +31,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
             shootTimer.Elapsed += OnShootTimerElapsed;
             shootTimer.AutoReset = true;
             shootTimer.Enabled = true;
+
+            hitTimer.Elapsed += OnHitTimerElapsed;
         }
 
         public void SetDestination(Vector2D destinationPos)
@@ -41,44 +45,45 @@ namespace AAI_Final_Assignment_WinForms.Entities
         {
             foreach (BaseGameEntity entity in entities)
             {
-                if (entity is TestEnemy enemyEntity)
+                if (gotHit == false && entity is Enemy enemyEntity)
                 {
                     if (enemyEntity.Pos.Distance(Pos) < entity.Radius + Radius) {
-                        var test = enemyEntity.Pos.Distance(Pos);
                         // Witch takes damage
-                        Health -= 1;
+                        gotHit = true;
+                        hitTimer.Enabled = true;
+                        Health -= 25;
                     }
                 }
                 else if (entity is ItemSpawn item && item.Pos.Clone().Sub(Pos).Length() < item.Radius + Radius)
                 {
                     // Witch heals
                     World.Items.Remove(item);
-                    if (Health + (MaxHealth/10) >= MaxHealth) {
+                    if (Health + (MaxHealth/5) >= MaxHealth) {
                         Health = MaxHealth;
                     }
                     else {
-                        Health += (MaxHealth/10);
+                        Health += (MaxHealth/5);
                     }
                 }
             }
         }
 
         public void ShootNearbyEnemy() {
-            TestEnemy? nearestEnemy = GetNearestEnemy(World.MovingEntities);
+            Enemy? nearestEnemy = GetNearestEnemy(World.MovingEntities);
             if (nearestEnemy != null && nearestEnemy.Pos.Clone().Distance(Pos) < 300) {
                 var heading = nearestEnemy.Pos.Clone().Sub(Pos).Normalize();
                 World.SpawnProjectile(Pos.Clone(), heading);
             }
         }
 
-        public TestEnemy? GetNearestEnemy(List<BaseGameEntity> entities)
+        public Enemy? GetNearestEnemy(List<BaseGameEntity> entities)
         {
-            TestEnemy nearestEnemy = null;
+            Enemy nearestEnemy = null;
             double nearestDistance = double.MaxValue;
     
             foreach (BaseGameEntity entity in entities.ToList())
             {
-                if (entity is TestEnemy movingEntity)
+                if (entity is Enemy movingEntity)
                 {
                     double distance = movingEntity.Pos.Distance(Pos);
                     if (distance < nearestDistance)
@@ -138,6 +143,11 @@ namespace AAI_Final_Assignment_WinForms.Entities
         private void OnShootTimerElapsed(object sender, ElapsedEventArgs e)
         {
             ShootNearbyEnemy();
+        }
+
+        private void OnHitTimerElapsed(object sender, ElapsedEventArgs e) {
+            hitTimer.Enabled = false;
+            gotHit = false;
         }
     }
 }

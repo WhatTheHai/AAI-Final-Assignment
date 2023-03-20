@@ -106,17 +106,16 @@ namespace AAI_Final_Assignment_WinForms.Entities
                     }
                 }
 
-                if (entity is Projectile projectile && this is TestEnemy &&
-                    projectile.Pos.Clone().Sub(Pos.Clone()).Length() < projectile.Radius + Radius)
-                {
-                    World.MovingEntities.Remove(projectile);
-                    if (Health - 10 <= 0)
-                    {
-                        Health = 0;
-                    }
-                    else
-                    {
-                        Health -= 10;
+                if (entity is Projectile projectile &&
+                    projectile.Pos.Clone().Sub(Pos.Clone()).Length() < projectile.Radius + Radius) {
+                    if (this is Enemy) {
+                        World.MovingEntities.Remove(projectile);
+                        if (Health - 10 <= 0) {
+                            Health = 0;
+                        }
+                        else {
+                            Health -= 10;
+                        }
                     }
                 }
             }

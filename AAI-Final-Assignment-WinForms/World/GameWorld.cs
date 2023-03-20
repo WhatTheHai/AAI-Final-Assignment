@@ -47,6 +47,7 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public const string PathPrefix = "..\\..\\..\\";
 
+        public readonly Random Rand;
 
         // game world class
         // the game world class contains all the data and objects pertinent to the environment like: walls, obstacles, agents etc...
@@ -58,6 +59,7 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public GameWorld(int w, int h)
         {
+            Rand = new Random();
             MovingEntities = new List<BaseGameEntity>();
             StaticEntities = new List<BaseGameEntity>();
             Items = new List<BaseGameEntity>();
@@ -88,12 +90,15 @@ namespace AAI_Final_Assignment_WinForms.World
                 if (me == null) continue;
                 me.Update(timeElapsed);
                 me.CheckCollisions(MEandItems);
+                if (me is Projectile) {
+                    me.CheckCollisions(StaticEntities);
+                }
                 Boundary(me);
             }
 
             if (!Items.Any())
             {
-                SpawnItems();
+                SpawnItems(10);
             }
 
             Witch.Update(timeElapsed);
@@ -180,28 +185,25 @@ namespace AAI_Final_Assignment_WinForms.World
         {
             // for (int i = 0; i < 10; i++)
             // {
-            //     TestEnemy t = new TestEnemy(new Vector2D(100, 100 + (i * 100)), this, 1, 50, 50, 50, 5, 10000); // 50 5 100000
+            //     Enemy t = new Enemy(new Vector2D(100, 100 + (i * 100)), this, 1, 50, 50, 50, 5, 10000); // 50 5 100000
             //     MovingEntities.Add(t);
             // }
-            for (int i = 0; i < 5; i++)
-            {
-                TestEnemy t = new TestEnemy(new Vector2D(800, 800), this, 1, 50, 50, 50, 5, 55, 12.5f); // 50 5 100000
-                MovingEntities.Add(t);
-            }
+            SpawnObstacles(20);
+            SpawnItems(10);
 
+            SpawnEnemies(10);
 
-            Circle o = new Circle(new Vector2D(200, 250), this, 2, 30, 25, 25, 60);
+/*            Circle o = new Circle(new Vector2D(200, 250), this, 2, 25, 25, 60);
             StaticEntities.Add(o);
             //
-            Circle o2 = new Circle(new Vector2D(350, 400), this, 2, 30, 25, 25, 60);
+            Circle o2 = new Circle(new Vector2D(350, 400), this, 2, 25, 25, 60);
             StaticEntities.Add(o2);
             // //
-            Circle o3 = new Circle(new Vector2D(200, 350), this, 2, 30, 25, 25, 60);
+            Circle o3 = new Circle(new Vector2D(200, 350), this, 2, 25, 25, 60);
             StaticEntities.Add(o3);
             // //
-            Circle o4 = new Circle(new Vector2D(300, 250), this, 2, 30, 25, 25, 60);
-            StaticEntities.Add(o4);
-            SpawnItems();
+            Circle o4 = new Circle(new Vector2D(300, 250), this, 2, 25, 25, 60);
+            StaticEntities.Add(o4);*/
             // //
             // Circle o5 = new Circle(new Vector2D(600, 350), this, 2, 60, 50, 50);
             // StaticEntities.Add(o5);
@@ -210,20 +212,48 @@ namespace AAI_Final_Assignment_WinForms.World
             // StaticEntities.Add(o6);
         }
 
-        private void SpawnItems()
+        private void SpawnObstacles(int amount) 
         {
-            Random Rand = new Random();
-            int maxAmount = 10;
             int currentAmount = 0;
 
-            List<BaseGameEntity> allEntities = new List<BaseGameEntity>();
-            allEntities.AddRange(StaticEntities);
-            allEntities.AddRange(Items);
+            while (currentAmount != amount)
+            {
+                Circle o1 = new Circle(new Vector2D(Rand.Next(0,Width), Rand.Next(0,Height)), this, 2, 25, 25, Rand.Next(20,70));
+                if (o1.CheckAnyCollisions(StaticEntities))
+                {
+                    StaticEntities.Add(o1);
+                    currentAmount++;
+                }
+            }
+        }
 
-            while (currentAmount != maxAmount)
+        private void SpawnEnemies(int amount) 
+        {
+            int currentAmount = 0;
+            
+            List<BaseGameEntity> staticEntities = GetStaticEntities();
+
+            while (currentAmount != amount)
+            {
+                Enemy t = new Enemy(new Vector2D(800, 800), this, 1, 50, 50, Rand.Next(50,100), Rand.Next(5,10), Rand.Next(40,60), Rand.NextSingle() * (10 - 20) + 20);
+                if (t.CheckAnyCollisions(staticEntities))
+                {
+                    MovingEntities.Add(t);
+                    currentAmount++;
+                }
+            }
+        }
+
+        private void SpawnItems(int amount)
+        {
+            int currentAmount = 0;
+
+            List<BaseGameEntity> staticEntities = GetStaticEntities();
+
+            while (currentAmount != amount)
             {
                 ItemSpawn i = new ItemSpawn(new Vector2D(Rand.Next(0, Width), Rand.Next(0, Height)), this, 2, 5, 5, 10);
-                if (i.CheckAnyCollisions(allEntities))
+                if (i.CheckAnyCollisions(staticEntities))
                 {
                     Items.Add(i);
                     currentAmount++;
@@ -246,6 +276,14 @@ namespace AAI_Final_Assignment_WinForms.World
             g.DrawString("Show Goals   :  t", drawFont, drawBrush, x, (y += 20), drawFormat);
 
             
+        }
+
+        private List<BaseGameEntity> GetStaticEntities() {
+            List<BaseGameEntity> allEntities = new List<BaseGameEntity>();
+            allEntities.AddRange(StaticEntities);
+            allEntities.AddRange(Items);
+
+            return allEntities;
         }
     }
 }
