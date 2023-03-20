@@ -17,7 +17,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
         public static readonly float INFINITY = float.MaxValue;
 
         public Dictionary<Vector2D, Vertex> VertexMap;
-        public const int VectorDistance = 28;
+        public const int VectorDistance = 24;
         public List<Vector2D>? MovePath;
         public Boolean RenderPath = false;
 
@@ -34,17 +34,10 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             //Removes the vertices that are on objects
             foreach (StaticEntity entity in gameWorld.StaticEntities) {
                 Vector2D vector = ClosestVertex(entity.Pos);
-
-                int x = (int)vector.X;
-                int y = (int)vector.Y;
-
-                int radius = (int)(entity.Radius);
-
-                for (int i = x - VectorDistance; i < (radius + x); i += VectorDistance) {
-                    for (int j = y - VectorDistance; j < (radius + y); j += VectorDistance) {
-                        Vector2D nearVector = new Vector2D(i, j);
-                        if (VertexMap.ContainsKey(nearVector))
-                            VertexMap.Remove(nearVector);
+                int radius = (int)entity.Radius;
+                foreach (var Vertex in VertexMap) {
+                    if (Vertex.Key.Distance(entity.Pos) <= radius) {
+                        VertexMap.Remove(Vertex.Key);
                     }
                 }
             }
@@ -410,7 +403,7 @@ namespace AAI_Final_Assignment_WinForms.Graph {
             {
                 g.DrawEllipse(p, new Rectangle((int)vertex.pos.X-3, (int)vertex.pos.Y-3, 6, 6));
 
-                if (RenderPath && vertex.fScore != float.MaxValue) {
+                if (RenderPath && (vertex.fScore != float.MaxValue || vertex.hScore != float.MaxValue || vertex.gScore != float.MaxValue)) {
                     //Debug purposes, prints all the scores
                     //g.DrawString($"{(int)vertex.fScore}\n{(int)vertex.gScore}\n{(int)vertex.hScore}", new Font("Arial", 5), new SolidBrush(Color.Black), new PointF((int)vertex.pos.X-1, (int)vertex.pos.Y+2));
                     g.DrawEllipse(p2, new Rectangle((int)vertex.pos.X-3, (int)vertex.pos.Y-3, 6, 6));

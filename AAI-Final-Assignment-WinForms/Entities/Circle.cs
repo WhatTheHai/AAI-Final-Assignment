@@ -10,7 +10,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
 {
     public class Circle : StaticEntity
     {
-        public Circle(Vector2D pos, GameWorld world, float scale, int diameter, int textureWidth, int textureHeight,
+        public Circle(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight,
             float radius) :
             base(pos, world, scale, textureWidth, textureHeight, radius)
         {
