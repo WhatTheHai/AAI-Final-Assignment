@@ -14,7 +14,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
 {
     public class Witch : MovingEntity
     {
-        private readonly Timer shootTimer = new Timer(10);
+        private readonly Timer shootTimer = new Timer(500);
         private readonly Timer hitTimer = new Timer(500);
         private Vector2D desiredVertex = new Vector2D();
         private bool gotHit = false;
