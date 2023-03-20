@@ -235,11 +235,17 @@ namespace AAI_Final_Assignment_WinForms.World
         {
             Font drawFont = new Font("Arial", 10);
             SolidBrush drawBrush = new SolidBrush(Color.Yellow);
-            float x = Width - 100f;
+            float x = Width - 150f;
             float y = 10f;
             StringFormat drawFormat = new StringFormat();
 
-            g.DrawString($"Key bindings:", drawFont, drawBrush, x, y, drawFormat);
+            g.DrawString("Key bindings:", drawFont, drawBrush, x, y, drawFormat);
+            g.DrawString("Show Graph  :  g", drawFont, drawBrush, x, (y += 20), drawFormat);
+            g.DrawString("Show Path    :  h", drawFont, drawBrush, x, (y += 20), drawFormat);
+            g.DrawString("Show Forces :  f", drawFont, drawBrush, x, (y += 20), drawFormat);
+            g.DrawString("Show Goals   :  t", drawFont, drawBrush, x, (y += 20), drawFormat);
+
+            
         }
     }
 }
