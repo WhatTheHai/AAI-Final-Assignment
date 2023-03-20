@@ -115,7 +115,10 @@ namespace AAI_Final_Assignment_WinForms.World
                 GameGraph.Render(g);
             }
 
-            MovingEntities.ToList().ForEach(e => e.Render(g));
+            foreach (var baseGameEntity in MovingEntities.ToArray()) {
+                if (baseGameEntity == null) continue;
+                baseGameEntity.Render(g);
+            }
 
             StaticEntities.ForEach(o => o.Render(g));
             Items.ToList().ForEach(o => o.Render(g));
@@ -270,10 +273,10 @@ namespace AAI_Final_Assignment_WinForms.World
             StringFormat drawFormat = new StringFormat();
 
             g.DrawString("Key bindings:", drawFont, drawBrush, x, y, drawFormat);
-            g.DrawString("Show Graph  :  g", drawFont, drawBrush, x, (y += 20), drawFormat);
-            g.DrawString("Show Path    :  h", drawFont, drawBrush, x, (y += 20), drawFormat);
-            g.DrawString("Show Forces :  f", drawFont, drawBrush, x, (y += 20), drawFormat);
-            g.DrawString("Show Goals   :  t", drawFont, drawBrush, x, (y += 20), drawFormat);
+            g.DrawString("Show Graph  :  G", drawFont, drawBrush, x, (y += 20), drawFormat);
+            g.DrawString("Show Path    :  H", drawFont, drawBrush, x, (y += 20), drawFormat);
+            g.DrawString("Show Forces :  F", drawFont, drawBrush, x, (y += 20), drawFormat);
+            g.DrawString("Show Goals   :  T", drawFont, drawBrush, x, (y += 20), drawFormat);
 
             
         }
