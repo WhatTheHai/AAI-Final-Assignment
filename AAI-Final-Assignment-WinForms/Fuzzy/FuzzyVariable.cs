@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AAI_Final_Assignment_WinForms.Fuzzy
 {
-    internal class FuzzyVariable
+    public class FuzzyVariable
     {
     }
 }

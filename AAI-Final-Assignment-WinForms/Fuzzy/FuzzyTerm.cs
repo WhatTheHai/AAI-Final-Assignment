@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AAI_Final_Assignment_WinForms.Fuzzy
 {
-    abstract class FuzzyTerm {
+    public abstract class FuzzyTerm {
         public abstract FuzzyTerm Clone();
 
         public abstract float GetDOM();

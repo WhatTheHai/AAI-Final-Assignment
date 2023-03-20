@@ -6,7 +6,19 @@ using System.Threading.Tasks;
 
 namespace AAI_Final_Assignment_WinForms.Fuzzy
 {
-    internal class FuzzySet
-    {
+    abstract class FuzzySet {
+        private float DOM;
+        private float RepresentativeValue;
+
+        protected FuzzySet(float representativeValue) {
+            DOM = 0.0f;
+            RepresentativeValue = representativeValue;
+        }
+
+        public abstract double CalculateDOM(float value);
+
+        public abstract double ORwithDOM(float value);
+
+
     }
 }
