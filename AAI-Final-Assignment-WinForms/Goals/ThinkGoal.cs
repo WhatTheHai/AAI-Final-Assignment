@@ -38,17 +38,21 @@ namespace AAI_Final_Assignment_WinForms.Goals
             {
                 var currentGoal = SubGoalsStack.Peek();
 
-                while ((currentGoal.GoalStatus == GoalStatusType.Completed ||
-                        currentGoal.GoalStatus == GoalStatusType.Failed) && SubGoalsStack.Count > 0)
+                if (currentGoal != null)
                 {
-                    SubGoalsStack.Pop().Deactivate();
-                    if (SubGoalsStack.Count > 0)
+                    while ((currentGoal.GoalStatus == GoalStatusType.Completed ||
+                            currentGoal.GoalStatus == GoalStatusType.Failed) && SubGoalsStack.Count > 0 &&
+                           currentGoal != null)
                     {
-                        currentGoal = SubGoalsStack.Peek();
+                        SubGoalsStack.Pop().Deactivate();
+                        if (SubGoalsStack.Count > 0)
+                        {
+                            currentGoal = SubGoalsStack.Peek();
+                        }
                     }
                 }
 
-                if (SubGoalsStack.Count <= 0) return;
+                if (SubGoalsStack.Count <= 0 || currentGoal == null) return;
                 currentGoal = SubGoalsStack.Peek();
                 currentGoal.Process();
             }

@@ -40,16 +40,24 @@ namespace AAI_Final_Assignment_WinForms
 
         private void label1_Paint(object sender, PaintEventArgs e)
         {
-          //label1.Text = _world.MovingEntities[0].SteeringBehaviour.DistanceAhead.ToString();
+            //label1.Text = _world.MovingEntities[0].SteeringBehaviour.DistanceAhead.ToString();
         }
 
-        private void Form1_KeyDown(object sender, KeyEventArgs e) {
-            switch (e.KeyData) {
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            switch (e.KeyData)
+            {
                 case Keys.G:
                     _world.GraphEnabled = !_world.GraphEnabled;
                     break;
                 case Keys.H:
                     _world.GameGraph.RenderPath = !_world.GameGraph.RenderPath;
+                    break;
+                case Keys.F:
+                    _world.ShowForces = !_world.ShowForces;
+                    break;
+                case Keys.T:
+                    _world.ShowGoals = !_world.ShowGoals;
                     break;
             }
         }

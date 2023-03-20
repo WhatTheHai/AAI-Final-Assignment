@@ -30,6 +30,12 @@ namespace AAI_Final_Assignment_WinForms.World
         public Graph.Graph GameGraph;
         public bool GraphEnabled = false;
 
+        //show forces
+        public bool ShowForces = false;
+
+        // show goals
+        public bool ShowGoals = false;
+
         // Current controllable entity
         public Witch Witch { get; set; }
 
@@ -60,8 +66,9 @@ namespace AAI_Final_Assignment_WinForms.World
             Projectiles = new List<BaseGameEntity>();
             BackgroundImages = new List<Bitmap>();
 
-            
-            for (int i = 1; i < 9; i++) {
+
+            for (int i = 1; i < 9; i++)
+            {
                 Image img = Image.FromFile(PathPrefix + $"Sprites\\Floors\\floor_{i}.png");
                 Bitmap bmp = new Bitmap(img, img.Width, img.Height);
                 BackgroundImages.Add(bmp);
@@ -78,7 +85,8 @@ namespace AAI_Final_Assignment_WinForms.World
         public void Update(float timeElapsed)
         {
             List<BaseGameEntity> MEandItems = GetMEandItems();
-            foreach (MovingEntity me in MovingEntities.ToArray()) {
+            foreach (MovingEntity me in MovingEntities.ToArray())
+            {
                 if (me == null) continue;
                 me.Update(timeElapsed);
                 me.CheckCollisions(MEandItems);
@@ -112,17 +120,20 @@ namespace AAI_Final_Assignment_WinForms.World
             StaticEntities.ForEach(o => o.Render(g));
             Items.ToList().ForEach(o => o.Render(g));
             Witch.Render(g);
+            RenderLabels(g);
         }
 
-        public List<BaseGameEntity> GetMEandItems() {
+        public List<BaseGameEntity> GetMEandItems()
+        {
             List<BaseGameEntity> allEntities = new List<BaseGameEntity>(MovingEntities.Count + Items.Count);
             allEntities.AddRange(MovingEntities);
             allEntities.AddRange(Items);
             return allEntities;
         }
 
-        public void SpawnProjectile(Vector2D pos, Vector2D heading) {
-            Projectile projectile = new Projectile(pos.Clone(), this, 1, 10, 10, 0,5,5,3);
+        public void SpawnProjectile(Vector2D pos, Vector2D heading)
+        {
+            Projectile projectile = new Projectile(pos.Clone(), this, 1, 10, 10, 0, 5, 5, 3);
             projectile.Heading = heading;
             MovingEntities.Add(projectile);
         }
@@ -248,6 +259,17 @@ namespace AAI_Final_Assignment_WinForms.World
                     currentAmount++;
                 }
             }
+        }
+
+        private void RenderLabels(Graphics g)
+        {
+            Font drawFont = new Font("Arial", 10);
+            SolidBrush drawBrush = new SolidBrush(Color.Yellow);
+            float x = Width - 100f;
+            float y = 10f;
+            StringFormat drawFormat = new StringFormat();
+
+            g.DrawString($"Key bindings:", drawFont, drawBrush, x, y, drawFormat);
         }
 
         private List<BaseGameEntity> GetStaticEntities() {

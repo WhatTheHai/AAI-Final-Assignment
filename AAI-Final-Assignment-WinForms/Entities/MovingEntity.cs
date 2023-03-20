@@ -91,17 +91,19 @@ namespace AAI_Final_Assignment_WinForms.Entities
             {
                 if (entity is ItemSpawn item && item.Pos.Clone().Sub(Pos).Length() < item.Radius + Radius)
                 {
-                    if (this is not Projectile) {
+                    if (this is not Projectile)
+                    {
                         // heals
                         World.Items.Remove(item);
-                        if (Health + 10 >= MaxHealth) {
+                        if (Health + 10 >= MaxHealth)
+                        {
                             Health = MaxHealth;
                         }
-                        else {
+                        else
+                        {
                             Health += 10;
                         }
                     }
-                        
                 }
 
                 if (entity is Projectile projectile &&
@@ -120,6 +122,12 @@ namespace AAI_Final_Assignment_WinForms.Entities
         }
 
         public override void Render(Graphics g)
+        {
+           // RenderDebugInfo(g);
+            RenderHp(g);
+        }
+
+        protected void RenderDebugInfo(Graphics g)
         {
             Font drawFont = new Font("Arial", 10);
             SolidBrush drawBrush = new SolidBrush(Color.Black);
@@ -145,14 +153,12 @@ namespace AAI_Final_Assignment_WinForms.Entities
             g.DrawString(SteeringBehaviour.IsCollision ? $"Collision: Yes" : $"Collision: No", drawFont, drawBrush, x,
                 y + 120,
                 drawFormat);
-
-            RenderHp(g);
-            RenderInfo(g);
         }
 
-        protected void RenderHp(Graphics g) {
+        protected void RenderHp(Graphics g)
+        {
             // Draw the health bar
-            int healthBarWidth = (int)Radius*2;
+            int healthBarWidth = (int)Radius * 2;
             int healthBarHeight = 4;
             int healthBarX = (int)Pos.X - healthBarWidth / 2;
             int healthBarY = (int)Pos.Y - (int)Radius - healthBarHeight;
@@ -170,38 +176,25 @@ namespace AAI_Final_Assignment_WinForms.Entities
             g.DrawRectangle(Pens.Black, healthBarX, healthBarY, healthBarMaxWidth, healthBarHeight);
         }
 
-        protected void RenderInfo(Graphics g)
+        protected void RenderForceArrows(Graphics g)
         {
-            int width = 3;
-            float multiplier = 5;
-
-            // current velocity
-            // DrawLineFromEntity(g, Pos, Velocity.Clone().Multiply(multiplier), Color.Green, width);
-
-            // desired seek force
-
-            // DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentDesiredForceSeek.Clone().Multiply(multiplier),
-            //     Color.Gray,
-            //     width);
-
-            // desired obstacle force
-            // DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentDesiredForceObstacle.Clone().Multiply(multiplier),
-            //     Color.Yellow,
-            //     width);
-
-            // steering force
-            // DrawLineFromEntity(g, Pos, currentSteeringForce.Clone().Multiply(multiplier), Color.Red, width);
-            // Vector2D currentSteeringForceEndPoint = currentVelocity.Clone().Add(currentSteeringForce.Clone());
-            //DrawLineFromEntity(g, Pos, currentSteeringForceEndPoint, Color.Blue, width);
+            float scale = 5.0f;
+            // velocity of entity
+            DrawLineFromEntity(g, Pos, Velocity, Color.Yellow, 3, scale);
+            if (SteeringBehaviour.Seek) DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentSeek, Color.Blue, 3, scale);
+            if (SteeringBehaviour.ObstacleAvoidance)
+                DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentObstacleAvoidance, Color.Red, 3, scale);
+            if (SteeringBehaviour.Wander)
+                DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentWander, Color.Green, 3, scale);
         }
 
-        protected void DrawLineFromEntity(Graphics g, Vector2D start, Vector2D end, Color color, int width)
+        protected void DrawLineFromEntity(Graphics g, Vector2D start, Vector2D end, Color color, int width, float scale)
         {
-            //g.DrawLine(new Pen(color, width), (int)start.X, (int)start.Y, (int)end.X, (int)end.Y);
-            PointF startPoint = new PointF((float)start.X, (float)start.Y);
-            PointF endPoint = new PointF((float)end.X + (float)start.X, (float)end.Y + (float)start.Y);
+            Vector2D scaledEnd = end.Clone().Multiply(scale);
+            Vector2D endpoint = start.Clone().Add(scaledEnd);
 
-            g.DrawLine(new Pen(color, width), startPoint, endPoint);
+            // Draw the line representing the velocity vector
+            g.DrawLine(new Pen(color, width), start.X, start.Y, endpoint.X, endpoint.Y);
         }
     }
 }
