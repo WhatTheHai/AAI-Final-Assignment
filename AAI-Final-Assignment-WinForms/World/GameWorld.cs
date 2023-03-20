@@ -87,19 +87,18 @@ namespace AAI_Final_Assignment_WinForms.World
             List<BaseGameEntity> MEandItems = GetMEandItems();
             foreach (MovingEntity me in MovingEntities.ToArray())
             {
+                //Prevents crashing
                 if (me == null) continue;
                 me.Update(timeElapsed);
                 me.CheckCollisions(MEandItems);
-                if (me is Projectile) {
-                    me.CheckCollisions(StaticEntities);
-                }
                 Boundary(me);
             }
 
             if (!Items.Any())
-            {
                 SpawnItems(10);
-            }
+
+            if (!MovingEntities.Any())
+                SpawnEnemies(5);
 
             Witch.Update(timeElapsed);
             Witch.CheckWithinRange(MEandItems);
@@ -194,7 +193,7 @@ namespace AAI_Final_Assignment_WinForms.World
             SpawnObstacles(20);
             SpawnItems(10);
 
-            SpawnEnemies(10);
+            SpawnEnemies(5);
 
 /*            Circle o = new Circle(new Vector2D(200, 250), this, 2, 25, 25, 60);
             StaticEntities.Add(o);
