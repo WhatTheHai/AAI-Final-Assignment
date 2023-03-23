@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AAI_Final_Assignment_WinForms.Fuzzy.FuzzySets;
+using AAI_Final_Assignment_WinForms.Fuzzy.FuzzyTerms;
 
 namespace AAI_Final_Assignment_WinForms.Fuzzy
 {
@@ -22,7 +23,9 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy
             maxRange = (max > maxRange) ? max : maxRange;
         }
 
-        pub
+        public FzSet AddLeftShoulderSet(string name, double minBound, double peak, double maxBound) {
+            
+        }
 
         public void Fuzzify(float value) {
 
