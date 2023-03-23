@@ -18,17 +18,55 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy
             minRange = maxRange = 0;
         }
 
-        public void AdjustRangeToFit(float min, float max) {
+        private void adjustRangeToFit(float min, float max) {
             minRange = (min < minRange) ? min : minRange;
             maxRange = (max > maxRange) ? max : maxRange;
         }
 
-        public FzSet AddLeftShoulderSet(string name, double minBound, double peak, double maxBound) {
-            
+        public FzSet AddLeftShoulderSet(string name, float minBound, float peak, float maxBound) {
+            memberSets.Add(name, new LeftShoulderFuzzySet(peak, peak - minBound, maxBound - peak));
+            adjustRangeToFit(minBound,maxBound);
+            return new FzSet(memberSets[name]);
         }
 
-        public void Fuzzify(float value) {
+        public FzSet AddRightShoulderSet(string name, float minBound, float peak, float maxBound) {
+            memberSets.Add(name, new RightShoulderFuzzySet(peak, peak - minBound, maxBound - peak));
+            adjustRangeToFit(minBound, maxBound);
+            return new FzSet(memberSets[name]);
+        }
 
+        public FzSet AddTriangularSet(string name, float minBound, float peak, float maxBound) {
+            memberSets.Add(name, new TriangleFuzzySet(peak, peak - minBound, maxBound - peak));
+            adjustRangeToFit(minBound, maxBound);
+            return new FzSet(memberSets[name]);
+        }
+
+
+        public void Fuzzify(float value) {
+            if (value > maxRange || value < minRange) {
+                throw new ArgumentOutOfRangeException();
+            }
+
+            foreach (FuzzySet set in memberSets.Values) {
+                set.SetDOM(set.CalculateDOM(value));
+            }
+        }
+
+        public float DeFuzzifyMaxAv() {
+            float bottom = 0.0f;
+            float top = 0.0f;
+
+            foreach (FuzzySet set in memberSets.Values) {
+                bottom += set.GetDOM();
+                top += set.GetRepresentativeVal() * set.GetDOM();
+            }
+
+            //Do not divide by zero
+            if (bottom.Equals(0.0f)) {
+                return 0.0f;
+            }
+
+            return top / bottom;
         }
     }
 
