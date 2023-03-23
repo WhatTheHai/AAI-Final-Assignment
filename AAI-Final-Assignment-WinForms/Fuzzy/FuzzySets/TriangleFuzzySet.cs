@@ -15,33 +15,33 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy.FuzzySets
 
     public class TriangleFuzzySet : FuzzySet
     {
-        private float peakPoint;
-        private float leftPoint;
-        private float rightPoint;
+        private float peak;
+        private float leftOffset;
+        private float rightOffset;
 
         public TriangleFuzzySet(float mid, float left, float right) : base(mid)
         {
-            peakPoint = mid;
-            leftPoint = left;
-            rightPoint = right;
+            peak = mid;
+            leftOffset = left;
+            rightOffset = right;
         }
 
         public override float CalculateDOM(float value)
         {
             // check for divide by zero's   todo: wat gebeured hier? 
-            if ((rightPoint == 0f && peakPoint == value) || (leftPoint == 0f && peakPoint == value)) return 1.0f;
+            if ((rightOffset == 0f && peak == value) || (leftOffset == 0f && peak == value)) return 1.0f;
 
             // get dom left 
-            if (value <= peakPoint && value >= (peakPoint - leftPoint))
+            if (value <= peak && value >= (peak - leftOffset))
             {
-                float grad = 1.0f / leftPoint;
-                return grad * (value - (peakPoint - leftPoint));
+                float grad = 1.0f / leftOffset;
+                return grad * (value - (peak - leftOffset));
             }
 
-            if (value > peakPoint && value < (peakPoint + rightPoint))
+            if (value > peak && value < (peak + rightOffset))
             {
-                float grad = 1.0f / rightPoint;
-                return grad * (value - peakPoint) + 1f;
+                float grad = 1.0f / rightOffset;
+                return grad * (value - peak) + 1f;
             }
 
             return 0.0f;

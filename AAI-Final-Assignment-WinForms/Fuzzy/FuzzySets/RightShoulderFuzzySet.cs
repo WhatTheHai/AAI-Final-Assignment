@@ -15,9 +15,9 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy.FuzzySets
 
     public class RightShoulderFuzzySet : FuzzySet
     {
-        private float peakPoint;
-        private float leftPoint;
-        private float rightPoint;
+        private float peak;
+        private float leftOffset;
+        private float rightOffset;
 
         public RightShoulderFuzzySet(float peak, float left, float right) : base(((peak + right) + peak) / 2)
         {
@@ -26,16 +26,16 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy.FuzzySets
         public override float CalculateDOM(float value)
         {
             // check for offset 0 
-            if ((rightPoint == 0f && peakPoint == value) || (leftPoint == 0f && peakPoint == value)) return 1.0f;
+            if ((rightOffset == 0f && peak == value) || (leftOffset == 0f && peak == value)) return 1.0f;
 
-            if ((value <= peakPoint) && (value > (peakPoint - leftPoint)))
+            if ((value <= peak) && (value > (peak - leftOffset)))
             {
-                float grad = 1.0f / leftPoint;
+                float grad = 1.0f / leftOffset;
 
-                return grad * (value - (peakPoint - leftPoint));
+                return grad * (value - (peak - leftOffset));
             }
 
-            if ((value > peakPoint) && (value <= peakPoint + rightPoint))
+            if ((value > peak) && (value <= peak + rightOffset))
             {
                 return 1.0f;
             }
