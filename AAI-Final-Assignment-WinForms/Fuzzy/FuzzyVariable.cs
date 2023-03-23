@@ -20,7 +20,7 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy
             minRange = maxRange = 0;
         }
 
-        private void adjustRangeToFit(float min, float max) {
+        private void AdjustRangeToFit(float min, float max) {
             minRange = (min < minRange) ? min : minRange;
             maxRange = (max > maxRange) ? max : maxRange;
         }
