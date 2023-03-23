@@ -8,28 +8,31 @@ using AAI_Final_Assignment_WinForms.Fuzzy.FuzzyTerms;
 
 namespace AAI_Final_Assignment_WinForms.Fuzzy
 {
-    public class FuzzyVariable {
+    public class FuzzyVariable
+    {
         private Dictionary<string, FuzzySet> memberSets;
         private float minRange;
         private float maxRange;
 
-        public FuzzyVariable() {
+        public FuzzyVariable()
+        {
             memberSets = new Dictionary<string, FuzzySet>();
             minRange = maxRange = 0;
         }
 
-        public void AdjustRangeToFit(float min, float max) {
+        public void AdjustRangeToFit(float min, float max)
+        {
             minRange = (min < minRange) ? min : minRange;
             maxRange = (max > maxRange) ? max : maxRange;
         }
 
-        public FzSet AddLeftShoulderSet(string name, double minBound, double peak, double maxBound) {
-            
+        public FzSet AddLeftShoulderSet(string name, double minBound, double peak, double maxBound)
+        {
+            return null;
         }
 
-        public void Fuzzify(float value) {
-
+        public void Fuzzify(float value)
+        {
         }
     }
-
 }

@@ -23,10 +23,15 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy.FuzzyTerms
             terms.Add(t3);
         }
 
+        AndFuzzyTerm(AndFuzzyTerm term)
+        {
+            this.terms = term.terms;
+        }
+
 
         public override FuzzyTerm Clone()
         {
-            throw new NotImplementedException();
+            return new AndFuzzyTerm(this);
         }
 
         public override float GetDOM()
@@ -42,12 +47,18 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy.FuzzyTerms
 
         public override void ClearDom()
         {
-            throw new NotImplementedException();
+            foreach (FuzzyTerm t in terms)
+            {
+                t.ClearDom();
+            }
         }
 
         public override void ORwithDOM(float value)
         {
-            throw new NotImplementedException();
+            foreach (FuzzyTerm t in terms)
+            {
+                t.ORwithDOM(value);
+            }
         }
     }
 }
