@@ -8,7 +8,7 @@ using AAI_Final_Assignment_WinForms.Fuzzy.FuzzyTerms;
 namespace AAI_Final_Assignment_WinForms.Fuzzy
 {
     public class FuzzyModule {
-        private Dictionary<string, FuzzyVariable> variables;
+        public Dictionary<string, FuzzyVariable> variables; // public for tests.
         private List<FuzzyRule> rules;
 
         public FuzzyModule() {

@@ -30,8 +30,8 @@ namespace Test
 
             // create sets
 
-            FzSet targetClose = distToTarget.AddLeftShoulderSet("TargetClose", 0, 25, 150);
-            FzSet targetMedium = distToTarget.AddTriangularSet("TargetMedium", 25, 150, 300);
+            FzSet targetClose = distToTarget.AddLeftShoulderSet("TargetClose", 0, 25, 150); // 0.0f ok
+            FzSet targetMedium = distToTarget.AddTriangularSet("TargetMedium", 25, 150, 300); // 
             FzSet targetFar = distToTarget.AddRightShoulderSet("TargetFar", 150, 300, 500);
 
             FzSet ammoLow = ammoStatus.AddTriangularSet("AmmoLow", 0, 0, 10);
@@ -58,14 +58,27 @@ namespace Test
         [Test]
         public void Logic()
         {
-           testModule.Fuzzify("DistanceToTarget", 200);
-           testModule.Fuzzify("AmmoStatus", 8);
+            testModule.Fuzzify("DistanceToTarget", 200);
+            testModule.Fuzzify("AmmoStatus", 8);
 
-           // av 
-           var result = testModule.DeFuzzify("Desirability");
+            // av 
+            var result = testModule.DeFuzzify("Desirability");
 
-           Assert.AreEqual(0.67 , result);
+            Assert.AreEqual(0.67, result);
+        }
 
+        [Test]
+        public void Fuzzify()
+        {
+            LeftShoulderFuzzySet close = new LeftShoulderFuzzySet(25, 25 - 0, 150 - 25);
+            TriangleFuzzySet medium = new TriangleFuzzySet(150, 150 - 25, 300 - 150);
+            RightShoulderFuzzySet far = new RightShoulderFuzzySet(300, 300 - 150, 500 - 300);
+
+            var closeC = close.CalculateDOM(200);
+            var mediumC = medium.CalculateDOM(200);
+            var farC = far.CalculateDOM(200);
+            // todo: waarom fuzzify fout...
+            var r1 = 0;
         }
     }
 }

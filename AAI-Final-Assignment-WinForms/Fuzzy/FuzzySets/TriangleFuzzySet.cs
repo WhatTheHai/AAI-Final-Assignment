@@ -40,7 +40,7 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy.FuzzySets
 
             if (value > peak && value < (peak + rightOffset))
             {
-                float grad = 1.0f / rightOffset;
+                float grad = 1.0f / -rightOffset;
                 return grad * (value - peak) + 1f;
             }
 

@@ -18,8 +18,12 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy.FuzzySets
         private float leftOffset;
         private float rightOffset;
 
+        // todo: representative value?????? 
         public LeftShoulderFuzzySet(float peak, float left, float right) : base((((peak - left) + peak) / 2))
         {
+            this.peak = peak;
+            this.leftOffset = left;
+            this.rightOffset = right;
         }
 
         public override float CalculateDOM(float value)
@@ -27,7 +31,7 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy.FuzzySets
             // check for offset 0 
             if ((rightOffset == 0f && peak == value) || (leftOffset == 0f && peak == value)) return 1.0f;
 
-            if ((value >= peak) && (value < (peak - rightOffset)))
+            if ((value >= peak) && (value < (peak + rightOffset)))
             {
                 float grad = 1.0f / -rightOffset;
 

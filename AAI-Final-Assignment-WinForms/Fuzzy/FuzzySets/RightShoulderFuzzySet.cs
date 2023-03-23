@@ -21,6 +21,9 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy.FuzzySets
 
         public RightShoulderFuzzySet(float peak, float left, float right) : base(((peak + right) + peak) / 2)
         {
+            this.peak = peak;
+            this.leftOffset = left;
+            this.rightOffset = right;
         }
 
         public override float CalculateDOM(float value)
