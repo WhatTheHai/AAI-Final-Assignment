@@ -27,19 +27,19 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy
 
         public FzSet AddLeftShoulderSet(string name, float minBound, float peak, float maxBound) {
             memberSets.Add(name, new LeftShoulderFuzzySet(peak, peak - minBound, maxBound - peak));
-            adjustRangeToFit(minBound,maxBound);
+            AdjustRangeToFit(minBound,maxBound);
             return new FzSet(memberSets[name]);
         }
 
         public FzSet AddRightShoulderSet(string name, float minBound, float peak, float maxBound) {
             memberSets.Add(name, new RightShoulderFuzzySet(peak, peak - minBound, maxBound - peak));
-            adjustRangeToFit(minBound, maxBound);
+            AdjustRangeToFit(minBound, maxBound);
             return new FzSet(memberSets[name]);
         }
 
         public FzSet AddTriangularSet(string name, float minBound, float peak, float maxBound) {
             memberSets.Add(name, new TriangleFuzzySet(peak, peak - minBound, maxBound - peak));
-            adjustRangeToFit(minBound, maxBound);
+            AdjustRangeToFit(minBound, maxBound);
             return new FzSet(memberSets[name]);
         }
 
