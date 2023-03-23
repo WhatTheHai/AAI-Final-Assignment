@@ -18,7 +18,7 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy.FuzzySets
         private float leftPoint;
         private float rightPoint;
 
-        public LeftShoulderFuzzySet(float peak, float left, float right) : base(((peak + right) / 2))
+        public LeftShoulderFuzzySet(float peak, float left, float right) : base((((peak - left) + peak) / 2))
         {
         }
 
