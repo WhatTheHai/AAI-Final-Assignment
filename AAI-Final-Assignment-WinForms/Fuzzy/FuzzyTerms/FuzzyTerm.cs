@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AAI_Final_Assignment_WinForms.Fuzzy
+namespace AAI_Final_Assignment_WinForms.Fuzzy.FuzzyTerms
 {
-    public abstract class FuzzyTerm {
+    public abstract class FuzzyTerm
+    {
+        protected List<FuzzyTerm> terms = new List<FuzzyTerm>();
         public abstract FuzzyTerm Clone();
 
         public abstract float GetDOM();
