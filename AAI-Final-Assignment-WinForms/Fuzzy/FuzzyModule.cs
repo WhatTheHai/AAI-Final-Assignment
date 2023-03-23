@@ -42,9 +42,7 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy
                     rule.SetConfidenceOfConsequentToZero();
                     rule.Calculate();
                 }
-                //TODO: Add this
-                //return fuzzyVariable.DeFuzzifyMaxAv();
-                return 0.0f;
+                return fuzzyVariable.DeFuzzifyMaxAv();
             }
             return 0.0f;
         }
