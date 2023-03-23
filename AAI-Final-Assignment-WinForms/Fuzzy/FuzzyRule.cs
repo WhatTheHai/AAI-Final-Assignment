@@ -14,5 +14,13 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy
             this.antecedent = antecedent.Clone();
             this.consequence = consequence.Clone();
         }
+
+        public void SetConfidenceOfConsequentToZero() {
+            consequence.ClearDom();
+        }
+
+        public void Calculate() {
+            consequence.ORwithDOM(antecedent.GetDOM());
+        }
     }
 }
