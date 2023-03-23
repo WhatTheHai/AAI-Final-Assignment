@@ -239,8 +239,8 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
             Vector2D wanderTarget = ME.Heading.Clone();
             //Create a random displacement vector and add it to the wander target
-            //Ensure the double number is between -1 and 1
-            Vector2D displacement = new Vector2D((float)rand.NextDouble() * 2 - 1, (float)rand.NextDouble() * 2 - 1);
+            //Ensure the float number is between -1 and 1
+            Vector2D displacement = new Vector2D(rand.NextSingle() * 2 - 1, rand.NextSingle() * 2 - 1);
             displacement.Multiply(wanderJitter);
             displacement.Normalize();
             displacement.Multiply(wanderDistance);
@@ -251,7 +251,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             targetLocal.Normalize().Multiply(wanderRadius);
 
             // Rotate the target vector by a random angle
-            float angle = (float)rand.NextDouble() * (float)Math.PI * 2;
+            float angle = rand.NextSingle() * (float)Math.PI * 2;
 
             // Perform a rotation using a rotation matrix
             Vector2D targetWorld = new Vector2D(

@@ -15,9 +15,9 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy
             RepresentativeValue = representativeValue;
         }
 
-        public abstract double CalculateDOM(float value);
+        public abstract float CalculateDOM(float value);
 
-        public abstract double ORwithDOM(float value);
+        public abstract float ORwithDOM(float value);
 
 
     }

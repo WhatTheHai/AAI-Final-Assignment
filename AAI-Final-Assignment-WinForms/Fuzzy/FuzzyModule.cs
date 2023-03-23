@@ -15,19 +15,27 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy
             rules = new List<FuzzyRule>();
         }
 
+        //Creates a new "empty" fuzzy variable and returns a reference to it
         public FuzzyVariable CreateFLV(string name) {
-            return null;
+            FuzzyVariable fuzzyVariable = new FuzzyVariable();
+            variables.Add(name, fuzzyVariable);
+            return fuzzyVariable;
         }
 
-        public void AddRule(FuzzyRule antecedent, FuzzyTerm consequence) {
-            
+        //Adds a rule to the module
+        public void AddRule(FuzzyTerm antecedent, FuzzyTerm consequence) {
+            rules.Add(new FuzzyRule(antecedent, consequence));
         }
 
+        //This method calls the Fuzzify method of the named FLV
         public void Fuzzify(string nameOfFlv, float value) {
-
+            if (variables.ContainsKey(nameOfFlv)) {
+                variables[nameOfFlv].Fuzzify(value);
+            }
         }
 
-        public double DeFuzzify(string key) {
+        //Given a fuzzy variable and a defuzzification method this returns a crisp value.
+        public float DeFuzzify(string key) {
             return 0;
         }
     }

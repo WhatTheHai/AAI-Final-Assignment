@@ -8,5 +8,10 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy
 {
     public class FuzzyVariable
     {
+        
+        public void Fuzzify(float value) {
+
+        }
     }
+
 }
