@@ -36,7 +36,16 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy
 
         //Given a fuzzy variable and a defuzzification method this returns a crisp value.
         public float DeFuzzify(string key) {
-            return 0;
+            if (variables.TryGetValue(key, out FuzzyVariable fuzzyVariable)) {
+                foreach (FuzzyRule rule in rules) {
+                    rule.SetConfidenceOfConsequentToZero();
+                    rule.Calculate();
+                }
+                //TODO: Add this
+                //return fuzzyVariable.DeFuzzifyMaxAv();
+                return 0.0f;
+            }
+            return 0.0f;
         }
     }
 }
