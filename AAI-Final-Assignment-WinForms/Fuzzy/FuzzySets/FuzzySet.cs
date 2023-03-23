@@ -19,9 +19,13 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy.FuzzySets
 
         public abstract float CalculateDOM(float value);
 
-        public void ClearDOM()
-        {
-            DOM = 0.0f;
+        public void ORwithDOM(float value) {
+            DOM = (value > DOM) ? value : DOM;
         }
+
+        public float GetRepresentativeVal() { return representativeValue; }
+        public float GetDOM() { return DOM; }
+        public void SetDOM(float value) { DOM = value; }
+        public void ClearDOM() { DOM = 0.0f; }
     }
 }
