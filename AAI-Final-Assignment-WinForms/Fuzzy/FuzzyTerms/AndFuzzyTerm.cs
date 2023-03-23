@@ -8,22 +8,22 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy.FuzzyTerms
 {
     public class AndFuzzyTerm : FuzzyTerm
     {
-        AndFuzzyTerm(FuzzyTerm t1)
+        public AndFuzzyTerm(FuzzyTerm t1)
         {
             terms.Add(t1);
         }
 
-        AndFuzzyTerm(FuzzyTerm t1, FuzzyTerm t2) : this(t1)
+        public AndFuzzyTerm(FuzzyTerm t1, FuzzyTerm t2) : this(t1)
         {
             terms.Add(t2);
         }
 
-        AndFuzzyTerm(FuzzyTerm t1, FuzzyTerm t2, FuzzyTerm t3) : this(t1, t2)
+        public AndFuzzyTerm(FuzzyTerm t1, FuzzyTerm t2, FuzzyTerm t3) : this(t1, t2)
         {
             terms.Add(t3);
         }
 
-        AndFuzzyTerm(AndFuzzyTerm term)
+        public AndFuzzyTerm(AndFuzzyTerm term)
         {
             this.terms = term.terms;
         }
