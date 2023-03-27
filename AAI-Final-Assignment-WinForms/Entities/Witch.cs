@@ -47,11 +47,11 @@ namespace AAI_Final_Assignment_WinForms.Entities
             {
                 if (gotHit == false && entity is Enemy enemyEntity)
                 {
-                    if (enemyEntity.Pos.Distance(Pos) < entity.Radius + Radius) {
+                    if (Health > 0 && enemyEntity.Pos.Distance(Pos) < entity.Radius + Radius) {
                         // Witch takes damage
                         gotHit = true;
                         hitTimer.Enabled = true;
-                        Health -= 25;
+                        Health -= ((Enemy)entity).Damage;
                     }
                 }
                 else if (entity is ItemSpawn item && item.Pos.Clone().Sub(Pos).Length() < item.Radius + Radius)
@@ -108,12 +108,15 @@ namespace AAI_Final_Assignment_WinForms.Entities
         }
 
         public override void Update(float timeElapsed) {
+            if (Health <= 0) {
+                World.MovingEntities.Remove(this);
+            }
             if (World.GameGraph.MovePath != null && World.GameGraph.MovePath.Count > 0)
             {
                 // Get the first vertex of the move path
                 Vector2D firstVector = World.GameGraph.MovePath.First().Clone();
                 // If the witch is close enough to the first vertex, remove it from the move path
-                if (firstVector.Clone().Sub(Pos).Length() < 2)
+                if (firstVector.Clone().Sub(Pos).Length() < 4)
                 {
                     World.GameGraph.MovePath.RemoveAt(0);
                     return;
@@ -132,7 +135,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 {
                     // Otherwise, normalize the direction vector and calculate the velocity vector
                     direction.Normalize();
-                    Velocity = direction.Multiply(4);
+                    Velocity = direction.Multiply(6);
                 }
 
                 // Update the position of the witch

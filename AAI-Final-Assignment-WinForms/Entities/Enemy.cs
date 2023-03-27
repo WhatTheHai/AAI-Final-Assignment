@@ -14,6 +14,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
     {
         public Color Color { get; set; }
         public Goal MainGoal { get; set; }
+        public int Damage { get; set; } = 10;
 
         public Enemy(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight, float mass,
             float maxSpeed, float maxForce, float radius) : base(pos, world, scale, textureWidth,
