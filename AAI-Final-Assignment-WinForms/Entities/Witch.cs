@@ -26,7 +26,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
         {
             Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\Wizard.png"),
                 new Size(TextureWidth, TextureHeight));
-            MaxHealth = Health = 500;
+            MaxHealth = Health = 100;
 
             shootTimer.Elapsed += OnShootTimerElapsed;
             shootTimer.AutoReset = true;
