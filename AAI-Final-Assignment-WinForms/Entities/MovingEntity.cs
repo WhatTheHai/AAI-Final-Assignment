@@ -174,6 +174,13 @@ namespace AAI_Final_Assignment_WinForms.Entities
             g.FillRectangle(Brushes.Green, healthBarX, healthBarY, healthBarCurrentWidth, healthBarHeight);
             // Border of the health bar
             g.DrawRectangle(Pens.Black, healthBarX, healthBarY, healthBarMaxWidth, healthBarHeight);
+
+            // Show the current health value as text on top of the health bar
+            Font font = new Font("Arial", 10);
+            string healthText = string.Format("{0}/{1}", Health, MaxHealth);
+            SizeF textSize = g.MeasureString(healthText, font);
+            PointF textPos = new PointF(healthBarX + healthBarWidth / 2 - textSize.Width / 2, healthBarY - textSize.Height);
+            g.DrawString(healthText, font, Brushes.Black, textPos);
         }
 
         protected void RenderForceArrows(Graphics g)
