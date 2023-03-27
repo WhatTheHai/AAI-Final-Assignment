@@ -18,7 +18,7 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy.FuzzySets
         private float leftOffset;
         private float rightOffset;
 
-        // todo: representative value?????? 
+        
         public LeftShoulderFuzzySet(float peak, float left, float right) : base((((peak - left) + peak) / 2))
         {
             this.peak = peak;

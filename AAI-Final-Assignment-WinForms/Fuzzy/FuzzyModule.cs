@@ -7,43 +7,58 @@ using AAI_Final_Assignment_WinForms.Fuzzy.FuzzyTerms;
 
 namespace AAI_Final_Assignment_WinForms.Fuzzy
 {
-    public class FuzzyModule {
+    public class FuzzyModule
+    {
         public Dictionary<string, FuzzyVariable> variables; // public for tests.
-        private List<FuzzyRule> rules;
+        public List<FuzzyRule> rules; // public for test
 
-        public FuzzyModule() {
+        public FuzzyModule()
+        {
             variables = new Dictionary<string, FuzzyVariable>();
             rules = new List<FuzzyRule>();
         }
 
         //Creates a new "empty" fuzzy variable and returns a reference to it
-        public FuzzyVariable CreateFLV(string name) {
+        public FuzzyVariable CreateFLV(string name)
+        {
             FuzzyVariable fuzzyVariable = new FuzzyVariable();
             variables.Add(name, fuzzyVariable);
             return fuzzyVariable;
         }
 
         //Adds a rule to the module
-        public void AddRule(FuzzyTerm antecedent, FuzzyTerm consequence) {
+        public void AddRule(FuzzyTerm antecedent, FuzzyTerm consequence)
+        {
             rules.Add(new FuzzyRule(antecedent, consequence));
         }
 
         //This method calls the Fuzzify method of the named FLV
-        public void Fuzzify(string nameOfFlv, float value) {
-            if (variables.ContainsKey(nameOfFlv)) {
+        public void Fuzzify(string nameOfFlv, float value)
+        {
+            if (variables.ContainsKey(nameOfFlv))
+            {
                 variables[nameOfFlv].Fuzzify(value);
             }
         }
 
         //Given a fuzzy variable and a defuzzification method this returns a crisp value.
-        public float DeFuzzify(string key) {
-            if (variables.TryGetValue(key, out FuzzyVariable fuzzyVariable)) {
-                foreach (FuzzyRule rule in rules) {
+        public float DeFuzzify(string key)
+        {
+            if (variables.TryGetValue(key, out FuzzyVariable fuzzyVariable))
+            {
+                foreach (FuzzyRule rule in rules)
+                {
                     rule.SetConfidenceOfConsequentToZero();
+                }
+
+                foreach (FuzzyRule rule in rules)
+                {
                     rule.Calculate();
                 }
+
                 return fuzzyVariable.DeFuzzifyMaxAv();
             }
+
             return 0.0f;
         }
     }
