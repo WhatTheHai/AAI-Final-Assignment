@@ -108,9 +108,6 @@ namespace AAI_Final_Assignment_WinForms.Entities
         }
 
         public override void Update(float timeElapsed) {
-            if (Health <= 0) {
-                World.MovingEntities.Remove(this);
-            }
             if (World.GameGraph.MovePath != null && World.GameGraph.MovePath.Count > 0)
             {
                 // Get the first vertex of the move path
