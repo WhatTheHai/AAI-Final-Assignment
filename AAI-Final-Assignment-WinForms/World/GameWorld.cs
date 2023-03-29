@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using AAI_Final_Assignment_WinForms.Behaviour;
 using AAI_Final_Assignment_WinForms.Entities;
+using AAI_Final_Assignment_WinForms.Fuzzy;
 using AAI_Final_Assignment_WinForms.Goals;
 using AAI_Final_Assignment_WinForms.util;
 
@@ -49,6 +50,8 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public readonly Random Rand;
 
+        public EnemyModule EnemyModule;
+
         // game world class
         // the game world class contains all the data and objects pertinent to the environment like: walls, obstacles, agents etc...
 
@@ -65,6 +68,7 @@ namespace AAI_Final_Assignment_WinForms.World
             Items = new List<BaseGameEntity>();
             Projectiles = new List<BaseGameEntity>();
             BackgroundImages = new List<Bitmap>();
+            EnemyModule = new EnemyModule();
 
 
             for (int i = 1; i < 9; i++)
@@ -213,13 +217,22 @@ namespace AAI_Final_Assignment_WinForms.World
 
             while (currentAmount != amount)
             {
-                Enemy t = new Enemy(new Vector2D(800, 800), this, 1, 50, 50, Rand.Next(50,100), Rand.Next(5,10), Rand.Next(40,60), Rand.NextSingle() * (10 - 20) + 20);
-                if (t.CheckAnyCollisions(staticEntities))
+                Enemy enemy = new Enemy(new Vector2D(800, 800), this, 1, 50, 50, Rand.Next(1,100), Rand.Next(1,20), 3, Rand.NextSingle() * (10 - 20) + 20);
+                DetermineDamage(enemy);
+                if (enemy.CheckAnyCollisions(staticEntities))
                 {
-                    MovingEntities.Add(t);
+                    MovingEntities.Add(enemy);
                     currentAmount++;
                 }
             }
+        }
+
+        private void DetermineDamage(Enemy enemy) {
+            EnemyModule.FuzzyEnemyModule.Fuzzify("Speed", enemy.MaxSpeed);
+            EnemyModule.FuzzyEnemyModule.Fuzzify("Massa", enemy.Mass);
+            
+            float damage = EnemyModule.FuzzyEnemyModule.DeFuzzify("DamageDealt");
+            enemy.Damage = (int)Math.Ceiling(damage);
         }
 
         private void SpawnItems(int amount)
