@@ -116,10 +116,9 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         /// <returns>The seeking force</returns>
         public Vector2D CalculateSeek()
         {
+
             Vector2D mePos = ME.Pos.Clone();
-            Vector2D targetPos = ME.CurrentTarget.Pos.Clone(); // todo: possible null?
-            //Vector2D targetPos = ME.World.Witch.Pos.Clone();
-            //Vector2D desiredVelocity = targetPos.Sub(mePos).Normalize().Multiply(ME.MaxSpeed);
+            Vector2D targetPos = ME.CurrentTarget.Pos.Clone();
             Vector2D desiredVelocity = targetPos.Sub(mePos);
             desiredVelocity.Normalize();
             desiredVelocity.Multiply(ME.MaxSpeed);
@@ -159,7 +158,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         /// <returns>The arriving force</returns>
         public Vector2D CalculateArrive()
         {
-            const float deceleration = 175;
+            const float deceleration = 500;
 
 
             Vector2D mePos = ME.Pos.Clone();

@@ -36,9 +36,9 @@ namespace AAI_Final_Assignment_WinForms.Entities
         }
 
         public void DetermineColor() {
+            //Max mass is 100
             int redValue = (int)Math.Ceiling(255 * (Mass / 100));
-
-            Color = Color.FromArgb(255, redValue, 0, 0);
+            Color = Color.FromArgb(255, Math.Clamp(redValue, 0, 255), 0, 0);
         }
 
         public override void Update(float timeElapsed)
