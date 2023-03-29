@@ -25,10 +25,10 @@ namespace AAI_Final_Assignment_WinForms.Entities
         public float MaxForce { get; set; }
 
         //Hitpoints
-        public double MaxHealth { get; set; }
+        public float MaxHealth { get; set; }
 
         //Current Health
-        public double Health { get; set; }
+        public float Health { get; set; }
 
         public BaseGameEntity? CurrentTarget { get; set; }
 
@@ -165,7 +165,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             int healthBarMaxWidth = healthBarWidth;
 
             // Calculate the width of the health bar based on the object's health
-            double healthPercent = Health / MaxHealth;
+            float healthPercent = Health / MaxHealth;
             int healthBarCurrentWidth = (int)(healthPercent * healthBarMaxWidth);
 
             // Background of the health bar

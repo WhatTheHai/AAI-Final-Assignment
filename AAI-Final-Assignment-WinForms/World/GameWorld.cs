@@ -185,33 +185,9 @@ namespace AAI_Final_Assignment_WinForms.World
         /// </summary>
         private void Populate()
         {
-            // for (int i = 0; i < 10; i++)
-            // {
-            //     Enemy t = new Enemy(new Vector2D(100, 100 + (i * 100)), this, 1, 50, 50, 50, 5, 10000); // 50 5 100000
-            //     MovingEntities.Add(t);
-            // }
             SpawnObstacles(20);
             SpawnItems(10);
-
             SpawnEnemies(5);
-
-/*            Circle o = new Circle(new Vector2D(200, 250), this, 2, 25, 25, 60);
-            StaticEntities.Add(o);
-            //
-            Circle o2 = new Circle(new Vector2D(350, 400), this, 2, 25, 25, 60);
-            StaticEntities.Add(o2);
-            // //
-            Circle o3 = new Circle(new Vector2D(200, 350), this, 2, 25, 25, 60);
-            StaticEntities.Add(o3);
-            // //
-            Circle o4 = new Circle(new Vector2D(300, 250), this, 2, 25, 25, 60);
-            StaticEntities.Add(o4);*/
-            // //
-            // Circle o5 = new Circle(new Vector2D(600, 350), this, 2, 60, 50, 50);
-            // StaticEntities.Add(o5);
-            //
-            // Circle o6 = new Circle(new Vector2D(400, 200), this, 2, 12, 50, 50);
-            // StaticEntities.Add(o6);
         }
 
         private void SpawnObstacles(int amount) 
