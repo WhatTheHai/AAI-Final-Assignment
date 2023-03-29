@@ -22,7 +22,6 @@ namespace AAI_Final_Assignment_WinForms.Entities
             mass, maxSpeed,
             maxForce, radius)
         {
-            Color = Color.DarkOrchid;
             SteeringBehaviour.Arrive = false;
             SteeringBehaviour.Seek = false;
             SteeringBehaviour.ObstacleAvoidance = true;
@@ -32,6 +31,14 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
             Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\sharkboy.png"),
                 new Size(TextureWidth, TextureHeight));
+
+            DetermineColor();
+        }
+
+        public void DetermineColor() {
+            int redValue = (int)Math.Ceiling(255 * (Mass / 100));
+
+            Color = Color.FromArgb(255, redValue, 0, 0);
         }
 
         public override void Update(float timeElapsed)
@@ -45,9 +52,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
             base.Update(timeElapsed);
         }
 
-        public override void Render(Graphics g)
-        {
-            g.DrawEllipse(new Pen(Color.Red, 3),
+        public override void Render(Graphics g) {
+            g.DrawEllipse(new Pen(Color, 3),
                 new Rectangle((int)Pos.X - (int)Radius, (int)Pos.Y - (int)Radius, (int)Radius * 2, (int)Radius * 2));
 
             Font drawFont = new Font("Arial", 10);
