@@ -40,9 +40,11 @@ namespace AAI_Final_Assignment_WinForms.Goals
 
                 if (currentGoal != null)
                 {
-                    while ((currentGoal.GoalStatus == GoalStatusType.Completed ||
-                            currentGoal.GoalStatus == GoalStatusType.Failed) && SubGoalsStack.Count > 0 &&
-                           currentGoal != null)
+                    while (
+                        currentGoal != null &&
+                        (currentGoal.GoalStatus == GoalStatusType.Completed ||
+                         currentGoal.GoalStatus == GoalStatusType.Failed) &&
+                        SubGoalsStack.Count > 0)
                     {
                         SubGoalsStack.Pop().Deactivate();
                         if (SubGoalsStack.Count > 0)
