@@ -83,7 +83,7 @@ namespace AAI_Final_Assignment_WinForms.World
 
             Width = w;
             Height = h;
-            
+
             SpawnWitch();
             Populate();
             GameGraph = new Graph.Graph(this);
@@ -105,7 +105,7 @@ namespace AAI_Final_Assignment_WinForms.World
                 SpawnItems(10);
 
             if (!MovingEntities.Any())
-                SpawnEnemies(5);
+                SpawnEnemies(10);
 
             if (Witch.IsDead())
                 SpawnWitch();
@@ -114,11 +114,14 @@ namespace AAI_Final_Assignment_WinForms.World
             Witch.CheckWithinRange(MEandItems);
         }
 
-        public void SpawnWitch() {
-            if (Witch == null) {
+        public void SpawnWitch()
+        {
+            if (Witch == null)
+            {
                 Witch = new Witch(new Vector2D(10, 10), this, 2, 50, 50, 50, 5, 55, 25);
             }
-            else {
+            else
+            {
                 Witch.Pos = new Vector2D(10, 10);
                 Witch.Health = Witch.MaxHealth;
             }
@@ -208,7 +211,7 @@ namespace AAI_Final_Assignment_WinForms.World
         {
             SpawnObstacles(20);
             SpawnItems(10);
-            SpawnEnemies(5);
+            SpawnEnemies(50);
         }
 
         private void SpawnObstacles(int amount)
@@ -235,8 +238,9 @@ namespace AAI_Final_Assignment_WinForms.World
 
             while (currentAmount != amount)
             {
-                Enemy enemy = new Enemy(new Vector2D(800, 800), this, 1, 50, 50, Rand.Next(10, 100), Rand.Next(1, 20),
-                    50, Rand.NextSingle() * (10 - 20) + 20);
+                Enemy enemy = new Enemy(new Vector2D(Rand.Next(0, Width), Rand.Next(0, Height)), this, 1, 50, 50,
+                    Rand.Next(10, 100), Rand.Next(1, 20),
+                    50, Rand.NextSingle() * (10 - 20) + 20, Rand.Next(180, 220));
                 DetermineDamage(enemy);
                 if (enemy.CheckAnyCollisions(staticEntities))
                 {

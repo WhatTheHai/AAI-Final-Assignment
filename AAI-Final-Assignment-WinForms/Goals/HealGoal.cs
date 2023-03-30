@@ -5,23 +5,23 @@ using System.Text;
 using System.Threading.Tasks;
 using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.Goals.Abstracts;
-using AAI_Final_Assignment_WinForms.Goals.Enums;
 
 namespace AAI_Final_Assignment_WinForms.Goals
 {
-    public class MoveToItemGoal : CompositeGoal
+    public class HealGoal : CompositeGoal
     {
-        public MoveToItemGoal(Enemy entity) : base(entity)
+        public HealGoal(Enemy entity) : base(entity)
         {
-            Name = "MovingToItem";
+            Name = "Healing";
         }
 
         public override void Activate()
         {
-            SetActive();
             SubGoalsStack.Clear();
-            SubGoalsStack.Push(new SeekItemGoal(Owner));
-            SubGoalsStack.Push(new SelectItemGoal(Owner));
+            SubGoalsStack.Push(new MoveToItemGoal(Owner));
+            SubGoalsStack.Push(new FleeGoal(Owner));
+            SetActive();
         }
+
     }
 }

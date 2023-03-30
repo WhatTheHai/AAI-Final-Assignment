@@ -52,7 +52,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             if (Flee)
             {
                 CurrentForce = CalculateFlee();
-                //if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
+                if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
             }
 
             if (Seek)

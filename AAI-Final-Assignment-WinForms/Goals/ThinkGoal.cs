@@ -10,61 +10,56 @@ namespace AAI_Final_Assignment_WinForms.Goals
     /// <summary>
     /// This is the brain of the moving entity and can never be deactivated.
     /// current choices are:
-    ///     ThinkingGoal(composite): 
-    ///         MoveToItemGoal(composite): selectItemGoal(atomic) + seekItemGoal(atomic)
-    ///     -->    WanderGoal(atomic?): update to composite...
-    ///         AttackGoal(composite): SelectWitchAsTargetGoal(atomic) + SeekTargetGoal(atomic)
+    ///     ThinkingGoal(composite): attacking/healing/resting
+    ///             AttackGoal(composite): SelectWitchAsTargetGoal(atomic) + SeekTargetGoal(atomic) add stamina cost.. when to attack?
+    ///             HealGoal(composite): Flee(atomic) + selectItemGoal(atomic):closest? + seekItemGoal(atomic)
+    ///             RestGoal(composite): Flee(atomic) + RegenStamina(atomic) : wander and regen stamina  
+    /// 
+    ///        
+    /// 
+    ///         
     ///
     ///
     ///         // maybe when full hp attack when lower get item while first fleeing?
-    ///         //  when to wander? maybe at spawn till in range? check range to mainchar 
+    ///         //  when to wander? maybe at spawn till in range? check range to mainchar
+    ///         // flee(till out of range) then go to closest point to heal?
+    ///  
     /// </summary>
     public class ThinkGoal : CompositeGoal
     {
-        public ThinkGoal(MovingEntity entity) : base(entity)
+        public ThinkGoal(Enemy entity) : base(entity)
         {
             Name = "Thinking";
         }
 
         public override void Activate()
         {
-            GoalStatus = GoalStatusType.Active;
+            SetActive();
             SubGoalsStack.Clear();
-            // SubGoalsStack.Push(new WanderGoal(Owner));
-            // SubGoalsStack.Push(new SeekTargetGoal(Owner));
-            // SubGoalsStack.Push(new MoveToItemGoal(Owner));
-            // SubGoalsStack.Push(new WanderGoal(Owner));
             SelectNewGoal();
         }
 
 
         public override void Process()
         {
-            if (!IsActive()) Activate();
+            SetActiveIfInactive();
 
-            // check if their is a subgoal to be processed. 
+            // check if their is a subgoal to be processed.  sometimes 0    rewrite 
             if (SubGoalsStack.Count > 0)
             {
                 var currentGoal = SubGoalsStack.Peek();
-
-                if (currentGoal != null)
+                while (
+                    (currentGoal.GoalStatus == GoalStatusType.Completed ||
+                     currentGoal.GoalStatus == GoalStatusType.Failed) &&
+                    SubGoalsStack.Count > 0)
                 {
-                    while (
-                        currentGoal != null &&
-                        (currentGoal.GoalStatus == GoalStatusType.Completed ||
-                         currentGoal.GoalStatus == GoalStatusType.Failed) &&
-                        SubGoalsStack.Count > 0)
+                    SubGoalsStack.Pop().Deactivate();
+                    if (SubGoalsStack.Count > 0)
                     {
-                        SubGoalsStack.Pop().Deactivate();
-                        if (SubGoalsStack.Count > 0)
-                        {
-                            currentGoal = SubGoalsStack.Peek();
-                        }
+                        currentGoal = SubGoalsStack.Peek();
                     }
                 }
 
-                if (SubGoalsStack.Count <= 0 || currentGoal == null) return;
-                currentGoal = SubGoalsStack.Peek();
                 currentGoal.Process();
             }
             else
@@ -83,22 +78,9 @@ namespace AAI_Final_Assignment_WinForms.Goals
         /// </summary>
         private void SelectNewGoal()
         {
-            Random random = new Random();
-            const int numberOfGoals = 3;
-            var number = random.Next(1, (numberOfGoals + 1));
-
-            switch (number)
-            {
-                case 1:
-                    SubGoalsStack.Push(new MoveToItemGoal(Owner));
-                    break;
-                case 2:
-                    SubGoalsStack.Push(new WanderGoal(Owner));
-                    break;
-                case 3:
-                    SubGoalsStack.Push(new AttackGoal(Owner));
-                    break;
-            }
+            if (Owner.HasLowHealth()) SubGoalsStack.Push(new HealGoal(Owner));
+            else if (Owner.HasNoStamina()) SubGoalsStack.Push(new RestGoal(Owner));
+            else SubGoalsStack.Push(new AttackGoal(Owner));
         }
     }
 }

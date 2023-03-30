@@ -12,22 +12,23 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
     {
         protected Stack<Goal> SubGoalsStack { get; set; }
 
-        protected CompositeGoal(MovingEntity entity) : base(entity)
+        protected CompositeGoal(Enemy entity) : base(entity)
         {
             SubGoalsStack = new Stack<Goal>();
         }
 
         public override void Process()
         {
-            if (!IsActive()) Activate();
+            SetActiveIfInactive();
 
-            // check if their is a subgoal to be processed. 
+            // check if their is a subgoal to be processed.  sometimes 0    rewrite 
             if (SubGoalsStack.Count > 0)
             {
                 var currentGoal = SubGoalsStack.Peek();
-
-                while ((currentGoal.GoalStatus == GoalStatusType.Completed ||
-                        currentGoal.GoalStatus == GoalStatusType.Failed) && SubGoalsStack.Count > 0)
+                while (
+                    (currentGoal.GoalStatus == GoalStatusType.Completed ||
+                     currentGoal.GoalStatus == GoalStatusType.Failed) &&
+                    SubGoalsStack.Count > 0)
                 {
                     SubGoalsStack.Pop().Deactivate();
                     if (SubGoalsStack.Count > 0)
@@ -36,14 +37,17 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
                     }
                 }
 
-                if (SubGoalsStack.Count <= 0) return;
-                currentGoal = SubGoalsStack.Peek();
                 currentGoal.Process();
             }
             else
             {
-                GoalStatus = GoalStatusType.Completed;
+                Deactivate();
             }
+        }
+
+        public override void Deactivate()
+        {
+            SetComplete();
         }
 
 
