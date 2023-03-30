@@ -9,10 +9,10 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
     public abstract class Goal
     {
         public string Name { get; set; }
-        protected MovingEntity Owner { get; set; }
+        protected Enemy Owner { get; set; }
         public GoalStatusType GoalStatus { get; set; }
 
-        protected Goal(MovingEntity entity)
+        protected Goal(Enemy entity)
         {
             Name = "";
             Owner = entity;
@@ -24,11 +24,26 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
         public abstract void Deactivate();
         public abstract string Display();
 
-        public bool IsActive()
+        public void SetActive()
         {
-            return GoalStatus == GoalStatusType.Active;
+            GoalStatus = GoalStatusType.Active;
         }
 
-        // activate if not active maken? 
+        public void SetComplete()
+        {
+            GoalStatus = GoalStatusType.Completed;
+        }
+
+        public void SetFailed()
+        {
+            GoalStatus = GoalStatusType.Failed;
+        }
+
+        public void SetActiveIfInactive()
+        {
+            if (GoalStatus == GoalStatusType.Inactive) Activate();
+        }
+
+
     }
 }

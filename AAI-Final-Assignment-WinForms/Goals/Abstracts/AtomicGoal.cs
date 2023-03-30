@@ -13,10 +13,7 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
     /// </summary>
     public abstract class AtomicGoal : Goal
     {
-        protected Timer Timer;
-        protected bool TimerComplete = false;
-
-        protected AtomicGoal(MovingEntity entity) : base(entity)
+        protected AtomicGoal(Enemy entity) : base(entity)
         {
         }
 

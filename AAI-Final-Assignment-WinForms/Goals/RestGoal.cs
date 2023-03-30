@@ -9,19 +9,19 @@ using AAI_Final_Assignment_WinForms.Goals.Enums;
 
 namespace AAI_Final_Assignment_WinForms.Goals
 {
-    public class MoveToItemGoal : CompositeGoal
+    public class RestGoal : CompositeGoal
     {
-        public MoveToItemGoal(Enemy entity) : base(entity)
+        public RestGoal(Enemy entity) : base(entity)
         {
-            Name = "MovingToItem";
+            Name = "Resting";
         }
 
         public override void Activate()
         {
-            SetActive();
             SubGoalsStack.Clear();
-            SubGoalsStack.Push(new SeekItemGoal(Owner));
-            SubGoalsStack.Push(new SelectItemGoal(Owner));
+            SubGoalsStack.Push(new WanderGoal(Owner));
+            SubGoalsStack.Push(new FleeGoal(Owner));
+            SetActive();
         }
     }
 }

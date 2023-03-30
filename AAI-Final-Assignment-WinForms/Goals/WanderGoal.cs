@@ -16,7 +16,9 @@ namespace AAI_Final_Assignment_WinForms.Goals
     /// </summary>
     public class WanderGoal : AtomicGoal
     {
-        public WanderGoal(MovingEntity entity) : base(entity)
+        private const double staminaIncreaseValue = 1.3;
+
+        public WanderGoal(Enemy entity) : base(entity)
         {
             Name = "Wander";
         }
@@ -24,32 +26,22 @@ namespace AAI_Final_Assignment_WinForms.Goals
         public override void Activate()
         {
             Owner.SteeringBehaviour.Wander = true;
-            GoalStatus = GoalStatusType.Active;
-
-            // temp 
-            Timer = new Timer(3000);
-            Timer.Elapsed += TimerOnElapsed;
-            Timer.Enabled = true;
+            SetActive();
         }
 
-        private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
-        {
-            TimerComplete = true;
-        }
 
         public override void Process()
         {
-            if (!IsActive()) Activate();
-            if (TimerComplete)
-            {
-                GoalStatus = GoalStatusType.Completed;
-                Deactivate();
-            }
+            SetActiveIfInactive();
+            Owner.Stamina += 1;
+            if (Owner.HasMaxStamina() || Owner.IsToCloseToTarget(Owner.World.Witch))
+                Deactivate(); // flee when to close 
         }
 
         public override void Deactivate()
         {
             Owner.SteeringBehaviour.Wander = false;
+            SetComplete();
         }
     }
 }

@@ -60,6 +60,9 @@ namespace AAI_Final_Assignment_WinForms.World
         // update world 
         // later : graphs 
 
+
+        // todo: top stack = null? 
+
         public GameWorld(int w, int h)
         {
             Rand = new Random();
@@ -80,7 +83,7 @@ namespace AAI_Final_Assignment_WinForms.World
 
             Width = w;
             Height = h;
-            
+
             SpawnWitch();
             Populate();
             GameGraph = new Graph.Graph(this);
@@ -102,7 +105,7 @@ namespace AAI_Final_Assignment_WinForms.World
                 SpawnItems(10);
 
             if (!MovingEntities.Any())
-                SpawnEnemies(5);
+                SpawnEnemies(10);
 
             if (Witch.IsDead())
                 SpawnWitch();
@@ -111,11 +114,14 @@ namespace AAI_Final_Assignment_WinForms.World
             Witch.CheckWithinRange(MEandItems);
         }
 
-        public void SpawnWitch() {
-            if (Witch == null) {
+        public void SpawnWitch()
+        {
+            if (Witch == null)
+            {
                 Witch = new Witch(new Vector2D(10, 10), this, 2, 50, 50, 50, 5, 55, 25);
             }
-            else {
+            else
+            {
                 Witch.Pos = new Vector2D(10, 10);
                 Witch.Health = Witch.MaxHealth;
             }
@@ -131,7 +137,8 @@ namespace AAI_Final_Assignment_WinForms.World
                 GameGraph.Render(g);
             }
 
-            foreach (var baseGameEntity in MovingEntities.ToArray()) {
+            foreach (var baseGameEntity in MovingEntities.ToArray())
+            {
                 if (baseGameEntity == null) continue;
                 baseGameEntity.Render(g);
             }
@@ -204,16 +211,17 @@ namespace AAI_Final_Assignment_WinForms.World
         {
             SpawnObstacles(20);
             SpawnItems(10);
-            SpawnEnemies(5);
+            SpawnEnemies(50);
         }
 
-        private void SpawnObstacles(int amount) 
+        private void SpawnObstacles(int amount)
         {
             int currentAmount = 0;
 
             while (currentAmount != amount)
             {
-                Circle o1 = new Circle(new Vector2D(Rand.Next(0,Width), Rand.Next(0,Height)), this, 2, 25, 25, Rand.Next(20,70));
+                Circle o1 = new Circle(new Vector2D(Rand.Next(0, Width), Rand.Next(0, Height)), this, 2, 25, 25,
+                    Rand.Next(20, 70));
                 if (o1.CheckAnyCollisions(StaticEntities))
                 {
                     StaticEntities.Add(o1);
@@ -222,15 +230,17 @@ namespace AAI_Final_Assignment_WinForms.World
             }
         }
 
-        private void SpawnEnemies(int amount) 
+        private void SpawnEnemies(int amount)
         {
             int currentAmount = 0;
-            
+
             List<BaseGameEntity> staticEntities = GetStaticEntities();
 
             while (currentAmount != amount)
             {
-                Enemy enemy = new Enemy(new Vector2D(800, 800), this, 1, 50, 50, Rand.Next(10,100), Rand.Next(1,20), 50, Rand.NextSingle() * (10 - 20) + 20);
+                Enemy enemy = new Enemy(new Vector2D(Rand.Next(0, Width), Rand.Next(0, Height)), this, 1, 50, 50,
+                    Rand.Next(10, 100), Rand.Next(1, 20),
+                    50, Rand.NextSingle() * (10 - 20) + 20, Rand.Next(180, 220));
                 DetermineDamage(enemy);
                 if (enemy.CheckAnyCollisions(staticEntities))
                 {
@@ -240,10 +250,11 @@ namespace AAI_Final_Assignment_WinForms.World
             }
         }
 
-        private void DetermineDamage(Enemy enemy) {
+        private void DetermineDamage(Enemy enemy)
+        {
             EnemyModule.FuzzyEnemyModule.Fuzzify("Speed", enemy.MaxSpeed);
             EnemyModule.FuzzyEnemyModule.Fuzzify("Massa", enemy.Mass);
-            
+
             float damage = EnemyModule.FuzzyEnemyModule.DeFuzzify("DamageDealt");
             enemy.Damage = (int)Math.Ceiling(damage);
         }
@@ -272,17 +283,17 @@ namespace AAI_Final_Assignment_WinForms.World
             float x = Width - 150f;
             float y = 10f;
             StringFormat drawFormat = new StringFormat();
+            int margin = 20;
 
             g.DrawString("Key bindings:", drawFont, drawBrush, x, y, drawFormat);
-            g.DrawString("Show Graph  :  G", drawFont, drawBrush, x, (y += 20), drawFormat);
-            g.DrawString("Show Path    :  H", drawFont, drawBrush, x, (y += 20), drawFormat);
-            g.DrawString("Show Forces :  F", drawFont, drawBrush, x, (y += 20), drawFormat);
-            g.DrawString("Show Goals   :  T", drawFont, drawBrush, x, (y += 20), drawFormat);
-
-            
+            g.DrawString("Show Graph  :  G", drawFont, drawBrush, x, (y += margin), drawFormat);
+            g.DrawString("Show Path    :  H", drawFont, drawBrush, x, (y += margin), drawFormat);
+            g.DrawString("Show Forces :  F", drawFont, drawBrush, x, (y += margin), drawFormat);
+            g.DrawString("Show Goals   :  T", drawFont, drawBrush, x, (y += margin), drawFormat);
         }
 
-        private List<BaseGameEntity> GetStaticEntities() {
+        private List<BaseGameEntity> GetStaticEntities()
+        {
             List<BaseGameEntity> allEntities = new List<BaseGameEntity>();
             allEntities.AddRange(StaticEntities);
             allEntities.AddRange(Items);
