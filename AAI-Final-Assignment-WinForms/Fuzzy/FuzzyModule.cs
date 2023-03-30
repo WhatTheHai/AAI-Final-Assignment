@@ -26,6 +26,10 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy
             return fuzzyVariable;
         }
 
+        public FuzzyVariable GetFLV(string name) {
+            return variables.ContainsKey(name) ? variables[name] : null;
+        }
+
         //Adds a rule to the module
         public void AddRule(FuzzyTerm antecedent, FuzzyTerm consequence)
         {

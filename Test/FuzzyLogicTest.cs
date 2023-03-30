@@ -154,7 +154,7 @@ namespace Test
             Assert.AreEqual(25f, result);
 
             
-            //As fast and light as possible -> Should return 0 damage.
+            //As fast and light as possible -> Should return 1 damage.
             enemyModule.FuzzyEnemyModule.Fuzzify("Speed", 20);
             enemyModule.FuzzyEnemyModule.Fuzzify("Massa", 1);
 

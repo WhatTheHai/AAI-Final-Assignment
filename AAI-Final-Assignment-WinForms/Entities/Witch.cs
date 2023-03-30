@@ -43,15 +43,18 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
         public void CheckWithinRange(List<BaseGameEntity> entities)
         {
+            int highestDamage = 0;
+            Enemy highestDamageEnemy = null;
+
             foreach (BaseGameEntity entity in entities)
             {
                 if (gotHit == false && entity is Enemy enemyEntity)
                 {
                     if (Health > 0 && enemyEntity.Pos.Distance(Pos) < entity.Radius + Radius) {
-                        // Witch takes damage
-                        gotHit = true;
-                        hitTimer.Enabled = true;
-                        Health -= ((Enemy)entity).Damage;
+                        if (((Enemy)entity).Damage > highestDamage) {
+                            highestDamageEnemy = (Enemy)entity;
+                            highestDamage = ((Enemy)entity).Damage;
+                        }
                     }
                 }
                 else if (entity is ItemSpawn item && item.Pos.Clone().Sub(Pos).Length() < item.Radius + Radius)
@@ -64,6 +67,17 @@ namespace AAI_Final_Assignment_WinForms.Entities
                     else {
                         Health += (MaxHealth/5);
                     }
+                }
+            }
+
+            if (highestDamageEnemy != null) {
+                gotHit = true;
+                hitTimer.Enabled = true;
+                if (Health - highestDamage <= 0) {
+                    Health = 0;
+                }
+                else {
+                    Health -= highestDamageEnemy.Damage;
                 }
             }
         }

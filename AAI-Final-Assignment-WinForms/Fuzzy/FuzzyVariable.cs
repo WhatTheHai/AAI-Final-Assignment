@@ -25,6 +25,28 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy
             maxRange = (max > maxRange) ? max : maxRange;
         }
 
+        public void AddFzSet(string setName, string setType, float minBound, float peak, float maxBound)
+        {
+            FuzzySet setToAdd;
+            switch (setType)
+            {
+                case "LeftShoulder":
+                    setToAdd = new LeftShoulderFuzzySet(peak, peak - minBound, maxBound - peak);
+                    break;
+                case "RightShoulder":
+                    setToAdd = new RightShoulderFuzzySet(peak, peak - minBound, maxBound - peak);
+                    break;
+                case "Triangular":
+                    setToAdd = new TriangleFuzzySet(peak, peak - minBound, maxBound - peak);
+                    break;
+                default:
+                    throw new ArgumentException("Invalid set type: " + setType);
+            }
+            memberSets.Add(setName, setToAdd);
+            AdjustRangeToFit(minBound, maxBound);
+            //return new FzSet(memberSets[setName]);
+        }
+
         public FzSet AddLeftShoulderSet(string name, float minBound, float peak, float maxBound) {
             memberSets.Add(name, new LeftShoulderFuzzySet(peak, peak - minBound, maxBound - peak));
             AdjustRangeToFit(minBound,maxBound);
@@ -43,6 +65,9 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy
             return new FzSet(memberSets[name]);
         }
 
+        public FzSet GetFzSet(string name) {
+            return memberSets.ContainsKey(name) ? new FzSet(memberSets[name]) : null;
+        }
 
         public void Fuzzify(float value) {
             if (value > maxRange || value < minRange) {
