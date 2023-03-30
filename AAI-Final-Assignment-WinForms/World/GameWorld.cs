@@ -83,8 +83,8 @@ namespace AAI_Final_Assignment_WinForms.World
 
             Width = w;
             Height = h;
-
-            Witch = new Witch(new Vector2D(10, 10), this, 2, 50, 50, 50, 5, 55, 25); // todo: fix 
+            
+            SpawnWitch();
             Populate();
             GameGraph = new Graph.Graph(this);
         }
@@ -107,8 +107,21 @@ namespace AAI_Final_Assignment_WinForms.World
             if (!MovingEntities.Any())
                 SpawnEnemies(5);
 
+            if (Witch.IsDead())
+                SpawnWitch();
+
             Witch.Update(timeElapsed);
             Witch.CheckWithinRange(MEandItems);
+        }
+
+        public void SpawnWitch() {
+            if (Witch == null) {
+                Witch = new Witch(new Vector2D(10, 10), this, 2, 50, 50, 50, 5, 55, 25);
+            }
+            else {
+                Witch.Pos = new Vector2D(10, 10);
+                Witch.Health = Witch.MaxHealth;
+            }
         }
 
         public void Render(Graphics g)

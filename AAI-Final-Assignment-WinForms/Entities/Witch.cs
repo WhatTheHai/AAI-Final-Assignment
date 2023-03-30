@@ -107,6 +107,10 @@ namespace AAI_Final_Assignment_WinForms.Entities
             RenderHp(g);
         }
 
+        public bool IsDead() {
+            return Health <= 0;
+        }
+
         public override void Update(float timeElapsed) {
             if (World.GameGraph.MovePath != null && World.GameGraph.MovePath.Count > 0)
             {
