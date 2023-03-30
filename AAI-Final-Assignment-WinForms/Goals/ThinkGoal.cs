@@ -8,7 +8,16 @@ using AAI_Final_Assignment_WinForms.Goals.Enums;
 namespace AAI_Final_Assignment_WinForms.Goals
 {
     /// <summary>
-    /// This is the brain of the moving entity and can never be deactivated. 
+    /// This is the brain of the moving entity and can never be deactivated.
+    /// current choices are:
+    ///     ThinkingGoal(composite): 
+    ///         MoveToItemGoal(composite): selectItemGoal(atomic) + seekItemGoal(atomic)
+    ///     -->    WanderGoal(atomic?): update to composite...
+    ///         AttackGoal(composite): SelectWitchAsTargetGoal(atomic) + SeekTargetGoal(atomic)
+    ///
+    ///
+    ///         // maybe when full hp attack when lower get item while first fleeing?
+    ///         //  when to wander? maybe at spawn till in range? check range to mainchar 
     /// </summary>
     public class ThinkGoal : CompositeGoal
     {
@@ -69,6 +78,9 @@ namespace AAI_Final_Assignment_WinForms.Goals
             // thinking may not be deactivated else the entity has no brain.
         }
 
+        /// <summary>
+        /// Randomly select what to do next? 
+        /// </summary>
         private void SelectNewGoal()
         {
             Random random = new Random();
