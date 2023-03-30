@@ -27,24 +27,20 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy
 
         public void AddFzSet(string setName, string setType, float minBound, float peak, float maxBound)
         {
-            FuzzySet setToAdd;
             switch (setType)
             {
                 case "LeftShoulder":
-                    setToAdd = new LeftShoulderFuzzySet(peak, peak - minBound, maxBound - peak);
+                    AddLeftShoulderSet(setName, minBound, peak, maxBound);
                     break;
                 case "RightShoulder":
-                    setToAdd = new RightShoulderFuzzySet(peak, peak - minBound, maxBound - peak);
+                    AddRightShoulderSet(setName, minBound, peak, maxBound);
                     break;
                 case "Triangular":
-                    setToAdd = new TriangleFuzzySet(peak, peak - minBound, maxBound - peak);
+                    AddTriangularSet(setName, minBound, peak, maxBound);
                     break;
                 default:
                     throw new ArgumentException("Invalid set type: " + setType);
             }
-            memberSets.Add(setName, setToAdd);
-            AdjustRangeToFit(minBound, maxBound);
-            //return new FzSet(memberSets[setName]);
         }
 
         public FzSet AddLeftShoulderSet(string name, float minBound, float peak, float maxBound) {

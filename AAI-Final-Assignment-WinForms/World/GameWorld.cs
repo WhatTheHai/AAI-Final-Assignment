@@ -253,9 +253,9 @@ namespace AAI_Final_Assignment_WinForms.World
         private void DetermineDamage(Enemy enemy)
         {
             EnemyModule.FuzzyEnemyModule.Fuzzify("Speed", enemy.MaxSpeed);
-            EnemyModule.FuzzyEnemyModule.Fuzzify("Massa", enemy.Mass);
+            EnemyModule.FuzzyEnemyModule.Fuzzify("Mass", enemy.Mass);
 
-            float damage = EnemyModule.FuzzyEnemyModule.DeFuzzify("DamageDealt");
+            float damage = EnemyModule.FuzzyEnemyModule.DeFuzzify("Damage");
             enemy.Damage = (int)Math.Ceiling(damage);
         }
 
