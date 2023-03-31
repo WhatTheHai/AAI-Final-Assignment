@@ -4,6 +4,7 @@ using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.Fuzzy;
 using AAI_Final_Assignment_WinForms.Goals;
 using AAI_Final_Assignment_WinForms.util;
+using Timer = System.Threading.Timer;
 
 namespace AAI_Final_Assignment_WinForms.World
 {
@@ -46,6 +47,11 @@ namespace AAI_Final_Assignment_WinForms.World
         // Height of main panel
         public int Height { get; set; }
         
+        //Timers for score
+        public float ScoreTimer { get; set; }
+
+        public float BestScore { get; set; }
+
         // Fuzzylogic module for the Enemy
         public EnemyModule EnemyModule;
 
@@ -95,8 +101,8 @@ namespace AAI_Final_Assignment_WinForms.World
             GameGraph = new Graph.Graph(this);
         }
 
-        public void Update(float timeElapsed)
-        {
+        public void Update(float timeElapsed) {
+            ScoreTimer += timeElapsed;
             List<BaseGameEntity> MEandItems = GetMEandItems();
             foreach (MovingEntity me in MovingEntities.ToArray())
             {
@@ -114,6 +120,11 @@ namespace AAI_Final_Assignment_WinForms.World
                 SpawnEnemies(amountOfEnemies);
 
             if (Witch.IsDead()) {
+                if (ScoreTimer > BestScore)
+                {
+                    BestScore = ScoreTimer;
+                }
+                ScoreTimer = 0f;
                 RefreshEnemies(amountOfEnemies);
                 SpawnWitch();
             }
@@ -155,6 +166,7 @@ namespace AAI_Final_Assignment_WinForms.World
             Items.ToList().ForEach(o => o.Render(g));
             Witch.Render(g);
             RenderLabels(g);
+            RenderScores(g);
         }
 
         public List<BaseGameEntity> GetMEandItems()
@@ -303,6 +315,14 @@ namespace AAI_Final_Assignment_WinForms.World
             g.DrawString("Show Path    :  H", drawFont, drawBrush, x, (y += margin), drawFormat);
             g.DrawString("Show Forces :  F", drawFont, drawBrush, x, (y += margin), drawFormat);
             g.DrawString("Show Goals   :  T", drawFont, drawBrush, x, (y += margin), drawFormat);
+        }
+
+        private void RenderScores(Graphics g)
+        {
+            string currentScore = $"Current Score: {ScoreTimer/10:0} points";
+            string bestScore = $"Best Score: {BestScore/10:0} points";
+            g.DrawString(currentScore, SystemFonts.DefaultFont, Brushes.White, new PointF(10, 10));
+            g.DrawString(bestScore, SystemFonts.DefaultFont, Brushes.White, new PointF(10, 20));
         }
 
         private List<BaseGameEntity> GetStaticEntities()
