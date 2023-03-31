@@ -53,14 +53,17 @@ namespace AAI_Final_Assignment_WinForms.Goals
                      currentGoal.GoalStatus == GoalStatusType.Failed) &&
                     SubGoalsStack.Count > 0)
                 {
-                    SubGoalsStack.Pop().Deactivate();
+                    SubGoalsStack.Pop();
                     if (SubGoalsStack.Count > 0)
                     {
                         currentGoal = SubGoalsStack.Peek();
                     }
                 }
 
-                currentGoal.Process();
+                if (SubGoalsStack.Count > 0)
+                {
+                    currentGoal.Process();
+                }
             }
             else
             {
@@ -78,7 +81,8 @@ namespace AAI_Final_Assignment_WinForms.Goals
         /// </summary>
         private void SelectNewGoal()
         {
-            if (Owner.HasLowHealth()) SubGoalsStack.Push(new HealGoal(Owner));
+            if (Owner.HasLowHealth())
+                SubGoalsStack.Push(new HealGoal(Owner)); // todo: chance amount of healing for enemy? 
             else if (Owner.HasNoStamina()) SubGoalsStack.Push(new RestGoal(Owner));
             else SubGoalsStack.Push(new AttackGoal(Owner));
         }

@@ -43,7 +43,5 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
         {
             if (GoalStatus == GoalStatusType.Inactive) Activate();
         }
-
-
     }
 }
