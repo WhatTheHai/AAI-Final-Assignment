@@ -263,7 +263,7 @@ namespace AAI_Final_Assignment_WinForms.World
             while (currentAmount != amount)
             {
                 Enemy enemy = new Enemy(new Vector2D(rand.Next(0, Width), rand.Next(0, Height)), this, 1, 50, 50,
-                    rand.Next(10, 100), rand.Next(1, 20),
+                    rand.Next(10, 100), rand.Next(1, 15),
                     50, rand.NextSingle() * (10 - 20) + 20, rand.Next(180, 220));
                 DetermineDamage(enemy);
                 if (enemy.CheckAnyCollisions(staticEntities))
