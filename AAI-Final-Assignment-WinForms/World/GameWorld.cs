@@ -103,6 +103,10 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public void Update(float timeElapsed) {
             ScoreTimer += timeElapsed;
+            //Spawns a new enemy once in a while
+            if ((int)ScoreTimer % 1000 == 0) {
+                SpawnEnemies(1);
+            }
             List<BaseGameEntity> MEandItems = GetMEandItems();
             foreach (MovingEntity me in MovingEntities.ToArray())
             {
