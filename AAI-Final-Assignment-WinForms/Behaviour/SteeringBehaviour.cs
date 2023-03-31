@@ -250,7 +250,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             targetLocal.Normalize().Multiply(wanderRadius);
 
             // Rotate the target vector by a random angle
-            float angle = rand.NextSingle() * (float)Math.PI * 2;
+            float angle = rand.NextSingle() * (float)Math.PI * 0.5f;
 
             // Perform a rotation using a rotation matrix
             Vector2D targetWorld = new Vector2D(
