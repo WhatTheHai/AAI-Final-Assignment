@@ -60,9 +60,9 @@ namespace AAI_Final_Assignment_WinForms.Fuzzy
             // Rules
             foreach (var rule in config.Rules.Values)
             {
-                FzSet antecedent1 = FuzzyEnemyModule.GetFLV("Speed").GetFzSet(rule.Antecedent1);
-                FzSet antecedent2 = FuzzyEnemyModule.GetFLV("Mass").GetFzSet(rule.Antecedent2);
-                FzSet consequent = FuzzyEnemyModule.GetFLV("Damage").GetFzSet(rule.Consequent);
+                FzSet antecedent1 = FuzzyEnemyModule.GetFLV(config.Variables.Keys.First()).GetFzSet(rule.Antecedent1);
+                FzSet antecedent2 = FuzzyEnemyModule.GetFLV(config.Variables.Keys.ElementAt(1)).GetFzSet(rule.Antecedent2);
+                FzSet consequent = FuzzyEnemyModule.GetFLV(config.Variables.Keys.Last()).GetFzSet(rule.Consequent);
                 FuzzyEnemyModule.AddRule(new AndFuzzyTerm(antecedent1, antecedent2), consequent);
             }
         }

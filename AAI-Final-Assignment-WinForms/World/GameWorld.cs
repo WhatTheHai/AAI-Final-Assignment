@@ -45,12 +45,18 @@ namespace AAI_Final_Assignment_WinForms.World
 
         // Height of main panel
         public int Height { get; set; }
+        
+        // Fuzzylogic module for the Enemy
+        public EnemyModule EnemyModule;
 
         public const string PathPrefix = "..\\..\\..\\";
 
-        public readonly Random Rand;
+        private readonly Random rand;
 
-        public EnemyModule EnemyModule;
+        private readonly int amountOfEnemies = 10;
+
+
+        
 
         // game world class
         // the game world class contains all the data and objects pertinent to the environment like: walls, obstacles, agents etc...
@@ -65,7 +71,7 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public GameWorld(int w, int h)
         {
-            Rand = new Random();
+            rand = new Random();
             MovingEntities = new List<BaseGameEntity>();
             StaticEntities = new List<BaseGameEntity>();
             Items = new List<BaseGameEntity>();
@@ -105,10 +111,12 @@ namespace AAI_Final_Assignment_WinForms.World
                 SpawnItems(10);
 
             if (!MovingEntities.Any())
-                SpawnEnemies(10);
+                SpawnEnemies(amountOfEnemies);
 
-            if (Witch.IsDead())
+            if (Witch.IsDead()) {
+                RefreshEnemies(amountOfEnemies);
                 SpawnWitch();
+            }
 
             Witch.Update(timeElapsed);
             Witch.CheckWithinRange(MEandItems);
@@ -211,7 +219,7 @@ namespace AAI_Final_Assignment_WinForms.World
         {
             SpawnObstacles(20);
             SpawnItems(10);
-            SpawnEnemies(50);
+            SpawnEnemies(amountOfEnemies);
         }
 
         private void SpawnObstacles(int amount)
@@ -220,8 +228,8 @@ namespace AAI_Final_Assignment_WinForms.World
 
             while (currentAmount != amount)
             {
-                Circle o1 = new Circle(new Vector2D(Rand.Next(0, Width), Rand.Next(0, Height)), this, 2, 25, 25,
-                    Rand.Next(20, 70));
+                Circle o1 = new Circle(new Vector2D(rand.Next(0, Width), rand.Next(0, Height)), this, 2, 25, 25,
+                    rand.Next(20, 70));
                 if (o1.CheckAnyCollisions(StaticEntities))
                 {
                     StaticEntities.Add(o1);
@@ -238,9 +246,9 @@ namespace AAI_Final_Assignment_WinForms.World
 
             while (currentAmount != amount)
             {
-                Enemy enemy = new Enemy(new Vector2D(Rand.Next(0, Width), Rand.Next(0, Height)), this, 1, 50, 50,
-                    Rand.Next(10, 100), Rand.Next(1, 20),
-                    50, Rand.NextSingle() * (10 - 20) + 20, Rand.Next(180, 220));
+                Enemy enemy = new Enemy(new Vector2D(rand.Next(0, Width), rand.Next(0, Height)), this, 1, 50, 50,
+                    rand.Next(10, 100), rand.Next(1, 20),
+                    50, rand.NextSingle() * (10 - 20) + 20, rand.Next(180, 220));
                 DetermineDamage(enemy);
                 if (enemy.CheckAnyCollisions(staticEntities))
                 {
@@ -248,6 +256,11 @@ namespace AAI_Final_Assignment_WinForms.World
                     currentAmount++;
                 }
             }
+        }
+
+        private void RefreshEnemies(int amount) {
+            MovingEntities = new List<BaseGameEntity>();
+            SpawnEnemies(amount);
         }
 
         private void DetermineDamage(Enemy enemy)
@@ -267,7 +280,7 @@ namespace AAI_Final_Assignment_WinForms.World
 
             while (currentAmount != amount)
             {
-                ItemSpawn i = new ItemSpawn(new Vector2D(Rand.Next(0, Width), Rand.Next(0, Height)), this, 2, 5, 5, 10);
+                ItemSpawn i = new ItemSpawn(new Vector2D(rand.Next(0, Width), rand.Next(0, Height)), this, 2, 5, 5, 10);
                 if (i.CheckAnyCollisions(staticEntities))
                 {
                     Items.Add(i);
