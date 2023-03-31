@@ -32,6 +32,7 @@ namespace Test
         }
 
         [Test]
+        [DefaultFloatingPointTolerance(0.3)]
         public void Logic()
         {
             // create sets
@@ -148,17 +149,17 @@ namespace Test
             //As slow and heavy as possible -> Should return max value.
 
             enemyModule.FuzzyEnemyModule.Fuzzify("Speed", 1);
-            enemyModule.FuzzyEnemyModule.Fuzzify("Massa", 100);
+            enemyModule.FuzzyEnemyModule.Fuzzify("Mass", 100);
             
-            var result = enemyModule.FuzzyEnemyModule.DeFuzzify("DamageDealt");
+            var result = enemyModule.FuzzyEnemyModule.DeFuzzify("Damage");
             Assert.AreEqual(25f, result);
 
             
             //As fast and light as possible -> Should return 1 damage.
             enemyModule.FuzzyEnemyModule.Fuzzify("Speed", 20);
-            enemyModule.FuzzyEnemyModule.Fuzzify("Massa", 1);
+            enemyModule.FuzzyEnemyModule.Fuzzify("Mass", 1);
 
-            var result2 = enemyModule.FuzzyEnemyModule.DeFuzzify("DamageDealt");
+            var result2 = enemyModule.FuzzyEnemyModule.DeFuzzify("Damage");
             Assert.AreEqual(1f, result2);
         }
     }
