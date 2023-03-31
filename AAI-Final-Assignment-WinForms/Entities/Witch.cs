@@ -26,7 +26,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
         {
             Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\Wizard.png"),
                 new Size(TextureWidth, TextureHeight));
-            MaxHealth = Health = 500;
+            MaxHealth = Health = 100;
 
             shootTimer.Elapsed += OnShootTimerElapsed;
             shootTimer.AutoReset = true;
@@ -43,15 +43,18 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
         public void CheckWithinRange(List<BaseGameEntity> entities)
         {
+            int highestDamage = 0;
+            Enemy highestDamageEnemy = null;
+
             foreach (BaseGameEntity entity in entities)
             {
                 if (gotHit == false && entity is Enemy enemyEntity)
                 {
-                    if (enemyEntity.Pos.Distance(Pos) < entity.Radius + Radius) {
-                        // Witch takes damage
-                        gotHit = true;
-                        hitTimer.Enabled = true;
-                        Health -= 25;
+                    if (Health > 0 && enemyEntity.Pos.Distance(Pos) < entity.Radius + Radius) {
+                        if (((Enemy)entity).Damage > highestDamage) {
+                            highestDamageEnemy = (Enemy)entity;
+                            highestDamage = ((Enemy)entity).Damage;
+                        }
                     }
                 }
                 else if (entity is ItemSpawn item && item.Pos.Clone().Sub(Pos).Length() < item.Radius + Radius)
@@ -64,6 +67,17 @@ namespace AAI_Final_Assignment_WinForms.Entities
                     else {
                         Health += (MaxHealth/5);
                     }
+                }
+            }
+
+            if (highestDamageEnemy != null) {
+                gotHit = true;
+                hitTimer.Enabled = true;
+                if (Health - highestDamage <= 0) {
+                    Health = 0;
+                }
+                else {
+                    Health -= highestDamageEnemy.Damage;
                 }
             }
         }
@@ -107,13 +121,17 @@ namespace AAI_Final_Assignment_WinForms.Entities
             RenderHp(g);
         }
 
+        public bool IsDead() {
+            return Health <= 0;
+        }
+
         public override void Update(float timeElapsed) {
             if (World.GameGraph.MovePath != null && World.GameGraph.MovePath.Count > 0)
             {
                 // Get the first vertex of the move path
                 Vector2D firstVector = World.GameGraph.MovePath.First().Clone();
                 // If the witch is close enough to the first vertex, remove it from the move path
-                if (firstVector.Clone().Sub(Pos).Length() < 2)
+                if (firstVector.Clone().Sub(Pos).Length() < 4)
                 {
                     World.GameGraph.MovePath.RemoveAt(0);
                     return;
@@ -132,7 +150,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 {
                     // Otherwise, normalize the direction vector and calculate the velocity vector
                     direction.Normalize();
-                    Velocity = direction.Multiply(4);
+                    Velocity = direction.Multiply(6);
                 }
 
                 // Update the position of the witch

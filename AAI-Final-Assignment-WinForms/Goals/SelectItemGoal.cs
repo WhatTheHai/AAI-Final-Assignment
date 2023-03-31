@@ -11,20 +11,20 @@ namespace AAI_Final_Assignment_WinForms.Goals
 {
     public class SelectItemGoal : AtomicGoal
     {
-        public SelectItemGoal(MovingEntity entity) : base(entity)
+        public SelectItemGoal(Enemy entity) : base(entity)
         {
             Name = "Select Item";
         }
 
         public override void Activate()
         {
-            // een item selecteren 
+            // select an item
             var itemCount = Owner.World.Items.Count;
 
             if (itemCount == 0) GoalStatus = GoalStatusType.Failed;
             else
             {
-                GoalStatus = GoalStatusType.Active;
+                SetActive();
 
                 Random random = new Random();
                 Owner.CurrentTarget = Owner.World.Items[random.Next(itemCount)];
@@ -34,7 +34,7 @@ namespace AAI_Final_Assignment_WinForms.Goals
 
         public override void Process()
         {
-            if (!IsActive()) Activate();
+            SetActiveIfInactive();
           
         }
 

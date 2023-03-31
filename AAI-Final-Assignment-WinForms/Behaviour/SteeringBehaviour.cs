@@ -52,7 +52,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             if (Flee)
             {
                 CurrentForce = CalculateFlee();
-                //if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
+                if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;
             }
 
             if (Seek)
@@ -116,10 +116,9 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         /// <returns>The seeking force</returns>
         public Vector2D CalculateSeek()
         {
+
             Vector2D mePos = ME.Pos.Clone();
-            Vector2D targetPos = ME.CurrentTarget.Pos.Clone(); // todo: possible null?
-            //Vector2D targetPos = ME.World.Witch.Pos.Clone();
-            //Vector2D desiredVelocity = targetPos.Sub(mePos).Normalize().Multiply(ME.MaxSpeed);
+            Vector2D targetPos = ME.CurrentTarget.Pos.Clone();
             Vector2D desiredVelocity = targetPos.Sub(mePos);
             desiredVelocity.Normalize();
             desiredVelocity.Multiply(ME.MaxSpeed);
@@ -159,7 +158,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         /// <returns>The arriving force</returns>
         public Vector2D CalculateArrive()
         {
-            const float deceleration = 175;
+            const float deceleration = 500;
 
 
             Vector2D mePos = ME.Pos.Clone();
@@ -239,8 +238,8 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
 
             Vector2D wanderTarget = ME.Heading.Clone();
             //Create a random displacement vector and add it to the wander target
-            //Ensure the double number is between -1 and 1
-            Vector2D displacement = new Vector2D((float)rand.NextDouble() * 2 - 1, (float)rand.NextDouble() * 2 - 1);
+            //Ensure the float number is between -1 and 1
+            Vector2D displacement = new Vector2D(rand.NextSingle() * 2 - 1, rand.NextSingle() * 2 - 1);
             displacement.Multiply(wanderJitter);
             displacement.Normalize();
             displacement.Multiply(wanderDistance);
@@ -251,7 +250,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
             targetLocal.Normalize().Multiply(wanderRadius);
 
             // Rotate the target vector by a random angle
-            float angle = (float)rand.NextDouble() * (float)Math.PI * 2;
+            float angle = rand.NextSingle() * (float)Math.PI * 2;
 
             // Perform a rotation using a rotation matrix
             Vector2D targetWorld = new Vector2D(

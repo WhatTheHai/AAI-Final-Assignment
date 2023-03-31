@@ -11,42 +11,32 @@ namespace AAI_Final_Assignment_WinForms.Goals
     /// </summary>
     public class SeekTargetGoal : AtomicGoal
     {
-        public SeekTargetGoal(MovingEntity entity) : base(entity)
+        private const double staminaReductionValue = 0.3;
+
+        public SeekTargetGoal(Enemy entity) : base(entity)
         {
             Name = "Seeking witch";
         }
 
         public override void Activate()
         {
-            // what if target disapers or is null? other unit picked up? 
+            // todo:  what if target disapears or is null? other unit picked up? 
             Owner.SteeringBehaviour.Seek = true;
-            GoalStatus = GoalStatusType.Active;
-            Timer = new Timer(7000);
-            Timer.Elapsed += TimerOnElapsed;
-            Timer.Enabled = true;
+            SetActive();
         }
 
-        private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
-        {
-            //  todo: remove 
-            TimerComplete = true;
-        }
 
         public override void Process()
         {
-            if (!IsActive()) Activate();
-
-
-            if (TimerComplete)
-            {
-                GoalStatus = GoalStatusType.Completed;
-                Deactivate();
-            }
+            SetActiveIfInactive();
+            Owner.Stamina -= staminaReductionValue;
+            if (Owner.HasNoStamina() || Owner.HasLowHealth()) Deactivate();
         }
 
         public override void Deactivate()
         {
             Owner.SteeringBehaviour.Seek = false;
+            SetComplete();
         }
     }
 }

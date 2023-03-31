@@ -11,22 +11,18 @@ namespace AAI_Final_Assignment_WinForms.Goals
 {
     public class AttackGoal : CompositeGoal
     {
-        public AttackGoal(MovingEntity entity) : base(entity)
+        public AttackGoal(Enemy entity) : base(entity)
         {
             Name = "Attacking";
         }
 
         public override void Activate()
         {
-            GoalStatus = GoalStatusType.Active;
+            SetActive();
             SubGoalsStack.Clear();
             SubGoalsStack.Push(new SeekTargetGoal(Owner));
             SubGoalsStack.Push(new SelectWitchAsTargetGoal(Owner));
         }
 
-        public override void Deactivate()
-        {
-            //
-        }
     }
 }

@@ -25,10 +25,10 @@ namespace AAI_Final_Assignment_WinForms.Entities
         public float MaxForce { get; set; }
 
         //Hitpoints
-        public double MaxHealth { get; set; }
+        public float MaxHealth { get; set; }
 
         //Current Health
-        public double Health { get; set; }
+        public float Health { get; set; }
 
         public BaseGameEntity? CurrentTarget { get; set; }
 
@@ -165,7 +165,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             int healthBarMaxWidth = healthBarWidth;
 
             // Calculate the width of the health bar based on the object's health
-            double healthPercent = Health / MaxHealth;
+            float healthPercent = Health / MaxHealth;
             int healthBarCurrentWidth = (int)(healthPercent * healthBarMaxWidth);
 
             // Background of the health bar
@@ -174,6 +174,13 @@ namespace AAI_Final_Assignment_WinForms.Entities
             g.FillRectangle(Brushes.Green, healthBarX, healthBarY, healthBarCurrentWidth, healthBarHeight);
             // Border of the health bar
             g.DrawRectangle(Pens.Black, healthBarX, healthBarY, healthBarMaxWidth, healthBarHeight);
+
+            // Show the current health value as text on top of the health bar
+            Font font = new Font("Arial", 10);
+            string healthText = string.Format("{0}/{1}", Health, MaxHealth);
+            SizeF textSize = g.MeasureString(healthText, font);
+            PointF textPos = new PointF(healthBarX + healthBarWidth / 2 - textSize.Width / 2, healthBarY - textSize.Height);
+            g.DrawString(healthText, font, Brushes.Black, textPos);
         }
 
         protected void RenderForceArrows(Graphics g)
@@ -186,6 +193,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentObstacleAvoidance, Color.Red, 3, scale);
             if (SteeringBehaviour.Wander)
                 DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentWander, Color.Green, 3, scale);
+            // todo: Flee 
         }
 
         protected void DrawLineFromEntity(Graphics g, Vector2D start, Vector2D end, Color color, int width, float scale)

@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using AAI_Final_Assignment_WinForms.Behaviour;
 using AAI_Final_Assignment_WinForms.Entities;
+using AAI_Final_Assignment_WinForms.Fuzzy;
 using AAI_Final_Assignment_WinForms.Goals;
 using AAI_Final_Assignment_WinForms.util;
 
@@ -49,6 +50,8 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public readonly Random Rand;
 
+        public EnemyModule EnemyModule;
+
         // game world class
         // the game world class contains all the data and objects pertinent to the environment like: walls, obstacles, agents etc...
 
@@ -56,6 +59,9 @@ namespace AAI_Final_Assignment_WinForms.World
         // render world 
         // update world 
         // later : graphs 
+
+
+        // todo: top stack = null? 
 
         public GameWorld(int w, int h)
         {
@@ -65,6 +71,7 @@ namespace AAI_Final_Assignment_WinForms.World
             Items = new List<BaseGameEntity>();
             Projectiles = new List<BaseGameEntity>();
             BackgroundImages = new List<Bitmap>();
+            EnemyModule = new EnemyModule();
 
 
             for (int i = 1; i < 9; i++)
@@ -77,7 +84,7 @@ namespace AAI_Final_Assignment_WinForms.World
             Width = w;
             Height = h;
 
-            Witch = new Witch(new Vector2D(10, 10), this, 2, 50, 50, 50, 5, 55, 25); // todo: fix 
+            SpawnWitch();
             Populate();
             GameGraph = new Graph.Graph(this);
         }
@@ -98,10 +105,26 @@ namespace AAI_Final_Assignment_WinForms.World
                 SpawnItems(10);
 
             if (!MovingEntities.Any())
-                SpawnEnemies(5);
+                SpawnEnemies(10);
+
+            if (Witch.IsDead())
+                SpawnWitch();
 
             Witch.Update(timeElapsed);
             Witch.CheckWithinRange(MEandItems);
+        }
+
+        public void SpawnWitch()
+        {
+            if (Witch == null)
+            {
+                Witch = new Witch(new Vector2D(10, 10), this, 2, 50, 50, 50, 5, 55, 25);
+            }
+            else
+            {
+                Witch.Pos = new Vector2D(10, 10);
+                Witch.Health = Witch.MaxHealth;
+            }
         }
 
         public void Render(Graphics g)
@@ -114,7 +137,8 @@ namespace AAI_Final_Assignment_WinForms.World
                 GameGraph.Render(g);
             }
 
-            foreach (var baseGameEntity in MovingEntities.ToArray()) {
+            foreach (var baseGameEntity in MovingEntities.ToArray())
+            {
                 if (baseGameEntity == null) continue;
                 baseGameEntity.Render(g);
             }
@@ -185,42 +209,19 @@ namespace AAI_Final_Assignment_WinForms.World
         /// </summary>
         private void Populate()
         {
-            // for (int i = 0; i < 10; i++)
-            // {
-            //     Enemy t = new Enemy(new Vector2D(100, 100 + (i * 100)), this, 1, 50, 50, 50, 5, 10000); // 50 5 100000
-            //     MovingEntities.Add(t);
-            // }
             SpawnObstacles(20);
             SpawnItems(10);
-
-            SpawnEnemies(5);
-
-/*            Circle o = new Circle(new Vector2D(200, 250), this, 2, 25, 25, 60);
-            StaticEntities.Add(o);
-            //
-            Circle o2 = new Circle(new Vector2D(350, 400), this, 2, 25, 25, 60);
-            StaticEntities.Add(o2);
-            // //
-            Circle o3 = new Circle(new Vector2D(200, 350), this, 2, 25, 25, 60);
-            StaticEntities.Add(o3);
-            // //
-            Circle o4 = new Circle(new Vector2D(300, 250), this, 2, 25, 25, 60);
-            StaticEntities.Add(o4);*/
-            // //
-            // Circle o5 = new Circle(new Vector2D(600, 350), this, 2, 60, 50, 50);
-            // StaticEntities.Add(o5);
-            //
-            // Circle o6 = new Circle(new Vector2D(400, 200), this, 2, 12, 50, 50);
-            // StaticEntities.Add(o6);
+            SpawnEnemies(50);
         }
 
-        private void SpawnObstacles(int amount) 
+        private void SpawnObstacles(int amount)
         {
             int currentAmount = 0;
 
             while (currentAmount != amount)
             {
-                Circle o1 = new Circle(new Vector2D(Rand.Next(0,Width), Rand.Next(0,Height)), this, 2, 25, 25, Rand.Next(20,70));
+                Circle o1 = new Circle(new Vector2D(Rand.Next(0, Width), Rand.Next(0, Height)), this, 2, 25, 25,
+                    Rand.Next(20, 70));
                 if (o1.CheckAnyCollisions(StaticEntities))
                 {
                     StaticEntities.Add(o1);
@@ -229,21 +230,33 @@ namespace AAI_Final_Assignment_WinForms.World
             }
         }
 
-        private void SpawnEnemies(int amount) 
+        private void SpawnEnemies(int amount)
         {
             int currentAmount = 0;
-            
+
             List<BaseGameEntity> staticEntities = GetStaticEntities();
 
             while (currentAmount != amount)
             {
-                Enemy t = new Enemy(new Vector2D(800, 800), this, 1, 50, 50, Rand.Next(50,100), Rand.Next(5,10), Rand.Next(40,60), Rand.NextSingle() * (10 - 20) + 20);
-                if (t.CheckAnyCollisions(staticEntities))
+                Enemy enemy = new Enemy(new Vector2D(Rand.Next(0, Width), Rand.Next(0, Height)), this, 1, 50, 50,
+                    Rand.Next(10, 100), Rand.Next(1, 20),
+                    50, Rand.NextSingle() * (10 - 20) + 20, Rand.Next(180, 220));
+                DetermineDamage(enemy);
+                if (enemy.CheckAnyCollisions(staticEntities))
                 {
-                    MovingEntities.Add(t);
+                    MovingEntities.Add(enemy);
                     currentAmount++;
                 }
             }
+        }
+
+        private void DetermineDamage(Enemy enemy)
+        {
+            EnemyModule.FuzzyEnemyModule.Fuzzify("Speed", enemy.MaxSpeed);
+            EnemyModule.FuzzyEnemyModule.Fuzzify("Mass", enemy.Mass);
+
+            float damage = EnemyModule.FuzzyEnemyModule.DeFuzzify("Damage");
+            enemy.Damage = (int)Math.Ceiling(damage);
         }
 
         private void SpawnItems(int amount)
@@ -270,17 +283,17 @@ namespace AAI_Final_Assignment_WinForms.World
             float x = Width - 150f;
             float y = 10f;
             StringFormat drawFormat = new StringFormat();
+            int margin = 20;
 
             g.DrawString("Key bindings:", drawFont, drawBrush, x, y, drawFormat);
-            g.DrawString("Show Graph  :  G", drawFont, drawBrush, x, (y += 20), drawFormat);
-            g.DrawString("Show Path    :  H", drawFont, drawBrush, x, (y += 20), drawFormat);
-            g.DrawString("Show Forces :  F", drawFont, drawBrush, x, (y += 20), drawFormat);
-            g.DrawString("Show Goals   :  T", drawFont, drawBrush, x, (y += 20), drawFormat);
-
-            
+            g.DrawString("Show Graph  :  G", drawFont, drawBrush, x, (y += margin), drawFormat);
+            g.DrawString("Show Path    :  H", drawFont, drawBrush, x, (y += margin), drawFormat);
+            g.DrawString("Show Forces :  F", drawFont, drawBrush, x, (y += margin), drawFormat);
+            g.DrawString("Show Goals   :  T", drawFont, drawBrush, x, (y += margin), drawFormat);
         }
 
-        private List<BaseGameEntity> GetStaticEntities() {
+        private List<BaseGameEntity> GetStaticEntities()
+        {
             List<BaseGameEntity> allEntities = new List<BaseGameEntity>();
             allEntities.AddRange(StaticEntities);
             allEntities.AddRange(Items);
