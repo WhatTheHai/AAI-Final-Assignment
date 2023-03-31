@@ -16,7 +16,7 @@ namespace AAI_Final_Assignment_WinForms.Goals
     /// </summary>
     public class WanderGoal : AtomicGoal
     {
-        private const double staminaIncreaseValue = 1.3;
+        private const double staminaIncreaseValue = 1.0;
 
         public WanderGoal(Enemy entity) : base(entity)
         {
@@ -33,7 +33,7 @@ namespace AAI_Final_Assignment_WinForms.Goals
         public override void Process()
         {
             SetActiveIfInactive();
-            Owner.Stamina += 1;
+            Owner.Stamina += staminaIncreaseValue;
             if (Owner.HasMaxStamina() || Owner.IsToCloseToTarget(Owner.World.Witch))
                 Deactivate(); // flee when to close 
         }

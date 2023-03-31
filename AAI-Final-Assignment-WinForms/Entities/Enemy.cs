@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms.VisualStyles;
-using AAI_Final_Assignment_WinForms.Goals;
+﻿using AAI_Final_Assignment_WinForms.Goals;
 using AAI_Final_Assignment_WinForms.Goals.Abstracts;
 using AAI_Final_Assignment_WinForms.util;
 using AAI_Final_Assignment_WinForms.World;
@@ -40,7 +34,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
             CurrentTarget = World.Witch;
 
             Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\sharkboy.png"),
-                new Size(TextureWidth, TextureHeight));
+                new Size(TextureWidth, TextureHeight)); // todo: not used
 
             DetermineColor();
         }

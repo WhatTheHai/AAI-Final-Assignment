@@ -20,7 +20,7 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
 
         public override string Display()
         {
-            return "    " + Name + " " + GoalStatus;
+            return "  " + Name;
         }
     }
 }

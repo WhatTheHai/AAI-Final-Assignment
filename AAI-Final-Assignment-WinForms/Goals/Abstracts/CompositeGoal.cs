@@ -30,14 +30,17 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
                      currentGoal.GoalStatus == GoalStatusType.Failed) &&
                     SubGoalsStack.Count > 0)
                 {
-                    SubGoalsStack.Pop().Deactivate();
+                    SubGoalsStack.Pop();
                     if (SubGoalsStack.Count > 0)
                     {
                         currentGoal = SubGoalsStack.Peek();
                     }
                 }
 
-                currentGoal.Process();
+                if (SubGoalsStack.Count > 0)
+                {
+                    currentGoal.Process();
+                }
             }
             else
             {
@@ -54,12 +57,12 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
         public override string Display()
         {
             StringBuilder sb = new StringBuilder();
-            sb.Append(Name + " " + GoalStatus + "\n");
+            sb.Append(Name + "\n");
             if (SubGoalsStack.Count > 0)
             {
                 if (SubGoalsStack.Peek() != null)
                 {
-                    sb.Append(SubGoalsStack.Peek().Display());
+                    sb.Append("   " + SubGoalsStack.Peek().Display());
                 }
             }
 
