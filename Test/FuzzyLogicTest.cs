@@ -2,7 +2,6 @@
 using AAI_Final_Assignment_WinForms.Fuzzy.FuzzySets;
 using AAI_Final_Assignment_WinForms.Fuzzy.FuzzyTerms;
 
-
 namespace Test
 {
     public class FuzzyLogicTest

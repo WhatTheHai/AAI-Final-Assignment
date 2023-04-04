@@ -301,6 +301,12 @@ public class Graph : IGraph {
         return null;
     }
 
+    /// <summary>
+    /// Takes two arguments, start and goal vertex and returns a built path. (Only works if the path has been found)
+    /// </summary>
+    /// <param name="startVertex"></param>
+    /// <param name="goalVertex"></param>
+    /// <returns></returns>
     public List<Vector2D> BuildPath(Vertex startVertex, Vertex goalVertex) {
         var path = new List<Vector2D>();
         var current = goalVertex;
