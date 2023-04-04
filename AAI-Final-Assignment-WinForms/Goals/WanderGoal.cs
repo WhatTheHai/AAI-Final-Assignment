@@ -12,7 +12,7 @@ using Timer = System.Timers.Timer;
 namespace AAI_Final_Assignment_WinForms.Goals
 {
     /// <summary>
-    ///  This goal activates the wander behaviour of a moving entity.
+    ///  This goal activates the wander behaviour of a moving entity. while wander it the entity regenerates stamina
     /// </summary>
     public class WanderGoal : AtomicGoal
     {

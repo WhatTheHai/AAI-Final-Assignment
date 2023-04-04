@@ -1,4 +1,4 @@
-﻿using AAI_Final_Assignment_WinForms.Entities;
+using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.util;
 
 namespace AAI_Final_Assignment_WinForms.Behaviour; 
@@ -18,6 +18,12 @@ public class SteeringBehaviour {
     // All steering behaviour that can be enabled
     public bool Seek, Flee, Arrive, ObstacleAvoidance, Wander;
 
+        // All vectors and booleans of the forces used for debugging and printing on screen
+        public Vector2D CurrentObstacleAvoidance = new();
+        public Vector2D CurrentSeek = new();
+        public Vector2D CurrentArrive = new();
+        public Vector2D CurrentWander = new();
+        public Vector2D CurrentFlee = new();
     public SteeringBehaviour(MovingEntity me) {
         ME = me;
     }
@@ -82,20 +88,18 @@ public class SteeringBehaviour {
         else
             TotalForce.Add(forceToAdd.Normalize().Multiply(magnitudeRemaining));
 
-        return true;
-    }
-
-    /// <summary>
-    ///     Calculates the desired force for seeking
-    /// </summary>
-    /// <returns>The seeking force</returns>
-    public Vector2D CalculateSeek() {
-        var mePos = ME.Pos.Clone();
-        var targetPos = ME.CurrentTarget.Pos.Clone();
-        var desiredVelocity = targetPos.Sub(mePos);
-        desiredVelocity.Normalize();
-        desiredVelocity.Multiply(ME.MaxSpeed);
-        desiredVelocity.Sub(ME.Velocity);
+        /// <summary>
+        /// Calculates the desired force for seeking
+        /// </summary>
+        /// <returns>The seeking force</returns>
+        public Vector2D CalculateSeek()
+        {
+            Vector2D mePos = ME.Pos.Clone();
+            Vector2D targetPos = ME.CurrentTarget.Pos.Clone();
+            Vector2D desiredVelocity = targetPos.Sub(mePos);
+            desiredVelocity.Normalize();
+            desiredVelocity.Multiply(ME.MaxSpeed);
+            desiredVelocity.Sub(ME.Velocity);
 
         CurrentSeek = desiredVelocity.Clone();
 
@@ -103,22 +107,52 @@ public class SteeringBehaviour {
     }
 
 
-    /// <summary>
-    ///     Calculates the desired force for fleeing
-    /// </summary>
-    /// <returns>The fleeing force</returns>
-    public Vector2D CalculateFlee() {
-        var panicDistanceSq = 100.0F;
-        var mePos = ME.Pos.Clone();
-        var targetPos = ME.World.Witch.Pos.Clone();
+        // /// <summary>
+        // /// Calculates the desired force for fleeing
+        // /// </summary>
+        // /// <returns>The fleeing force</returns>
+        // public Vector2D CalculateFlee()
+        // {
+        //     // todo: rework... with paniq distance? 
+        //     float panicDistanceSq = 100.0F;
+        //     Vector2D mePos = ME.Pos.Clone();
+        //     Vector2D targetPos = ME.World.Witch.Pos.Clone();
+        //
+        //     //If not in the panic distance, do not flee
+        //     if (mePos.Distance(targetPos) > panicDistanceSq)
+        //     {
+        //         return new Vector2D(0, 0);
+        //     }
+        //
+        //     Vector2D desiredVelocity = mePos.Sub(targetPos).Normalize().Multiply(ME.MaxSpeed);
+        //     CurrentFlee = desiredVelocity.Clone();
+        //
+        //     return desiredVelocity.Sub(ME.Velocity.Clone());
+        // }
 
-        //If not in the panic distance, do not flee
-        if (mePos.Distance(targetPos) > panicDistanceSq) return new Vector2D(0, 0);
+        /// <summary>
+        /// Calculates the desired force for fleeing
+        /// </summary>
+        /// <returns>The fleeing force</returns>
+        public Vector2D CalculateFlee()
+        {
+            Vector2D mePos = ME.Pos.Clone();
+            Vector2D targetPos = ME.CurrentTarget.Pos;
 
-        var desiredVelocity = mePos.Sub(targetPos).Normalize().Multiply(ME.MaxSpeed);
+            if (!Flee)
+            {
+                CurrentFlee = new Vector2D();
+                return new Vector2D();
+            }
 
-        return desiredVelocity.Sub(ME.Velocity.Clone());
-    }
+            Vector2D desiredVelocity = mePos.Sub(targetPos);
+            desiredVelocity.Normalize();
+            desiredVelocity.Multiply(ME.MaxSpeed);
+            desiredVelocity.Sub(ME.Velocity);
+            CurrentFlee = desiredVelocity.Clone();
+
+            return desiredVelocity;
+        }
 
     /// <summary>
     ///     Calculates the desired force for arriving at a target

@@ -1,4 +1,4 @@
-﻿using AAI_Final_Assignment_WinForms.Behaviour;
+using AAI_Final_Assignment_WinForms.Behaviour;
 using AAI_Final_Assignment_WinForms.util;
 using AAI_Final_Assignment_WinForms.World;
 
@@ -60,15 +60,15 @@ public abstract class MovingEntity : BaseGameEntity {
         var steeringForce = SteeringBehaviour.Calculate();
         currentSteeringForce = steeringForce.Clone();
 
-        // acceleratie force/mass 
-        var acceleration = steeringForce.Clone().Divide(Mass);
+            // acceleration force/mass 
+            Vector2D acceleration = steeringForce.Clone().Divide(Mass);
 
         // update velocity
         Velocity.Add(acceleration.Multiply(timeElapsed));
         //Velocity.Add(steeringForce);
 
-        // dont exceed max velocity 
-        Velocity.Truncate(MaxSpeed);
+            // don't exceed max velocity 
+            Velocity.Truncate(MaxSpeed);
 
         // update position 
         Pos.Add(Velocity.Clone().Multiply(timeElapsed));
@@ -163,17 +163,30 @@ public abstract class MovingEntity : BaseGameEntity {
         var textPos = new PointF(healthBarX + healthBarWidth / 2 - textSize.Width / 2, healthBarY - textSize.Height);
         g.DrawString(healthText, font, Brushes.Black, textPos);
     }
+            // Show the current health value as text on top of the health bar
+            Font font = new Font("Arial", 10);
+            string healthText = string.Format("{0}/{1}", Health, MaxHealth);
+            SizeF textSize = g.MeasureString(healthText, font);
+            PointF textPos = new PointF(healthBarX + healthBarWidth / 2 - textSize.Width / 2,
+                healthBarY - textSize.Height);
+            g.DrawString(healthText, font, Brushes.Black, textPos);
+        }
 
-    protected void RenderForceArrows(Graphics g) {
-        var scale = 5.0f;
-        // velocity of entity
-        DrawLineFromEntity(g, Pos, Velocity, Color.Yellow, 3, scale);
-        if (SteeringBehaviour.Seek) DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentSeek, Color.Blue, 3, scale);
-        if (SteeringBehaviour.ObstacleAvoidance)
-            DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentObstacleAvoidance, Color.Red, 3, scale);
-        if (SteeringBehaviour.Wander)
-            DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentWander, Color.Green, 3, scale);
-    }
+                DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentFlee, Color.Orange, 3, scale);
+        protected void RenderForceArrows(Graphics g)
+        {
+            float scale = 5.0f;
+            // velocity of entity
+            DrawLineFromEntity(g, Pos, Velocity, Color.Yellow, 3, scale);
+            if (SteeringBehaviour.Seek) DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentSeek, Color.Blue, 3, scale);
+            if (SteeringBehaviour.ObstacleAvoidance)
+                DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentObstacleAvoidance, Color.Red, 3, scale);
+            if (SteeringBehaviour.Wander)
+                DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentWander, Color.Green, 3, scale);
+            if (SteeringBehaviour.Flee)
+                DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentFlee, Color.Orange, 3, scale);
+            // todo: Flee 
+        }
 
     protected void DrawLineFromEntity(Graphics g, Vector2D start, Vector2D end, Color color, int width, float scale) {
         var scaledEnd = end.Clone().Multiply(scale);

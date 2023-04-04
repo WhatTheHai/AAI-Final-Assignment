@@ -1,8 +1,18 @@
-﻿using AAI_Final_Assignment_WinForms.Entities;
+using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.Goals.Abstracts;
 using AAI_Final_Assignment_WinForms.Goals.Enums;
 
-namespace AAI_Final_Assignment_WinForms.Goals; 
+namespace AAI_Final_Assignment_WinForms.Goals
+{
+    /// <summary>
+    ///  Select a item as target as long as it exists. 
+    /// </summary>
+    public class SelectItemGoal : AtomicGoal
+    {
+        public SelectItemGoal(Enemy entity) : base(entity)
+        {
+            Name = "Select Item";
+        }
 
 public class SelectItemGoal : AtomicGoal {
     public SelectItemGoal(Enemy entity) : base(entity) {

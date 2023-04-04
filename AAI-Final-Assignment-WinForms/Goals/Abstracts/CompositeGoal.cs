@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.Goals.Enums;
 
@@ -17,15 +17,25 @@ public abstract class CompositeGoal : Goal {
     public override void Process() {
         SetActiveIfInactive();
 
-        // check if their is a subgoal to be processed.  sometimes 0    rewrite 
-        if (SubGoalsStack.Count > 0) {
-            var currentGoal = SubGoalsStack.Peek();
-            while (
-                (currentGoal.GoalStatus == GoalStatusType.Completed ||
-                 currentGoal.GoalStatus == GoalStatusType.Failed) &&
-                SubGoalsStack.Count > 0) {
-                SubGoalsStack.Pop();
-                if (SubGoalsStack.Count > 0) currentGoal = SubGoalsStack.Peek();
+            if (SubGoalsStack.Count > 0)
+            {
+                var currentGoal = SubGoalsStack.Peek();
+                while (
+                    (currentGoal.GoalStatus == GoalStatusType.Completed ||
+                     currentGoal.GoalStatus == GoalStatusType.Failed) &&
+                    SubGoalsStack.Count > 0)
+                {
+                    SubGoalsStack.Pop();
+                    if (SubGoalsStack.Count > 0)
+                    {
+                        currentGoal = SubGoalsStack.Peek();
+                    }
+                }
+
+                if (SubGoalsStack.Count > 0)
+                {
+                    currentGoal.Process();
+                }
             }
 
             if (SubGoalsStack.Count > 0) currentGoal.Process();

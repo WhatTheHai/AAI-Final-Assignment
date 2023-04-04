@@ -9,6 +9,9 @@ using AAI_Final_Assignment_WinForms.Goals.Enums;
 
 namespace AAI_Final_Assignment_WinForms.Goals
 {
+    /// <summary>
+    /// Run away from attacker, wander and regen stamina
+    /// </summary>
     public class RestGoal : CompositeGoal
     {
         public RestGoal(Enemy entity) : base(entity)

@@ -1,4 +1,4 @@
-﻿using AAI_Final_Assignment_WinForms.Entities;
+using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.Fuzzy;
 using AAI_Final_Assignment_WinForms.util;
 
@@ -48,6 +48,8 @@ public class GameWorld {
 
     // List of all static entities
     public List<BaseGameEntity> StaticEntities;
+    
+    private readonly int amountOfEnemies = 5;
 
     public GameWorld(int w, int h) {
         rand = new Random();
