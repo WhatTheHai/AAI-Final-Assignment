@@ -1,340 +1,290 @@
-﻿using System.Numerics;
-using AAI_Final_Assignment_WinForms.Behaviour;
-using AAI_Final_Assignment_WinForms.Entities;
+﻿using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.Fuzzy;
-using AAI_Final_Assignment_WinForms.Goals;
 using AAI_Final_Assignment_WinForms.util;
-using Timer = System.Threading.Timer;
 
-namespace AAI_Final_Assignment_WinForms.World
-{
-    public class GameWorld
-    {
-        // List of all moving entities
-        public List<BaseGameEntity> MovingEntities;
+namespace AAI_Final_Assignment_WinForms.World; 
 
-        // List of all static entities
-        public List<BaseGameEntity> StaticEntities;
+public class GameWorld {
+    public const string PathPrefix = "..\\..\\..\\";
 
-        // List of all items
-        public List<BaseGameEntity> Items;
+    private readonly int amountOfEnemies = 10;
 
-        // List of all projectiles
-        public List<BaseGameEntity> Projectiles;
+    private readonly Random rand;
 
-        // Preloaded background images
-        public List<Bitmap> BackgroundImages = new List<Bitmap>();
+    // Place to store the generated background
+    private Bitmap background;
 
-        // Place to store the generated background
-        private Bitmap background;
+    // Preloaded background images
+    public List<Bitmap> BackgroundImages = new();
 
-        // The graph where the characters can move over.
-        public Graph.Graph GameGraph;
-        public bool GraphEnabled = false;
+    // Fuzzylogic module for the Enemy
+    public EnemyModule EnemyModule;
 
-        //show forces
-        public bool ShowForces = false;
+    // The graph where the characters can move over.
+    public Graph.Graph GameGraph;
+    public bool GraphEnabled = false;
 
-        // show goals
-        public bool ShowGoals = false;
+    // List of all items
+    public List<BaseGameEntity> Items;
 
-        // Current controllable entity
-        public Witch Witch { get; set; }
+    // List of all moving entities
+    public List<BaseGameEntity> MovingEntities;
 
-        // Width of main panel 
-        public int Width { get; set; }
+    // List of all projectiles
+    public List<BaseGameEntity> Projectiles;
 
-        // Height of main panel
-        public int Height { get; set; }
-        
-        //Timers for score
-        public float ScoreTimer { get; set; }
+    //show forces
+    public bool ShowForces = false;
 
-        public float BestScore { get; set; }
+    // show goals
+    public bool ShowGoals = false;
 
-        // Fuzzylogic module for the Enemy
-        public EnemyModule EnemyModule;
-
-        public const string PathPrefix = "..\\..\\..\\";
-
-        private readonly Random rand;
-
-        private readonly int amountOfEnemies = 10;
+    // List of all static entities
+    public List<BaseGameEntity> StaticEntities;
 
 
-        
+    // game world class
+    // the game world class contains all the data and objects pertinent to the environment like: walls, obstacles, agents etc...
 
-        // game world class
-        // the game world class contains all the data and objects pertinent to the environment like: walls, obstacles, agents etc...
+    // size/bounds of world 
+    // render world 
+    // update world 
+    // later : graphs 
 
-        // size/bounds of world 
-        // render world 
-        // update world 
-        // later : graphs 
-
-
-        // todo: top stack = null? 
-
-        public GameWorld(int w, int h)
-        {
-            rand = new Random();
-            MovingEntities = new List<BaseGameEntity>();
-            StaticEntities = new List<BaseGameEntity>();
-            Items = new List<BaseGameEntity>();
-            Projectiles = new List<BaseGameEntity>();
-            BackgroundImages = new List<Bitmap>();
-            EnemyModule = new EnemyModule();
+    public GameWorld(int w, int h) {
+        rand = new Random();
+        MovingEntities = new List<BaseGameEntity>();
+        StaticEntities = new List<BaseGameEntity>();
+        Items = new List<BaseGameEntity>();
+        Projectiles = new List<BaseGameEntity>();
+        BackgroundImages = new List<Bitmap>();
+        EnemyModule = new EnemyModule();
 
 
-            for (int i = 1; i < 9; i++)
-            {
-                Image img = Image.FromFile(PathPrefix + $"Sprites\\Floors\\floor_{i}.png");
-                Bitmap bmp = new Bitmap(img, img.Width, img.Height);
-                BackgroundImages.Add(bmp);
-            }
-
-            Width = w;
-            Height = h;
-
-            SpawnWitch();
-            Populate();
-            GameGraph = new Graph.Graph(this);
+        for (var i = 1; i < 9; i++) {
+            var img = Image.FromFile(PathPrefix + $"Sprites\\Floors\\floor_{i}.png");
+            var bmp = new Bitmap(img, img.Width, img.Height);
+            BackgroundImages.Add(bmp);
         }
 
-        public void Update(float timeElapsed) {
-            ScoreTimer += timeElapsed;
-            //Spawns a new enemy once in a while
-            if ((int)ScoreTimer % 1000 == 0) {
-                SpawnEnemies(1);
-            }
-            List<BaseGameEntity> MEandItems = GetMEandItems();
-            foreach (MovingEntity me in MovingEntities.ToArray())
-            {
-                //Prevents crashing
-                if (me == null) continue;
-                me.Update(timeElapsed);
-                me.CheckCollisions(MEandItems);
-                Boundary(me);
-            }
+        Width = w;
+        Height = h;
 
-            if (!Items.Any())
-                SpawnItems(10);
+        SpawnWitch();
+        Populate();
+        GameGraph = new Graph.Graph(this);
+    }
 
-            if (!MovingEntities.Any())
-                SpawnEnemies(amountOfEnemies);
+    // Current controllable entity
+    public Witch Witch { get; set; }
 
-            if (Witch.IsDead()) {
-                if (ScoreTimer > BestScore)
-                {
-                    BestScore = ScoreTimer;
-                }
-                ScoreTimer = 0f;
-                RefreshEnemies(amountOfEnemies);
-                SpawnWitch();
-            }
+    // Width of main panel 
+    public int Width { get; set; }
 
-            Witch.Update(timeElapsed);
-            Witch.CheckWithinRange(MEandItems);
+    // Height of main panel
+    public int Height { get; set; }
+
+    //Timers for score
+    public float ScoreTimer { get; set; }
+
+    public float BestScore { get; set; }
+
+    public void Update(float timeElapsed) {
+        ScoreTimer += timeElapsed;
+        //Spawns a new enemy once in a while
+        if ((int)ScoreTimer % 1000 == 0) SpawnEnemies(1);
+        var MEandItems = GetMEandItems();
+        foreach (MovingEntity me in MovingEntities.ToArray()) {
+            //Prevents crashing
+            if (me == null) continue;
+            me.Update(timeElapsed);
+            me.CheckCollisions(MEandItems);
+            Boundary(me);
         }
 
-        public void SpawnWitch()
-        {
-            if (Witch == null)
-            {
-                Witch = new Witch(new Vector2D(10, 10), this, 2, 50, 50, 50, 5, 55, 25);
-            }
-            else
-            {
-                Witch.Pos = new Vector2D(10, 10);
-                Witch.Health = Witch.MaxHealth;
-            }
-        }
-
-        public void Render(Graphics g)
-        {
-            // Render priority 
-            // Background -> Graph -> Entities -> Main Character
-            RenderBackground(g);
-            if (GraphEnabled)
-            {
-                GameGraph.Render(g);
-            }
-
-            foreach (var baseGameEntity in MovingEntities.ToArray())
-            {
-                if (baseGameEntity == null) continue;
-                baseGameEntity.Render(g);
-            }
-
-            StaticEntities.ForEach(o => o.Render(g));
-            Items.ToList().ForEach(o => o.Render(g));
-            Witch.Render(g);
-            RenderLabels(g);
-            RenderScores(g);
-        }
-
-        public List<BaseGameEntity> GetMEandItems()
-        {
-            List<BaseGameEntity> allEntities = new List<BaseGameEntity>(MovingEntities.Count + Items.Count);
-            allEntities.AddRange(MovingEntities);
-            allEntities.AddRange(Items);
-            return allEntities;
-        }
-
-        public void SpawnProjectile(Vector2D pos, Vector2D heading)
-        {
-            Projectile projectile = new Projectile(pos.Clone(), this, 1, 10, 10, 0, 5, 5, 3, heading);
-            MovingEntities.Add(projectile);
-        }
-
-        public void RenderBackground(Graphics g)
-        {
-            if (background == null) // generate the background only once
-            {
-                Random Rand = new Random();
-                background = new Bitmap(Width, Height);
-                Graphics bg = Graphics.FromImage(background);
-                for (int x = 0; x < Width; x += BackgroundImages[0].Width)
-                {
-                    for (int y = 0; y < Height; y += BackgroundImages[0].Height)
-                    {
-                        Bitmap floor;
-                        //Make floor0 more common
-                        floor = Rand.Next(0, 3) == 0
-                            ? BackgroundImages[Rand.Next(BackgroundImages.Count)]
-                            : BackgroundImages[0];
-                        bg.DrawImage(floor, x, y);
-                    }
-                }
-            }
-
-            g.DrawImage(background, 0, 0); // render the stored background
-        }
-
-        private void Boundary(MovingEntity entity)
-        {
-            if (entity.Pos.X < 0 || entity.Pos.X > Width)
-            {
-                entity.Velocity.X = -entity.Velocity.X; // Inverts the x velocity to bounce off the left or right edge
-                entity.Pos.X =
-                    Math.Max(0, Math.Min(entity.Pos.X, Width)); // Clamps the position within the screen bounds
-            }
-
-            if (entity.Pos.Y < 0 || entity.Pos.Y > Height)
-            {
-                entity.Velocity.Y = -entity.Velocity.Y; // Same as x velocity, but with the y-axis instead
-                entity.Pos.Y = Math.Max(0, Math.Min(entity.Pos.Y, Height));
-            }
-        }
-
-        /// <summary>
-        /// Spawn all entities and to according list.
-        /// </summary>
-        private void Populate()
-        {
-            SpawnObstacles(20);
+        if (!Items.Any())
             SpawnItems(10);
+
+        if (!MovingEntities.Any())
             SpawnEnemies(amountOfEnemies);
+
+        if (Witch.IsDead()) {
+            if (ScoreTimer > BestScore) BestScore = ScoreTimer;
+            ScoreTimer = 0f;
+            RefreshEnemies(amountOfEnemies);
+            SpawnWitch();
         }
 
-        private void SpawnObstacles(int amount)
-        {
-            int currentAmount = 0;
+        Witch.Update(timeElapsed);
+        Witch.CheckWithinRange(MEandItems);
+    }
 
-            while (currentAmount != amount)
-            {
-                Circle o1 = new Circle(new Vector2D(rand.Next(0, Width), rand.Next(0, Height)), this, 2, 25, 25,
-                    rand.Next(20, 70));
-                if (o1.CheckAnyCollisions(StaticEntities))
-                {
-                    StaticEntities.Add(o1);
-                    currentAmount++;
-                }
+    public void SpawnWitch() {
+        if (Witch == null) {
+            Witch = new Witch(new Vector2D(10, 10), this, 2, 50, 50, 50, 5, 55, 25);
+        }
+        else {
+            Witch.Pos = new Vector2D(10, 10);
+            Witch.Health = Witch.MaxHealth;
+        }
+    }
+
+    public void Render(Graphics g) {
+        // Render priority 
+        // Background -> Graph -> Entities -> Main Character
+        RenderBackground(g);
+        if (GraphEnabled) GameGraph.Render(g);
+
+        foreach (var baseGameEntity in MovingEntities.ToArray()) {
+            if (baseGameEntity == null) continue;
+            baseGameEntity.Render(g);
+        }
+
+        StaticEntities.ForEach(o => o.Render(g));
+        Items.ToList().ForEach(o => o.Render(g));
+        Witch.Render(g);
+        RenderLabels(g);
+        RenderScores(g);
+    }
+
+    public List<BaseGameEntity> GetMEandItems() {
+        var allEntities = new List<BaseGameEntity>(MovingEntities.Count + Items.Count);
+        allEntities.AddRange(MovingEntities);
+        allEntities.AddRange(Items);
+        return allEntities;
+    }
+
+    public void SpawnProjectile(Vector2D pos, Vector2D heading) {
+        var projectile = new Projectile(pos.Clone(), this, 1, 10, 10, 0, 5, 5, 3, heading);
+        MovingEntities.Add(projectile);
+    }
+
+    public void RenderBackground(Graphics g) {
+        if (background == null) // generate the background only once
+        {
+            var Rand = new Random();
+            background = new Bitmap(Width, Height);
+            var bg = Graphics.FromImage(background);
+            for (var x = 0; x < Width; x += BackgroundImages[0].Width)
+            for (var y = 0; y < Height; y += BackgroundImages[0].Height) {
+                Bitmap floor;
+                //Make floor0 more common
+                floor = Rand.Next(0, 3) == 0
+                    ? BackgroundImages[Rand.Next(BackgroundImages.Count)]
+                    : BackgroundImages[0];
+                bg.DrawImage(floor, x, y);
             }
         }
 
-        private void SpawnEnemies(int amount)
-        {
-            int currentAmount = 0;
+        g.DrawImage(background, 0, 0); // render the stored background
+    }
 
-            List<BaseGameEntity> staticEntities = GetStaticEntities();
+    private void Boundary(MovingEntity entity) {
+        if (entity.Pos.X < 0 || entity.Pos.X > Width) {
+            entity.Velocity.X = -entity.Velocity.X; // Inverts the x velocity to bounce off the left or right edge
+            entity.Pos.X =
+                Math.Max(0, Math.Min(entity.Pos.X, Width)); // Clamps the position within the screen bounds
+        }
 
-            while (currentAmount != amount)
-            {
-                Enemy enemy = new Enemy(new Vector2D(rand.Next(0, Width), rand.Next(0, Height)), this, 1, 50, 50,
-                    rand.Next(10, 100), rand.Next(1, 15),
-                    50, rand.NextSingle() * (10 - 20) + 20, rand.Next(180, 220));
-                DetermineDamage(enemy);
-                if (enemy.CheckAnyCollisions(staticEntities))
-                {
-                    MovingEntities.Add(enemy);
-                    currentAmount++;
-                }
+        if (entity.Pos.Y < 0 || entity.Pos.Y > Height) {
+            entity.Velocity.Y = -entity.Velocity.Y; // Same as x velocity, but with the y-axis instead
+            entity.Pos.Y = Math.Max(0, Math.Min(entity.Pos.Y, Height));
+        }
+    }
+
+    /// <summary>
+    ///     Spawn all entities and to according list.
+    /// </summary>
+    private void Populate() {
+        SpawnObstacles(20);
+        SpawnItems(10);
+        SpawnEnemies(amountOfEnemies);
+    }
+
+    private void SpawnObstacles(int amount) {
+        var currentAmount = 0;
+
+        while (currentAmount != amount) {
+            var o1 = new Circle(new Vector2D(rand.Next(0, Width), rand.Next(0, Height)), this, 2, 25, 25,
+                rand.Next(20, 70));
+            if (o1.CheckAnyCollisions(StaticEntities)) {
+                StaticEntities.Add(o1);
+                currentAmount++;
             }
         }
+    }
 
-        private void RefreshEnemies(int amount) {
-            MovingEntities = new List<BaseGameEntity>();
-            SpawnEnemies(amount);
-        }
+    private void SpawnEnemies(int amount) {
+        var currentAmount = 0;
 
-        private void DetermineDamage(Enemy enemy)
-        {
-            EnemyModule.FuzzyEnemyModule.Fuzzify("Speed", enemy.MaxSpeed);
-            EnemyModule.FuzzyEnemyModule.Fuzzify("Mass", enemy.Mass);
+        var staticEntities = GetStaticEntities();
 
-            float damage = EnemyModule.FuzzyEnemyModule.DeFuzzify("Damage");
-            enemy.Damage = (int)Math.Ceiling(damage);
-        }
-
-        private void SpawnItems(int amount)
-        {
-            int currentAmount = 0;
-
-            List<BaseGameEntity> staticEntities = GetStaticEntities();
-
-            while (currentAmount != amount)
-            {
-                ItemSpawn i = new ItemSpawn(new Vector2D(rand.Next(0, Width), rand.Next(0, Height)), this, 2, 5, 5, 10);
-                if (i.CheckAnyCollisions(staticEntities))
-                {
-                    Items.Add(i);
-                    currentAmount++;
-                }
+        while (currentAmount != amount) {
+            var enemy = new Enemy(new Vector2D(rand.Next(0, Width), rand.Next(0, Height)), this, 1, 50, 50,
+                rand.Next(10, 100), rand.Next(1, 15),
+                50, rand.NextSingle() * (10 - 20) + 20, rand.Next(180, 220));
+            DetermineDamage(enemy);
+            if (enemy.CheckAnyCollisions(staticEntities)) {
+                MovingEntities.Add(enemy);
+                currentAmount++;
             }
         }
+    }
 
-        private void RenderLabels(Graphics g)
-        {
-            Font drawFont = new Font("Arial", 10);
-            SolidBrush drawBrush = new SolidBrush(Color.Yellow);
-            float x = Width - 150f;
-            float y = 10f;
-            StringFormat drawFormat = new StringFormat();
-            int margin = 20;
+    private void RefreshEnemies(int amount) {
+        MovingEntities = new List<BaseGameEntity>();
+        SpawnEnemies(amount);
+    }
 
-            g.DrawString("Key bindings:", drawFont, drawBrush, x, y, drawFormat);
-            g.DrawString("Show Graph  :  G", drawFont, drawBrush, x, (y += margin), drawFormat);
-            g.DrawString("Show Path    :  H", drawFont, drawBrush, x, (y += margin), drawFormat);
-            g.DrawString("Show Forces :  F", drawFont, drawBrush, x, (y += margin), drawFormat);
-            g.DrawString("Show Goals   :  T", drawFont, drawBrush, x, (y += margin), drawFormat);
+    private void DetermineDamage(Enemy enemy) {
+        EnemyModule.FuzzyEnemyModule.Fuzzify("Speed", enemy.MaxSpeed);
+        EnemyModule.FuzzyEnemyModule.Fuzzify("Mass", enemy.Mass);
+
+        var damage = EnemyModule.FuzzyEnemyModule.DeFuzzify("Damage");
+        enemy.Damage = (int)Math.Ceiling(damage);
+    }
+
+    private void SpawnItems(int amount) {
+        var currentAmount = 0;
+
+        var staticEntities = GetStaticEntities();
+
+        while (currentAmount != amount) {
+            var i = new ItemSpawn(new Vector2D(rand.Next(0, Width), rand.Next(0, Height)), this, 2, 5, 5, 10);
+            if (i.CheckAnyCollisions(staticEntities)) {
+                Items.Add(i);
+                currentAmount++;
+            }
         }
+    }
 
-        private void RenderScores(Graphics g)
-        {
-            string currentScore = $"Current Score: {ScoreTimer/10:0} points";
-            string bestScore = $"Best Score: {BestScore/10:0} points";
-            g.DrawString(currentScore, SystemFonts.DefaultFont, Brushes.White, new PointF(10, 10));
-            g.DrawString(bestScore, SystemFonts.DefaultFont, Brushes.White, new PointF(10, 20));
-        }
+    private void RenderLabels(Graphics g) {
+        var drawFont = new Font("Arial", 10);
+        var drawBrush = new SolidBrush(Color.Yellow);
+        var x = Width - 150f;
+        var y = 10f;
+        var drawFormat = new StringFormat();
+        var margin = 20;
 
-        private List<BaseGameEntity> GetStaticEntities()
-        {
-            List<BaseGameEntity> allEntities = new List<BaseGameEntity>();
-            allEntities.AddRange(StaticEntities);
-            allEntities.AddRange(Items);
+        g.DrawString("Key bindings:", drawFont, drawBrush, x, y, drawFormat);
+        g.DrawString("Show Graph  :  G", drawFont, drawBrush, x, y += margin, drawFormat);
+        g.DrawString("Show Path    :  H", drawFont, drawBrush, x, y += margin, drawFormat);
+        g.DrawString("Show Forces :  F", drawFont, drawBrush, x, y += margin, drawFormat);
+        g.DrawString("Show Goals   :  T", drawFont, drawBrush, x, y += margin, drawFormat);
+    }
 
-            return allEntities;
-        }
+    private void RenderScores(Graphics g) {
+        var currentScore = $"Current Score: {ScoreTimer / 10:0} points";
+        var bestScore = $"Best Score: {BestScore / 10:0} points";
+        g.DrawString(currentScore, SystemFonts.DefaultFont, Brushes.White, new PointF(10, 10));
+        g.DrawString(bestScore, SystemFonts.DefaultFont, Brushes.White, new PointF(10, 20));
+    }
+
+    private List<BaseGameEntity> GetStaticEntities() {
+        var allEntities = new List<BaseGameEntity>();
+        allEntities.AddRange(StaticEntities);
+        allEntities.AddRange(Items);
+
+        return allEntities;
     }
 }

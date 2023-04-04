@@ -5,6 +5,7 @@ using AAI_Final_Assignment_WinForms.Fuzzy.FuzzyTerms;
 
 namespace Test
 {
+    //Requires the right json file in the debug folder!!!!!!!!!
     public class GameModuleTest
     {
         private EnemyModule enemyModule;

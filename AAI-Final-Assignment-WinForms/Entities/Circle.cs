@@ -1,32 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AAI_Final_Assignment_WinForms.util;
+﻿using AAI_Final_Assignment_WinForms.util;
 using AAI_Final_Assignment_WinForms.World;
 
-namespace AAI_Final_Assignment_WinForms.Entities
-{
-    public class Circle : StaticEntity
-    {
-        public Circle(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight,
-            float radius) :
-            base(pos, world, scale, textureWidth, textureHeight, radius)
-        {
-            Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\CAULDRON FILL.png"),
-                new Size(TextureWidth, TextureHeight));
-        }
+namespace AAI_Final_Assignment_WinForms.Entities; 
+
+public class Circle : StaticEntity {
+    public Circle(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight,
+        float radius) :
+        base(pos, world, scale, textureWidth, textureHeight, radius) {
+        Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\CAULDRON FILL.png"),
+            new Size(TextureWidth, TextureHeight));
+    }
 
 
-        public override void Render(Graphics g)
-        {
-            g.FillEllipse(Brushes.Blue, new Rectangle((int)Pos.X, (int)Pos.Y, 3, 3));
-            g.DrawEllipse(new Pen(Color.Purple, 3),
-                new Rectangle((int)Pos.X - (int)Radius, (int)Pos.Y - (int)Radius, (int)Radius * 2, (int)Radius * 2));
-
-            //g.DrawImage(Texture, (int)Center.X - TextureWidth / 2, (int)Center.Y - TextureHeight / 2);
-            //  g.DrawImage(Texture, (int)Pos.X - TextureWidth / 2, (int)Pos.Y - TextureHeight / 2);
-        }
+    public override void Render(Graphics g) {
+        g.FillEllipse(Brushes.Blue, new Rectangle((int)Pos.X, (int)Pos.Y, 3, 3));
+        g.DrawEllipse(new Pen(Color.Purple, 3),
+            new Rectangle((int)Pos.X - (int)Radius, (int)Pos.Y - (int)Radius, (int)Radius * 2, (int)Radius * 2));
     }
 }
