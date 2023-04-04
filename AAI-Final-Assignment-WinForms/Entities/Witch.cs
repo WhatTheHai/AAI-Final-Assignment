@@ -87,8 +87,14 @@ public class Witch : MovingEntity {
     }
 
     public override void Render(Graphics g) {
-        g.FillEllipse(Brushes.Blue,
+        if (Texture == null) {
+            g.FillEllipse(Brushes.Blue,
             new Rectangle((int)Pos.X - (int)Radius, (int)Pos.Y - (int)Radius, (int)Radius * 2, (int)Radius * 2));
+        }
+        else {
+            g.DrawImage(Texture, (int)Pos.X - TextureWidth / 2, (int)Pos.Y - TextureHeight / 2);
+        }
+        
         RenderHp(g);
     }
 

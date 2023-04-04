@@ -116,7 +116,7 @@ public class GameWorld {
 
     public void SpawnWitch() {
         if (Witch == null) {
-            Witch = new Witch(new Vector2D(10, 10), this, 2, 50, 50, 50, 5, 55, 25);
+            Witch = new Witch(new Vector2D(10, 10), this, 2, 25, 25, 50, 5, 55, 25);
         }
         else {
             Witch.Pos = new Vector2D(10, 10);
