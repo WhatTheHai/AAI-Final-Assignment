@@ -41,7 +41,7 @@ public abstract class CompositeGoal : Goal
                 if (SubGoalsStack.Count > 0) currentGoal = SubGoalsStack.Peek();
             }
 
-            if (SubGoalsStack.Count > 0) currentGoal.Process();
+            if (SubGoalsStack.Count > 0 && currentGoal != null) currentGoal.Process();
         
     }
 
