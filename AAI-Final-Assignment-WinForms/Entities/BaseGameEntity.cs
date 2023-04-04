@@ -5,7 +5,6 @@ namespace AAI_Final_Assignment_WinForms.Entities;
 
 public abstract class BaseGameEntity {
     // path prefix for loading sprites etc.
-    public const string PathPrefix = "..\\..\\..\\";
 
     // records the next unique identifier for an entity 
     private static int _nextId;
