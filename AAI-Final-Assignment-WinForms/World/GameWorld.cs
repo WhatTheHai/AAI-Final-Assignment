@@ -103,6 +103,10 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public void Update(float timeElapsed) {
             ScoreTimer += timeElapsed;
+            //Spawns a new enemy once in a while
+            if ((int)ScoreTimer % 1000 == 0) {
+                SpawnEnemies(1);
+            }
             List<BaseGameEntity> MEandItems = GetMEandItems();
             foreach (MovingEntity me in MovingEntities.ToArray())
             {
@@ -179,8 +183,7 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public void SpawnProjectile(Vector2D pos, Vector2D heading)
         {
-            Projectile projectile = new Projectile(pos.Clone(), this, 1, 10, 10, 0, 5, 5, 3);
-            projectile.Heading = heading;
+            Projectile projectile = new Projectile(pos.Clone(), this, 1, 10, 10, 0, 5, 5, 3, heading);
             MovingEntities.Add(projectile);
         }
 
@@ -259,7 +262,7 @@ namespace AAI_Final_Assignment_WinForms.World
             while (currentAmount != amount)
             {
                 Enemy enemy = new Enemy(new Vector2D(rand.Next(0, Width), rand.Next(0, Height)), this, 1, 50, 50,
-                    rand.Next(10, 100), rand.Next(1, 20),
+                    rand.Next(10, 100), rand.Next(1, 15),
                     50, rand.NextSingle() * (10 - 20) + 20, rand.Next(180, 220));
                 DetermineDamage(enemy);
                 if (enemy.CheckAnyCollisions(staticEntities))

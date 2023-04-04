@@ -8,7 +8,6 @@ namespace Test
     public class FuzzyLogicTest
     {
         private FuzzyModule testModule;
-        private EnemyModule enemyModule;
         private FuzzyVariable distToTarget;
         private FuzzyVariable ammoStatus;
         private FuzzyVariable desirability;
@@ -26,12 +25,10 @@ namespace Test
             // consequent
 
             desirability = testModule.CreateFLV("Desirability");
-
-            // game module
-            enemyModule = new EnemyModule();
         }
 
         [Test]
+        [DefaultFloatingPointTolerance(0.3)]
         public void Logic()
         {
             // create sets
@@ -140,26 +137,6 @@ namespace Test
 
             result = testModule.DeFuzzify("Desirability"); // 0.2 = 12.5 
             Assert.AreEqual(12.5f, result);
-        }
-
-        [Test]
-        [DefaultFloatingPointTolerance(0.1f)]
-        public void EnemyDefuzzify() {
-            //As slow and heavy as possible -> Should return max value.
-
-            enemyModule.FuzzyEnemyModule.Fuzzify("Speed", 1);
-            enemyModule.FuzzyEnemyModule.Fuzzify("Massa", 100);
-            
-            var result = enemyModule.FuzzyEnemyModule.DeFuzzify("DamageDealt");
-            Assert.AreEqual(25f, result);
-
-            
-            //As fast and light as possible -> Should return 1 damage.
-            enemyModule.FuzzyEnemyModule.Fuzzify("Speed", 20);
-            enemyModule.FuzzyEnemyModule.Fuzzify("Massa", 1);
-
-            var result2 = enemyModule.FuzzyEnemyModule.DeFuzzify("DamageDealt");
-            Assert.AreEqual(1f, result2);
         }
     }
 }

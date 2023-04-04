@@ -267,15 +267,13 @@ namespace AAI_Final_Assignment_WinForms.Graph {
                 return null;
             }
 
-            //openSet = vertices that are awaiting to be explored
-            //closedSet = already explored vertices
             PriorityQueue<Vertex> openSet = new PriorityQueue<Vertex>();
             HashSet<Vertex> closedSet = new HashSet<Vertex>();
 
-            //Adjusted node cost = cost to reach a node + estimate cost to target
+            //Adjusted vertex cost = cost to reach a vertex + estimate cost to target
             // F Score = G score + H score
-            // G: distance from node to start node
-            // H: distance from nod to the target node
+            // G: distance from vertex to start vertex
+            // H: distance from vertex to the target vertex
             // Set the G, H, and F scores of the start vertex
             startVertex.gScore = 0;
             startVertex.hScore = startVertex.Heuristic(goalVertex);
