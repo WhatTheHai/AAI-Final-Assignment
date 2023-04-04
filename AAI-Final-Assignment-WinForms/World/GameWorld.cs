@@ -183,8 +183,7 @@ namespace AAI_Final_Assignment_WinForms.World
 
         public void SpawnProjectile(Vector2D pos, Vector2D heading)
         {
-            Projectile projectile = new Projectile(pos.Clone(), this, 1, 10, 10, 0, 5, 5, 3);
-            projectile.Heading = heading;
+            Projectile projectile = new Projectile(pos.Clone(), this, 1, 10, 10, 0, 5, 5, 3, heading);
             MovingEntities.Add(projectile);
         }
 
