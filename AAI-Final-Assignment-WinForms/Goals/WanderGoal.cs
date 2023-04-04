@@ -1,7 +1,7 @@
 ﻿using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.Goals.Abstracts;
 
-namespace AAI_Final_Assignment_WinForms.Goals; 
+namespace AAI_Final_Assignment_WinForms.Goals;
 
 /// <summary>
 ///     This goal activates the wander behaviour of a moving entity. while wander it the entity regenerates stamina

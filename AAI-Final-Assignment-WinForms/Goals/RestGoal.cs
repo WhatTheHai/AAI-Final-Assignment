@@ -1,7 +1,7 @@
 ﻿using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.Goals.Abstracts;
 
-namespace AAI_Final_Assignment_WinForms.Goals; 
+namespace AAI_Final_Assignment_WinForms.Goals;
 
 /// <summary>
 ///     Run away from attacker, wander and regen stamina

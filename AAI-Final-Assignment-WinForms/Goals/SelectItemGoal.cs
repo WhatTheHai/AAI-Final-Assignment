@@ -7,24 +7,19 @@ namespace AAI_Final_Assignment_WinForms.Goals;
 /// <summary>
 ///     Select a item as target as long as it exists.
 /// </summary>
-public class SelectItemGoal : AtomicGoal
-{
-    public SelectItemGoal(Enemy entity) : base(entity)
-    {
+public class SelectItemGoal : AtomicGoal {
+    public SelectItemGoal(Enemy entity) : base(entity) {
         Name = "Select Item";
     }
 
-    public override void Activate()
-    {
+    public override void Activate() {
         // select an item
         var itemCount = Owner.World.Items.Count;
 
-        if (itemCount == 0)
-        {
+        if (itemCount == 0) {
             GoalStatus = GoalStatusType.Failed;
         }
-        else
-        {
+        else {
             SetActive();
 
             var random = new Random();
@@ -33,8 +28,7 @@ public class SelectItemGoal : AtomicGoal
         }
     }
 
-    public override void Process()
-    {
+    public override void Process() {
         SetActiveIfInactive();
     }
 }

@@ -1,7 +1,7 @@
 ﻿using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.Goals.Enums;
 
-namespace AAI_Final_Assignment_WinForms.Goals.Abstracts; 
+namespace AAI_Final_Assignment_WinForms.Goals.Abstracts;
 
 /// <summary>
 ///     Abstract goal class used for the composite pattern.

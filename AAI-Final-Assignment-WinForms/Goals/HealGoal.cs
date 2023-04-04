@@ -1,7 +1,7 @@
 ﻿using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.Goals.Abstracts;
 
-namespace AAI_Final_Assignment_WinForms.Goals; 
+namespace AAI_Final_Assignment_WinForms.Goals;
 
 /// <summary>
 ///     Healing goal, first flee away then go to a healing item

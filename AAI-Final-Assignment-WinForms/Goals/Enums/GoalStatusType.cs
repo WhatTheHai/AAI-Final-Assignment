@@ -1,4 +1,4 @@
-﻿namespace AAI_Final_Assignment_WinForms.Goals.Enums; 
+﻿namespace AAI_Final_Assignment_WinForms.Goals.Enums;
 
 /// <summary>
 ///     The different stages a goal can have.

@@ -6,21 +6,17 @@ namespace AAI_Final_Assignment_WinForms.Goals;
 /// <summary>
 ///     set the witch as target.
 /// </summary>
-public class SelectWitchAsTargetGoal : AtomicGoal
-{
-    public SelectWitchAsTargetGoal(Enemy entity) : base(entity)
-    {
+public class SelectWitchAsTargetGoal : AtomicGoal {
+    public SelectWitchAsTargetGoal(Enemy entity) : base(entity) {
         Name = "Select Witch";
     }
 
-    public override void Activate()
-    {
+    public override void Activate() {
         Owner.CurrentTarget = Owner.World.Witch;
         SetActive();
     }
 
-    public override void Process()
-    {
+    public override void Process() {
         SetActiveIfInactive();
         Deactivate();
     }

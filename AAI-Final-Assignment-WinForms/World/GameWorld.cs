@@ -11,7 +11,7 @@ namespace AAI_Final_Assignment_WinForms.World;
 public class GameWorld {
     public const string PathPrefix = "..\\..\\..\\";
 
-    private readonly int amountOfEnemies = 4;
+    private readonly int amountOfEnemies = 6;
 
     private readonly Random rand;
 
