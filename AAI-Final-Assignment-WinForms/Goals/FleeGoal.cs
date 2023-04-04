@@ -9,6 +9,9 @@ using AAI_Final_Assignment_WinForms.util;
 
 namespace AAI_Final_Assignment_WinForms.Goals
 {
+    /// <summary>
+    /// flee away from attacker. accounts for flee distance set in enemy
+    /// </summary>
     public class FleeGoal : AtomicGoal
     {
         public FleeGoal(Enemy entity) : base(entity)

@@ -59,7 +59,7 @@ namespace AAI_Final_Assignment_WinForms.World
 
         private readonly Random rand;
 
-        private readonly int amountOfEnemies = 10;
+        private readonly int amountOfEnemies = 1;
 
 
         

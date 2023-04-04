@@ -21,7 +21,6 @@ namespace AAI_Final_Assignment_WinForms.Goals.Abstracts
         {
             SetActiveIfInactive();
 
-            // check if their is a subgoal to be processed.  sometimes 0    rewrite 
             if (SubGoalsStack.Count > 0)
             {
                 var currentGoal = SubGoalsStack.Peek();

@@ -4,6 +4,9 @@ using AAI_Final_Assignment_WinForms.Goals.Enums;
 
 namespace AAI_Final_Assignment_WinForms.Goals
 {
+    /// <summary>
+    /// set the witch as target.
+    /// </summary>
     public class SelectWitchAsTargetGoal : AtomicGoal
     {
         public SelectWitchAsTargetGoal(Enemy entity) : base(entity)

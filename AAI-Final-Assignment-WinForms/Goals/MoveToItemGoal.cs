@@ -9,6 +9,9 @@ using AAI_Final_Assignment_WinForms.Goals.Enums;
 
 namespace AAI_Final_Assignment_WinForms.Goals
 {
+    /// <summary>
+    /// Select a item, seek the item.
+    /// </summary>
     public class MoveToItemGoal : CompositeGoal
     {
         public MoveToItemGoal(Enemy entity) : base(entity)

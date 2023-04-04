@@ -32,6 +32,7 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         public Vector2D CurrentSeek = new();
         public Vector2D CurrentArrive = new();
         public Vector2D CurrentWander = new();
+        public Vector2D CurrentFlee = new();
 
         public bool IsCollision { get; set; }
 
@@ -116,7 +117,6 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         /// <returns>The seeking force</returns>
         public Vector2D CalculateSeek()
         {
-
             Vector2D mePos = ME.Pos.Clone();
             Vector2D targetPos = ME.CurrentTarget.Pos.Clone();
             Vector2D desiredVelocity = targetPos.Sub(mePos);
@@ -130,26 +130,51 @@ namespace AAI_Final_Assignment_WinForms.Behaviour
         }
 
 
+        // /// <summary>
+        // /// Calculates the desired force for fleeing
+        // /// </summary>
+        // /// <returns>The fleeing force</returns>
+        // public Vector2D CalculateFlee()
+        // {
+        //     // todo: rework... with paniq distance? 
+        //     float panicDistanceSq = 100.0F;
+        //     Vector2D mePos = ME.Pos.Clone();
+        //     Vector2D targetPos = ME.World.Witch.Pos.Clone();
+        //
+        //     //If not in the panic distance, do not flee
+        //     if (mePos.Distance(targetPos) > panicDistanceSq)
+        //     {
+        //         return new Vector2D(0, 0);
+        //     }
+        //
+        //     Vector2D desiredVelocity = mePos.Sub(targetPos).Normalize().Multiply(ME.MaxSpeed);
+        //     CurrentFlee = desiredVelocity.Clone();
+        //
+        //     return desiredVelocity.Sub(ME.Velocity.Clone());
+        // }
+
         /// <summary>
         /// Calculates the desired force for fleeing
         /// </summary>
         /// <returns>The fleeing force</returns>
         public Vector2D CalculateFlee()
         {
-            // todo: rework... 
-            float panicDistanceSq = 100.0F;
             Vector2D mePos = ME.Pos.Clone();
-            Vector2D targetPos = ME.World.Witch.Pos.Clone();
+            Vector2D targetPos = ME.CurrentTarget.Pos;
 
-            //If not in the panic distance, do not flee
-            if (mePos.Distance(targetPos) > panicDistanceSq)
+            if (!Flee)
             {
-                return new Vector2D(0, 0);
+                CurrentFlee = new Vector2D();
+                return new Vector2D();
             }
 
-            Vector2D desiredVelocity = mePos.Sub(targetPos).Normalize().Multiply(ME.MaxSpeed);
+            Vector2D desiredVelocity = mePos.Sub(targetPos);
+            desiredVelocity.Normalize();
+            desiredVelocity.Multiply(ME.MaxSpeed);
+            desiredVelocity.Sub(ME.Velocity);
+            CurrentFlee = desiredVelocity.Clone();
 
-            return desiredVelocity.Sub(ME.Velocity.Clone());
+            return desiredVelocity;
         }
 
         /// <summary>

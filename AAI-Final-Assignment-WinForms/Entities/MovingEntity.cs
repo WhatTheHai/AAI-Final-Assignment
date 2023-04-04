@@ -64,14 +64,14 @@ namespace AAI_Final_Assignment_WinForms.Entities
             Vector2D steeringForce = SteeringBehaviour.Calculate();
             currentSteeringForce = steeringForce.Clone();
 
-            // acceleratie force/mass 
+            // acceleration force/mass 
             Vector2D acceleration = steeringForce.Clone().Divide(Mass);
 
             // update velocity
             Velocity.Add(acceleration.Multiply(timeElapsed));
             //Velocity.Add(steeringForce);
 
-            // dont exceed max velocity 
+            // don't exceed max velocity 
             Velocity.Truncate(MaxSpeed);
 
             // update position 
@@ -107,13 +107,17 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 }
 
                 if (entity is Projectile projectile &&
-                    projectile.Pos.Clone().Sub(Pos.Clone()).Length() < projectile.Radius + Radius) {
-                    if (this is Enemy) {
+                    projectile.Pos.Clone().Sub(Pos.Clone()).Length() < projectile.Radius + Radius)
+                {
+                    if (this is Enemy)
+                    {
                         World.MovingEntities.Remove(projectile);
-                        if (Health - 10 <= 0) {
+                        if (Health - 10 <= 0)
+                        {
                             Health = 0;
                         }
-                        else {
+                        else
+                        {
                             Health -= 10;
                         }
                     }
@@ -123,7 +127,7 @@ namespace AAI_Final_Assignment_WinForms.Entities
 
         public override void Render(Graphics g)
         {
-           // RenderDebugInfo(g);
+            // RenderDebugInfo(g);
             RenderHp(g);
         }
 
@@ -179,7 +183,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
             Font font = new Font("Arial", 10);
             string healthText = string.Format("{0}/{1}", Health, MaxHealth);
             SizeF textSize = g.MeasureString(healthText, font);
-            PointF textPos = new PointF(healthBarX + healthBarWidth / 2 - textSize.Width / 2, healthBarY - textSize.Height);
+            PointF textPos = new PointF(healthBarX + healthBarWidth / 2 - textSize.Width / 2,
+                healthBarY - textSize.Height);
             g.DrawString(healthText, font, Brushes.Black, textPos);
         }
 
@@ -193,6 +198,8 @@ namespace AAI_Final_Assignment_WinForms.Entities
                 DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentObstacleAvoidance, Color.Red, 3, scale);
             if (SteeringBehaviour.Wander)
                 DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentWander, Color.Green, 3, scale);
+            if (SteeringBehaviour.Flee)
+                DrawLineFromEntity(g, Pos, SteeringBehaviour.CurrentFlee, Color.Orange, 3, scale);
             // todo: Flee 
         }
 
