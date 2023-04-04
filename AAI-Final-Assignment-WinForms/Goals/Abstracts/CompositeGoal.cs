@@ -16,14 +16,17 @@ public abstract class CompositeGoal : Goal {
 
     public override void Process() {
         SetActiveIfInactive();
-
-        if (SubGoalsStack.Count > 0) {
+        // extra checks for stack and a current goal that is null because of a null exception sometimes
+        if (SubGoalsStack.Count > 0)
+        {
             var currentGoal = SubGoalsStack.Peek();
             while (
-                (currentGoal.GoalStatus == GoalStatusType.Completed ||
-                 currentGoal.GoalStatus == GoalStatusType.Failed) &&
-                SubGoalsStack.Count > 0) {
-                SubGoalsStack.Pop();
+                (SubGoalsStack.Count > 0 && SubGoalsStack.Peek() != null &&
+                 currentGoal.GoalStatus == GoalStatusType.Completed ||
+                 currentGoal.GoalStatus == GoalStatusType.Failed)
+            )
+            {
+                if (SubGoalsStack.Count > 0) SubGoalsStack.Pop();
                 if (SubGoalsStack.Count > 0) currentGoal = SubGoalsStack.Peek();
             }
 

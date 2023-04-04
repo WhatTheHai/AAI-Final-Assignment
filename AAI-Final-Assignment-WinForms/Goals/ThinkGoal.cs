@@ -32,8 +32,7 @@ public class ThinkGoal : CompositeGoal
     public override void Process()
     {
         SetActiveIfInactive();
-
-        // check if their is a subgoal to be processed.
+        // extra checks for stack and a current goal that is null because of a null exception sometimes
         if (SubGoalsStack.Count > 0)
         {
             var currentGoal = SubGoalsStack.Peek();
@@ -43,7 +42,7 @@ public class ThinkGoal : CompositeGoal
                  currentGoal.GoalStatus == GoalStatusType.Failed)
             )
             {
-                SubGoalsStack.Pop();
+                if (SubGoalsStack.Count > 0) SubGoalsStack.Pop();
                 if (SubGoalsStack.Count > 0) currentGoal = SubGoalsStack.Peek();
             }
 
