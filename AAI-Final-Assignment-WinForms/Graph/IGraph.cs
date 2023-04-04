@@ -1,24 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AAI_Final_Assignment_WinForms.util;
+﻿using AAI_Final_Assignment_WinForms.util;
 
-namespace AAI_Final_Assignment_WinForms.Graph
-{
-    public partial interface IGraph
-    {
-        void AddVertex(Vector2D pos);
-        Vertex GetVertex(Vector2D pos);
+namespace AAI_Final_Assignment_WinForms.Graph; 
 
-        void AddEdge(Vector2D source, Vector2D dest, float cost);
+public interface IGraph {
+    void AddVertex(Vector2D pos);
+    Vertex GetVertex(Vector2D pos);
 
-        void ClearAll();
+    void AddEdge(Vector2D source, Vector2D dest, float cost);
 
-        void Unweighted(Vector2D pos);
+    void ClearAll();
 
-        void Dijkstra(Vector2D pos);
-        bool IsConnected();
-    }
+    void Unweighted(Vector2D pos);
+
+    void Dijkstra(Vector2D pos);
+    bool IsConnected();
 }

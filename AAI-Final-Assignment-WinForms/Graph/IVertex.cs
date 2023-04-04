@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace AAI_Final_Assignment_WinForms.Graph; 
 
-namespace AAI_Final_Assignment_WinForms.Graph
-{
-    public partial interface IVertex
-    { 
-        string GetName();  // Returns the name of the vertex
+public interface IVertex {
+    string GetName(); // Returns the name of the vertex
 
-        LinkedList<Edge> GetAdjacents();
+    LinkedList<Edge> GetAdjacents();
 
-        float GetDistance();
+    float GetDistance();
 
-        Vertex GetPrevious();
+    Vertex GetPrevious();
 
-        bool GetKnown();
+    bool GetKnown();
 
-        void Reset();  // Resets prev, distance (infinity) and known for a vertex
-    }
+    void Reset(); // Resets prev, distance (infinity) and known for a vertex
 }
