@@ -47,8 +47,8 @@
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this._mainPanel);
-            this.Name = "Form1";
-            this.Text = "Form1";
+            this.Name = "Circle Survivor";
+            this.Text = "Circle Survivor";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.Form1_KeyDown);
             this.ResumeLayout(false);
 

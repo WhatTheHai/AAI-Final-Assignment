@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AAI-Final-Assignment-WinForms\AAI-Final-Assignment-WinForms.csproj" />
+    <ProjectReference Include="..\AAI-Final-Assignment-WinForms\Circle Surivors.csproj" />
   </ItemGroup>
 
 </Project>

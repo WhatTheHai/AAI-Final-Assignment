@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.32002.185
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AAI-Final-Assignment-WinForms", "AAI-Final-Assignment-WinForms\AAI-Final-Assignment-WinForms.csproj", "{19F95D6E-6385-448C-9A78-B65FA225811F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Circle Surivors", "AAI-Final-Assignment-WinForms\Circle Surivors.csproj", "{19F95D6E-6385-448C-9A78-B65FA225811F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Test", "Test\Test.csproj", "{D6F9C9C2-FC25-4EF1-A5DF-0BB2958DF05C}"
 EndProject
