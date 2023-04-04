@@ -15,7 +15,7 @@ public class Witch : MovingEntity {
         float maxSpeed, float maxForce, float radius
     ) : base(pos,
         world, scale, textureWidth, textureHeight, mass, maxSpeed, maxForce, radius) {
-        Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\Wizard.png"),
+        Texture = new Bitmap(Image.FromFile("Sprites\\Wizard.png"),
             new Size(TextureWidth, TextureHeight));
         MaxHealth = Health = 100;
 

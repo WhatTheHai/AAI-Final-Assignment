@@ -9,8 +9,6 @@ namespace AAI_Final_Assignment_WinForms.World;
 /// like: walls, obstacles, agents etc...
 /// </summary>
 public class GameWorld {
-    public const string PathPrefix = "..\\..\\..\\";
-
     private readonly int amountOfEnemies = 6;
 
     private readonly Random rand;
@@ -57,7 +55,7 @@ public class GameWorld {
 
 
         for (var i = 1; i < 9; i++) {
-            var img = Image.FromFile(PathPrefix + $"Sprites\\Floors\\floor_{i}.png");
+            var img = Image.FromFile($"Sprites\\Floors\\floor_{i}.png");
             var bmp = new Bitmap(img, img.Width, img.Height);
             BackgroundImages.Add(bmp);
         }

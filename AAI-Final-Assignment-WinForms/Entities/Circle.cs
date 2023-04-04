@@ -7,8 +7,6 @@ public class Circle : StaticEntity {
     public Circle(Vector2D pos, GameWorld world, float scale, int textureWidth, int textureHeight,
         float radius) :
         base(pos, world, scale, textureWidth, textureHeight, radius) {
-        Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\CAULDRON FILL.png"),
-            new Size(TextureWidth, TextureHeight));
     }
 
 
