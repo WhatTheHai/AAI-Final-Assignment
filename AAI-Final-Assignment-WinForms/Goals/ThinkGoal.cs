@@ -1,90 +1,47 @@
-﻿using System.Diagnostics;
-using System.Text;
-using AAI_Final_Assignment_WinForms.Entities;
+﻿using AAI_Final_Assignment_WinForms.Entities;
 using AAI_Final_Assignment_WinForms.Goals.Abstracts;
-using AAI_Final_Assignment_WinForms.Goals.Enums;
 
+namespace AAI_Final_Assignment_WinForms.Goals;
 
-namespace AAI_Final_Assignment_WinForms.Goals
-{
-    /// <summary>
-    /// This is the brain of the moving entity and can never be deactivated.
-    /// current choices are:
-    ///     ThinkingGoal(composite): attacking/healing/resting
-    ///             AttackGoal(composite): SelectWitchAsTargetGoal(atomic) + SeekTargetGoal(atomic) add stamina cost.. when to attack?
-    ///             HealGoal(composite): Flee(atomic) + selectItemGoal(atomic):closest? + seekItemGoal(atomic)
-    ///             RestGoal(composite): Flee(atomic) + RegenStamina(atomic) : wander and regen stamina  
-    /// 
-    ///        
-    /// 
-    ///         
-    ///
-    ///
-    ///         // maybe when full hp attack when lower get item while first fleeing?
-    ///         //  when to wander? maybe at spawn till in range? check range to mainchar
-    ///         // flee(till out of range) then go to closest point to heal?
-    ///  
-    /// </summary>
-    public class ThinkGoal : CompositeGoal
-    {
-        public ThinkGoal(Enemy entity) : base(entity)
-        {
-            Name = "Thinking";
-        }
+/// <summary>
+///     This is the brain of the moving entity and can never be deactivated.
+///     current choices are:
+///     ThinkingGoal(composite): attacking/healing/resting
+///     AttackGoal(composite): SelectWitchAsTargetGoal(atomic) + SeekTargetGoal(atomic)
+///     HealGoal(composite): Flee(atomic) + selectItemGoal(atomic) + seekItemGoal(atomic)
+///     RestGoal(composite): Flee(atomic) + RegenStamina(atomic)
+/// </summary>
+public class ThinkGoal : CompositeGoal {
+    public ThinkGoal(Enemy entity) : base(entity) {
+        Name = "Thinking";
+    }
 
-        public override void Activate()
-        {
-            SetActive();
-            SubGoalsStack.Clear();
+    public override void Activate() {
+        SetActive();
+        SubGoalsStack.Clear();
+        SelectNewGoal();
+    }
+
+    public override void Process() {
+        SetActiveIfInactive();
+        // extra checks for stack and a current goal that is null because of a null exception sometimes
+        if (SubGoalsStack.Count > 0)
+            ProcessStack();
+        else
             SelectNewGoal();
-        }
+    }
 
+    public override void Deactivate() {
+        // thinking may not be deactivated else the entity has no brain.
+    }
 
-        public override void Process()
-        {
-            SetActiveIfInactive();
-
-            // check if their is a subgoal to be processed.  sometimes 0    rewrite 
-            if (SubGoalsStack.Count > 0)
-            {
-                var currentGoal = SubGoalsStack.Peek();
-                while (
-                    (currentGoal.GoalStatus == GoalStatusType.Completed ||
-                     currentGoal.GoalStatus == GoalStatusType.Failed) &&
-                    SubGoalsStack.Count > 0)
-                {
-                    SubGoalsStack.Pop();
-                    if (SubGoalsStack.Count > 0)
-                    {
-                        currentGoal = SubGoalsStack.Peek();
-                    }
-                }
-
-                if (SubGoalsStack.Count > 0)
-                {
-                    currentGoal.Process();
-                }
-            }
-            else
-            {
-                SelectNewGoal();
-            }
-        }
-
-        public override void Deactivate()
-        {
-            // thinking may not be deactivated else the entity has no brain.
-        }
-
-        /// <summary>
-        /// Randomly select what to do next? 
-        /// </summary>
-        private void SelectNewGoal()
-        {
-            if (Owner.HasLowHealth())
-                SubGoalsStack.Push(new HealGoal(Owner)); // todo: chance amount of healing for enemy? 
-            else if (Owner.HasNoStamina()) SubGoalsStack.Push(new RestGoal(Owner));
-            else SubGoalsStack.Push(new AttackGoal(Owner));
-        }
+    /// <summary>
+    ///     Randomly select what to do next?
+    /// </summary>
+    private void SelectNewGoal() {
+        if (Owner.HasLowHealth())
+            SubGoalsStack.Push(new HealGoal(Owner));
+        else if (Owner.HasNoStamina()) SubGoalsStack.Push(new RestGoal(Owner));
+        else SubGoalsStack.Push(new AttackGoal(Owner));
     }
 }
