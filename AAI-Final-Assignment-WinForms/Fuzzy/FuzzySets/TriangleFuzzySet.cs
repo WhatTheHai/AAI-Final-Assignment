@@ -18,7 +18,7 @@ public class TriangleFuzzySet : FuzzySet {
     }
 
     public override float CalculateDOM(float value) {
-        // check for divide by zero's   todo: wat gebeured hier? 
+        // check for divide by zero's
         if ((rightOffset == 0f && peak == value) || (leftOffset == 0f && peak == value)) return 1.0f;
 
         // get dom left 

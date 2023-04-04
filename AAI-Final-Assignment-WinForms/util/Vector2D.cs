@@ -52,8 +52,7 @@ public class Vector2D : IEquatable<Vector2D> {
         Y /= value;
         return this;
     }
-
-    // todo: remove? 
+    
     public float Dot(Vector2D v2) {
         X *= v2.X;
         Y *= v2.Y;

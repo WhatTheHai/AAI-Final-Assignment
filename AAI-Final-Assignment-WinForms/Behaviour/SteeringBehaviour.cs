@@ -9,7 +9,6 @@ public class SteeringBehaviour {
     // Current force of the object
     public Vector2D CurrentForce;
 
-
     // All vectors and booleans of the forces used for debugging and printing on screen
     public Vector2D CurrentObstacleAvoidance = new();
     public Vector2D CurrentSeek = new();
