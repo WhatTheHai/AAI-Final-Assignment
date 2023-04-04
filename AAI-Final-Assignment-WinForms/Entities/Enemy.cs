@@ -28,7 +28,7 @@ public class Enemy : MovingEntity
         CurrentTarget = World.Witch;
 
         Texture = new Bitmap(Image.FromFile(PathPrefix + "Sprites\\sharkboy.png"),
-            new Size(TextureWidth, TextureHeight)); // todo: not used
+            new Size(TextureWidth, TextureHeight));
 
         DetermineColor();
     }

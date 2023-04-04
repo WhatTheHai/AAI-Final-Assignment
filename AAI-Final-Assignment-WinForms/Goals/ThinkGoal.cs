@@ -66,7 +66,7 @@ public class ThinkGoal : CompositeGoal
     private void SelectNewGoal()
     {
         if (Owner.HasLowHealth())
-            SubGoalsStack.Push(new HealGoal(Owner)); // todo: chance amount of healing for enemy? 
+            SubGoalsStack.Push(new HealGoal(Owner));
         else if (Owner.HasNoStamina()) SubGoalsStack.Push(new RestGoal(Owner));
         else SubGoalsStack.Push(new AttackGoal(Owner));
     }

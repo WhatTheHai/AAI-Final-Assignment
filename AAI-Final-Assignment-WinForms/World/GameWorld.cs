@@ -4,6 +4,10 @@ using AAI_Final_Assignment_WinForms.util;
 
 namespace AAI_Final_Assignment_WinForms.World; 
 
+/// <summary>
+/// The GameWorld class contains all the data and objects pertinent to the environment
+/// like: walls, obstacles, agents etc...
+/// </summary>
 public class GameWorld {
     public const string PathPrefix = "..\\..\\..\\";
 
@@ -41,14 +45,6 @@ public class GameWorld {
 
     // List of all static entities
     public List<BaseGameEntity> StaticEntities;
-
-    // game world class
-    // the game world class contains all the data and objects pertinent to the environment like: walls, obstacles, agents etc...
-
-    // size/bounds of world 
-    // render world 
-    // update world 
-    // later : graphs 
 
     public GameWorld(int w, int h) {
         rand = new Random();
