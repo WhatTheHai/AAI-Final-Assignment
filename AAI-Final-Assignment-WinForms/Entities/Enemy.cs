@@ -3,9 +3,10 @@ using AAI_Final_Assignment_WinForms.Goals.Abstracts;
 using AAI_Final_Assignment_WinForms.util;
 using AAI_Final_Assignment_WinForms.World;
 
-namespace AAI_Final_Assignment_WinForms.Entities; 
+namespace AAI_Final_Assignment_WinForms.Entities;
 
-public class Enemy : MovingEntity {
+public class Enemy : MovingEntity
+{
     private const int lowHealthThreshold = 40;
     private const int FleeingThreshold = 400;
 
@@ -15,8 +16,8 @@ public class Enemy : MovingEntity {
         float maxSpeed, float maxForce, float radius, int stamina) : base(pos, world, scale, textureWidth,
         textureHeight,
         mass, maxSpeed,
-        maxForce, radius) {
-        // SteeringBehaviour.Arrive = false;
+        maxForce, radius)
+    {
         SteeringBehaviour.Seek = false;
         SteeringBehaviour.Flee = false;
         SteeringBehaviour.ObstacleAvoidance = true;
@@ -37,21 +38,25 @@ public class Enemy : MovingEntity {
     public int Damage { get; set; }
     public double Stamina { get; set; }
 
-    public void DetermineColor() {
+    public void DetermineColor()
+    {
         //Max mass is 100
         var redValue = (int)Math.Ceiling(255 * (Mass / 100));
         Color = Color.FromArgb(255, Math.Clamp(redValue, 0, 255), 0, 0);
     }
 
-    public override void Update(float timeElapsed) {
+    public override void Update(float timeElapsed)
+    {
         if (Health <= 0) World.MovingEntities.Remove(this);
 
         MainGoal.Process();
         base.Update(timeElapsed);
     }
 
-    public override void Render(Graphics g) {
-        g.DrawEllipse(new Pen(Color, 3),
+    public override void Render(Graphics g)
+    {
+      
+        g.FillEllipse(new SolidBrush(Color),
             new Rectangle((int)Pos.X - (int)Radius, (int)Pos.Y - (int)Radius, (int)Radius * 2, (int)Radius * 2));
 
         var drawFont = new Font("Arial", 10);
@@ -66,19 +71,23 @@ public class Enemy : MovingEntity {
         if (World.ShowForces) RenderForceArrows(g);
     }
 
-    public bool HasNoStamina() {
+    public bool HasNoStamina()
+    {
         return Stamina <= 0;
     }
 
-    public bool HasMaxStamina() {
+    public bool HasMaxStamina()
+    {
         return Stamina >= maxStamina;
     }
 
-    public bool HasLowHealth() {
+    public bool HasLowHealth()
+    {
         return Health < lowHealthThreshold;
     }
 
-    public bool IsToCloseToTarget(MovingEntity target) {
+    public bool IsToCloseToTarget(MovingEntity target)
+    {
         return Pos.Distance(target.Pos) < FleeingThreshold;
     }
 }

@@ -35,7 +35,6 @@ public class SteeringBehaviour {
     /// <returns>The total force applied to the entity</returns>
     public Vector2D Calculate() {
         TotalForce = new Vector2D();
-        // todo check.
         if (ObstacleAvoidance) {
             CurrentForce = CalculateObstacleAvoidance();
             if (!AccumulateForce(TotalForce, CurrentForce)) return TotalForce;

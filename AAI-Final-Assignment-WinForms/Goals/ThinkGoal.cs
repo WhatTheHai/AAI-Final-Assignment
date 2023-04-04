@@ -2,7 +2,7 @@
 using AAI_Final_Assignment_WinForms.Goals.Abstracts;
 using AAI_Final_Assignment_WinForms.Goals.Enums;
 
-namespace AAI_Final_Assignment_WinForms.Goals; 
+namespace AAI_Final_Assignment_WinForms.Goals;
 
 /// <summary>
 ///     This is the brain of the moving entity and can never be deactivated.
@@ -15,46 +15,56 @@ namespace AAI_Final_Assignment_WinForms.Goals;
 ///     //  when to wander? maybe at spawn till in range? check range to mainchar
 ///     // flee(till out of range) then go to closest point to heal?
 /// </summary>
-public class ThinkGoal : CompositeGoal {
-    public ThinkGoal(Enemy entity) : base(entity) {
+public class ThinkGoal : CompositeGoal
+{
+    public ThinkGoal(Enemy entity) : base(entity)
+    {
         Name = "Thinking";
     }
 
-    public override void Activate() {
+    public override void Activate()
+    {
         SetActive();
         SubGoalsStack.Clear();
         SelectNewGoal();
     }
-    
-    public override void Process() {
+
+    public override void Process()
+    {
         SetActiveIfInactive();
 
         // check if their is a subgoal to be processed.
-        if (SubGoalsStack.Count > 0) {
+        if (SubGoalsStack.Count > 0)
+        {
             var currentGoal = SubGoalsStack.Peek();
             while (
-                (currentGoal.GoalStatus == GoalStatusType.Completed ||
-                 currentGoal.GoalStatus == GoalStatusType.Failed) &&
-                SubGoalsStack.Count > 0) {
+                (SubGoalsStack.Count > 0 && SubGoalsStack.Peek() != null &&
+                 currentGoal.GoalStatus == GoalStatusType.Completed ||
+                 currentGoal.GoalStatus == GoalStatusType.Failed)
+            )
+            {
                 SubGoalsStack.Pop();
                 if (SubGoalsStack.Count > 0) currentGoal = SubGoalsStack.Peek();
             }
 
             if (SubGoalsStack.Count > 0) currentGoal.Process();
         }
-        else {
+        else
+        {
             SelectNewGoal();
         }
     }
 
-    public override void Deactivate() {
+    public override void Deactivate()
+    {
         // thinking may not be deactivated else the entity has no brain.
     }
 
     /// <summary>
     ///     Randomly select what to do next?
     /// </summary>
-    private void SelectNewGoal() {
+    private void SelectNewGoal()
+    {
         if (Owner.HasLowHealth())
             SubGoalsStack.Push(new HealGoal(Owner)); // todo: chance amount of healing for enemy? 
         else if (Owner.HasNoStamina()) SubGoalsStack.Push(new RestGoal(Owner));
